@@ -15,8 +15,6 @@ public class UserController {
 
     public void registerUser(User user) {
         userService.registerUser(user);
-        System.out.println("\nCongratulations " + user.getName() + "! You can log in now!");
-        System.out.println("User Type: " + user.getUserRole());
     }
 
     public User getUserById(int userId) {

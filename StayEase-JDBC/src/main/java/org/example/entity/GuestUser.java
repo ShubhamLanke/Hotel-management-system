@@ -7,7 +7,7 @@ import java.util.List;
 public class GuestUser extends User {
     private List<Guest> accompaniedGuests;
 
-    public GuestUser(int userID, String name, String email, String password, boolean isActive, List<Guest> accompaniedGuests) {
+    public GuestUser(Integer userID, String name, String email, String password, boolean isActive, List<Guest> accompaniedGuests) {
         super(userID, name, email, password, UserRole.GUEST, isActive);
         this.accompaniedGuests = accompaniedGuests;
     }

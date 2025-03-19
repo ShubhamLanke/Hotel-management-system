@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 public class BookingDaoImpl implements BookingDao {
     private final Connection connection = DatabaseConnection.getConnection();
+//    private final Connection connection = ConnectionUtility.getConnection();
     private static final Logger logger = Logger.getLogger(BookingDaoImpl.class.getName());
 
     @Override

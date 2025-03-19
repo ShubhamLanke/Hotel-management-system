@@ -12,6 +12,7 @@ import org.example.service.*;
 import org.example.view.AdminDashBoard;
 import org.example.view.Menu;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
@@ -34,5 +35,6 @@ public class Main {
 
         Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard);
         menu.displayMainMenu();
+
     }
 }

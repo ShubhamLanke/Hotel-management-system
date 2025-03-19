@@ -1,25 +1,25 @@
 package org.example.entity;
 
 public class Guest {
-    private int guestId;
+    private Integer guestId;
     private String name;
     private int age;
-    private int userId;
+    private Integer userId;
 
     public Guest(){}
 
-    public Guest(int guestId, String name, int age, int userId) {
+    public Guest(Integer guestId, String name, int age, Integer userId) {
         this.guestId = guestId;
         this.name = name;
         this.age = age;
         this.userId = userId;
     }
 
-    public int getGuestId() {
+    public Integer getGuestId() {
         return guestId;
     }
 
-    public void setGuestId(int guestId) {
+    public void setGuestId(Integer guestId) {
         this.guestId = guestId;
     }
 
@@ -39,11 +39,11 @@ public class Guest {
         this.age = age;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

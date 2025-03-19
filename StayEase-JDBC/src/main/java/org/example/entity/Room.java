@@ -4,7 +4,7 @@ import org.example.constants.RoomType;
 
 public class Room {
 
-    private int roomID;
+    private Integer roomID;
     private int roomNumber;
     private RoomType roomType;
     private double price;
@@ -13,7 +13,7 @@ public class Room {
     public Room() {
     }
 
-    public Room(int roomID, int roomNumber, RoomType roomType, double price, boolean isAvailable) {
+    public Room(Integer roomID, int roomNumber, RoomType roomType, double price, boolean isAvailable) {
         this.roomID = roomID;
         this.roomNumber = roomNumber;
         this.roomType = roomType;
@@ -21,11 +21,11 @@ public class Room {
         this.isAvailable = isAvailable;
     }
 
-    public int getRoomID() {
+    public Integer getRoomID() {
         return roomID;
     }
 
-    public void setRoomID(int roomID) {
+    public void setRoomID(Integer roomID) {
         this.roomID = roomID;
     }
 

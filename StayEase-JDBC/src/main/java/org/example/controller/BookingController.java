@@ -2,36 +2,33 @@ package org.example.controller;
 
 
 import org.example.entity.Booking;
+import org.example.exception.ServiceException;
 import org.example.service.BookingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 public class BookingController {
 
     private final BookingService bookingService;
+    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
 
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
-    public void createBooking(Booking booking) {// TODO check for instance validation
+    public void createBooking(Booking booking) {
         bookingService.createBooking(booking);
-        System.out.println("\nBooking created successfully!");
     }
 
     public void updateBooking(Booking booking) {
         bookingService.updateBooking(booking);
-        System.out.println("Booking updated successfully!");
     }
 
-    public boolean cancelBooking(int bookingId) { // TODO update code for shoter lines
-        try {
-            bookingService.cancelBooking(bookingId);
-            return true;
-        } catch (Exception e) {
-            System.out.println("Error canceling booking: " + e.getMessage());
-            return false;
-        }
+    public boolean cancelBooking(int bookingId) {
+        return bookingService.cancelBooking(bookingId);
     }
 
     public Booking getBookingById(int bookingId) {

@@ -5,9 +5,9 @@ import org.example.constants.BookingStatus;
 import java.time.LocalDateTime;
 
 public class Booking {
-    private int bookingId;
-    private int userId;
-    private int roomId;
+    private Integer bookingId;
+    private Integer userId;
+    private Integer roomId;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
     private BookingStatus status;
@@ -15,7 +15,7 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(int bookingId, int userId, int roomId, LocalDateTime checkIn, LocalDateTime checkOut, BookingStatus status) {
+    public Booking(Integer bookingId, Integer userId, Integer roomId, LocalDateTime checkIn, LocalDateTime checkOut, BookingStatus status) {
         this.bookingId = bookingId;
         this.userId = userId;
         this.roomId = roomId;
@@ -24,27 +24,27 @@ public class Booking {
         this.status = status;
     }
 
-    public int getBookingId() {
+    public Integer getBookingId() {
         return bookingId;
     }
 
-    public void setBookingId(int bookingId) {
+    public void setBookingId(Integer bookingId) {
         this.bookingId = bookingId;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public int getRoomId() {
+    public Integer getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(Integer roomId) {
         this.roomId = roomId;
     }
 

@@ -5,14 +5,14 @@ import org.example.constants.PaymentStatus;
 import java.time.LocalDateTime;
 
 public class Invoice {
-    private int invoiceId;
-    private int bookingId;
-    private int userId;
+    private Integer invoiceId;
+    private Integer bookingId;
+    private Integer userId;
     private double amount;
     private LocalDateTime issueDate;
     private PaymentStatus paymentStatus;
 
-    public Invoice(int invoiceId, int bookingId, int userId, double amount, LocalDateTime issueDate, PaymentStatus paymentStatus) {
+    public Invoice(Integer invoiceId, Integer bookingId, Integer userId, double amount, LocalDateTime issueDate, PaymentStatus paymentStatus) {
         this.invoiceId = invoiceId;
         this.bookingId = bookingId;
         this.userId = userId;
@@ -21,27 +21,27 @@ public class Invoice {
         this.paymentStatus = paymentStatus;
     }
 
-    public int getInvoiceId() {
+    public Integer getInvoiceId() {
         return invoiceId;
     }
 
-    public void setInvoiceId(int invoiceId) {
+    public void setInvoiceId(Integer invoiceId) {
         this.invoiceId = invoiceId;
     }
 
-    public int getBookingId() {
+    public Integer getBookingId() {
         return bookingId;
     }
 
-    public void setBookingId(int bookingId) {
+    public void setBookingId(Integer bookingId) {
         this.bookingId = bookingId;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

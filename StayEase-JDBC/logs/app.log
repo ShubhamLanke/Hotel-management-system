@@ -1,0 +1,13 @@
+2025-03-19 12:20:43 [main] INFO  Menu - 
+==============================
+2025-03-19 12:20:43 [main] INFO  Menu -   Welcome to StayEase Hotel!
+2025-03-19 12:20:43 [main] INFO  Menu - ==============================
+2025-03-19 12:20:43 [main] INFO  Menu - 1. View Available Rooms
+2025-03-19 12:20:43 [main] INFO  Menu - 2. Register User
+2025-03-19 12:20:43 [main] INFO  Menu - 3. Login
+2025-03-19 12:20:43 [main] INFO  Menu - ------------------------------
+2025-03-19 12:20:43 [main] INFO  Menu - Enter your choice: 
+2025-03-19 12:21:38 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
+2025-03-19 12:24:45 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
+2025-03-19 12:26:50 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
+2025-03-19 12:27:42 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.

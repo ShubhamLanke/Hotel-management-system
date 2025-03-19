@@ -4,7 +4,7 @@ import org.example.constants.UserRole;
 
 public class User {
 
-    private int userID;
+    private Integer userID;
     private String name;
     private String email;
     private String password;
@@ -14,7 +14,7 @@ public class User {
     public User() {
     }
 
-    public User(int userID, String name, String email, String password, UserRole userRole, boolean isActive) {
+    public User(Integer userID, String name, String email, String password, UserRole userRole, boolean isActive) {
         this.userID = userID;
         this.name = name;
         this.email = email;
@@ -23,11 +23,11 @@ public class User {
         this.isActive = isActive;
     }
 
-    public int getUserID() {
+    public Integer getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(Integer userID) {
         this.userID = userID;
     }
 

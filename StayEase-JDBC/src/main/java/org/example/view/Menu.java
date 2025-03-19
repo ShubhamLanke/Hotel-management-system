@@ -8,6 +8,8 @@ import org.example.controller.InvoiceController;
 import org.example.controller.RoomController;
 import org.example.controller.UserController;
 import org.example.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class Menu {
 
     private static final Scanner scanner = new Scanner(System.in);
+    private static final Logger log = LoggerFactory.getLogger(Menu.class);
 
     private final RoomController roomController;
     private final UserController userController;
@@ -40,14 +43,13 @@ public class Menu {
     }
 
     public void displayMainMenu() {
-        while (true) {
+        while (1>0) {
             System.out.println("\n==============================");
             System.out.println("  Welcome to StayEase Hotel!");
             System.out.println("==============================");
             System.out.println("1. View Available Rooms");
             System.out.println("2. Register User");
             System.out.println("3. Login");
-            System.out.println("4. Exit");
             System.out.println("------------------------------");
             System.out.print("Enter your choice: ");
 
@@ -65,14 +67,11 @@ public class Menu {
                     case 3:
                         loginUser();
                         break;
-                    case 4:
-                        System.out.println("Thank you for using the system. Exiting...");
-                        return;
                     default:
-                        System.out.println("Invalid choice! Please enter a number between 1 and 4.");
+                        log.info("Invalid choice! Please enter a number between 1 and 4.");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a number between 1 and 4.");
+                log.error("Invalid input! Please enter a number between 1 and 4.");
                 scanner.nextLine();
             }
         }
@@ -130,6 +129,8 @@ public class Menu {
             }
 
             userController.registerUser(user);
+            System.out.println("\nCongratulations " + user.getName() + "! You can log in now!");
+            System.out.println("User Type: " + user.getUserRole());
 
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid role! Please enter either STAFF or GUEST.");
@@ -618,14 +619,13 @@ public class Menu {
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.schedule(() -> {
-            System.out.println("---- Task executed........");
-//            Room room = roomController.getRoomById(roomId);
-//            if (room != null) {
-//                room.setAvailable(true);
-//                roomController.updateRoom(room);
-//                System.out.println("Room ID " + roomId + " is now available again.");
-//            }
-        }, 2000, TimeUnit.MILLISECONDS);
+            Room room = roomController.getRoomById(roomId);
+            if (room != null) {
+                room.setAvailable(true);
+                roomController.updateRoom(room);
+                System.out.println("Room ID " + roomId + " is now available again.");
+            }
+        }, delay, TimeUnit.MILLISECONDS);
     }
 
     private boolean bookingPaymentChoice() {
