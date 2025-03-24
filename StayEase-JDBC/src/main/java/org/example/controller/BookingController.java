@@ -1,8 +1,9 @@
 package org.example.controller;
 
-
+import org.example.constants.ResponseStatus;
 import org.example.entity.Booking;
 import org.example.service.BookingService;
+import org.example.utility.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,16 +30,21 @@ public class BookingController {
         return bookingService.cancelBooking(bookingId);
     }
 
-    public Booking getBookingById(int bookingId) {
-        return bookingService.getBookingById(bookingId);
+    public Response getBookingById(int bookingId) {
+        return bookingService.getBookingById(bookingId)
+                .map(booking -> new Response(booking, ResponseStatus.SUCCESS, "Booking found!"))
+                .orElse(new Response(null, ResponseStatus.ERROR,"Booking not found!"));
     }
 
-    public List<Booking> getBookingsByUser(int userId) {
+
+    public Response getBookingsByUser(int userId) {
         return bookingService.getBookingsByUser(userId);
     }
 
-    public Booking getConfirmedBookingByUserId(int loggedInGuest) {
-        return bookingService.getConfirmedBookingByUserId(loggedInGuest);
+    public Response getConfirmedBookingByUserId(int loggedInGuest) {
+        return bookingService.getConfirmedBookingByUserId(loggedInGuest)
+                .map(booking -> new Response(booking, ResponseStatus.SUCCESS, "Confirmed booking found!"))
+                .orElse(new Response(null, ResponseStatus.ERROR, "Booking not found!"));
     }
 
     public List<Booking> getAllBookings() {

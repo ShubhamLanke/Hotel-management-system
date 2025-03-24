@@ -34,7 +34,7 @@ public class RoomServiceImpl implements RoomService {
         if (room == null || room.getRoomID() <= 0) {
             throw new IllegalArgumentException("Room or Room ID is invalid.");
         }
-        Optional<Room> existingRoom = Optional.ofNullable(roomDao.getRoomById(room.getRoomID()));
+        Optional<Room> existingRoom = roomDao.getRoomById(room.getRoomID());
         if (existingRoom.isEmpty()) {
             return Optional.empty(); // Room doesn't exist
         }
@@ -67,7 +67,7 @@ public class RoomServiceImpl implements RoomService {
         if (roomId <= 0) {
             throw new IllegalArgumentException("Invalid Room ID.");
         }
-        Optional<Room> room = Optional.ofNullable(roomDao.getRoomById(roomId));
+        Optional<Room> room = roomDao.getRoomById(roomId);
         if (room.isEmpty()) {
             throw new RoomNotFoundException("Room with ID " + roomId + " not found.");
         }
@@ -86,7 +86,7 @@ public class RoomServiceImpl implements RoomService {
         if (roomId <= 0) {
             throw new IllegalArgumentException("Invalid Room ID.");
         }
-        Optional<Room> room = Optional.ofNullable(roomDao.getRoomById(roomId));
+        Optional<Room> room = roomDao.getRoomById(roomId);
         if (room.isEmpty()) {
             throw new RoomNotFoundException("Room with ID " + roomId + " not found.");
         }
@@ -105,12 +105,12 @@ public class RoomServiceImpl implements RoomService {
         if (roomId <= 0) {
             throw new IllegalArgumentException("Invalid Room ID.");
         }
-        Room room = roomDao.getRoomById(roomId);
-        if (room != null) {
+        Optional<Room> room = roomDao.getRoomById(roomId);
+        if (room.isPresent()) {
             logger.info("Fetched room with ID {}: {}", roomId, room);
         } else {
             logger.warn("Room with ID {} not found.", roomId);
         }
-        return Optional.ofNullable(room);
+        return room;
     }
 }

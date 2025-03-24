@@ -31,8 +31,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (bookingId <= 0) {
             throw new ServiceException("Invalid booking ID.");
         }
-        Invoice invoice = invoiceDao.getInvoiceByBookingId(bookingId);
-        return Optional.ofNullable(invoice); // Return Optional.empty() if invoice is not found
+        return invoiceDao.getInvoiceByBookingId(bookingId);
     }
 
     @Override
@@ -56,8 +55,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (invoiceId <= 0) {
             throw new ServiceException("Invalid invoice ID.");
         }
-        Invoice invoice = invoiceDao.getInvoiceById(invoiceId);
-        return Optional.ofNullable(invoice); // Return Optional.empty() if invoice is not found
+        return invoiceDao.getInvoiceById(invoiceId);
     }
 
     @Override

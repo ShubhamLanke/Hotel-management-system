@@ -25,7 +25,7 @@ public class BookingServiceImpl implements BookingService {
         if (Objects.isNull(booking)) {
             throw new ServiceException("INVALID_BOOKING_DETAILS_PROVIDED");
         }
-        bookingDao.saveBooking(booking);
+        bookingDao.createBooking(booking);
         log.info("Booking created successfully with ID: {}", booking.getBookingId());
     }
 
@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
         if (Objects.isNull(booking)) {
             throw new ServiceException("INVALID_BOOKING_DETAILS_PROVIDED");
         }
-        bookingDao.saveBooking(booking);
+        bookingDao.updateBooking(booking);
         log.info("Booking updated successfully with ID: {}", booking.getBookingId());
     }
 

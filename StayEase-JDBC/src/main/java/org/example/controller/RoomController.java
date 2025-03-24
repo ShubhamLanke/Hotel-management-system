@@ -17,10 +17,9 @@ public class RoomController {
         roomService.addRoom(room);
     }
 
-    public String updateRoom(Room room) {
+    public boolean updateRoom(Room room) {
         Optional<Boolean> result = roomService.updateRoom(room);
-        return result.map(success -> success ? "Room updated successfully!" : "Failed to update room.")
-                .orElse("An error occurred while updating the room.");
+        return result.orElse(false);
     }
 
     public List<Room> getAvailableRooms() {
