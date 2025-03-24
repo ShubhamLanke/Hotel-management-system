@@ -2,10 +2,15 @@ package org.example.service;
 
 import org.example.dao.RoomDao;
 import org.example.entity.Room;
+import org.example.exception.RoomNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 public class RoomServiceImpl implements RoomService {
+    private static final Logger logger = LoggerFactory.getLogger(RoomServiceImpl.class);
     private final RoomDao roomDao;
 
     public RoomServiceImpl(RoomDao roomDao) {
@@ -14,12 +19,37 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void addRoom(Room room) {
+        if (room == null) {
+            throw new IllegalArgumentException("Room cannot be null.");
+        }
+        if (room.getRoomNumber() <= 0) {
+            throw new IllegalArgumentException("Room number must be a positive integer.");
+        }
         roomDao.addRoom(room);
+        logger.info("Room added successfully: {}", room);
     }
 
     @Override
-    public void updateRoom(Room room) {
-        roomDao.updateRoom(room);
+    public Optional<Boolean> updateRoom(Room room) {
+        if (room == null || room.getRoomID() <= 0) {
+            throw new IllegalArgumentException("Room or Room ID is invalid.");
+        }
+        Optional<Room> existingRoom = Optional.ofNullable(roomDao.getRoomById(room.getRoomID()));
+        if (existingRoom.isEmpty()) {
+            return Optional.empty(); // Room doesn't exist
+        }
+        if (room.getRoomNumber() <= 0) {
+            throw new IllegalArgumentException("Room number must be a positive integer.");
+        }
+
+        try {
+            roomDao.updateRoom(room);
+            logger.info("Room updated successfully: {}", room);
+            return Optional.of(true);
+        } catch (Exception e) {
+            logger.error("Failed to update room with ID {}: {}", room.getRoomID(), e.getMessage(), e);
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -34,16 +64,53 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void markRoomUnderMaintenance(int roomId) {
-        roomDao.markRoomUnderMaintenance(roomId);
+        if (roomId <= 0) {
+            throw new IllegalArgumentException("Invalid Room ID.");
+        }
+        Optional<Room> room = Optional.ofNullable(roomDao.getRoomById(roomId));
+        if (room.isEmpty()) {
+            throw new RoomNotFoundException("Room with ID " + roomId + " not found.");
+        }
+
+        try {
+            roomDao.markRoomUnderMaintenance(roomId);
+            logger.info("Room with ID {} marked as under maintenance.", roomId);
+        } catch (Exception e) {
+            logger.error("Failed to mark room with ID {} as under maintenance: {}", roomId, e.getMessage(), e);
+            throw new RuntimeException("Failed to mark room as under maintenance.", e);
+        }
     }
 
     @Override
     public void markRoomAvailable(int roomId) {
-        roomDao.markRoomAvailable(roomId);
+        if (roomId <= 0) {
+            throw new IllegalArgumentException("Invalid Room ID.");
+        }
+        Optional<Room> room = Optional.ofNullable(roomDao.getRoomById(roomId));
+        if (room.isEmpty()) {
+            throw new RoomNotFoundException("Room with ID " + roomId + " not found.");
+        }
+
+        try {
+            roomDao.markRoomAvailable(roomId);
+            logger.info("Room with ID {} marked as available.", roomId);
+        } catch (Exception e) {
+            logger.error("Failed to mark room with ID {} as available: {}", roomId, e.getMessage(), e);
+            throw new RuntimeException("Failed to mark room as available.", e);
+        }
     }
 
     @Override
-    public Room getRoomById(int roomId) {
-        return roomDao.getRoomById(roomId);
+    public Optional<Room> getRoomById(int roomId) {
+        if (roomId <= 0) {
+            throw new IllegalArgumentException("Invalid Room ID.");
+        }
+        Room room = roomDao.getRoomById(roomId);
+        if (room != null) {
+            logger.info("Fetched room with ID {}: {}", roomId, room);
+        } else {
+            logger.warn("Room with ID {} not found.", roomId);
+        }
+        return Optional.ofNullable(room);
     }
 }

@@ -9,8 +9,11 @@ import org.example.utility.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 public class UserDaoImpl implements UserDao {
+    private static final Logger logger = Logger.getLogger(UserDaoImpl.class.getName());
     private final Connection connection = DatabaseConnection.getConnection();
 
     @Override
@@ -24,53 +27,51 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setBoolean(5, user.getUserRole() == UserRole.STAFF ? false : true);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")) {
+            if ("23505".equals(e.getSQLState())) {
                 throw new RuntimeException("Email is already registered!");
             }
-            e.printStackTrace();
+            logger.severe("Error while registering user: " + e.getMessage());
         }
     }
 
     @Override
-    public User loginUser(String email, String password) {
+    public Optional<User> loginUser(String email, String password) {
         String sql = "SELECT * FROM users WHERE email = ? AND password = ? AND is_active = true";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, email);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 UserRole role = UserRole.valueOf(rs.getString("user_role"));
                 boolean isActive = rs.getBoolean("is_active");
 
-                // If the user is a GUEST, fetch accompanied guests
                 if (role == UserRole.GUEST) {
                     List<Guest> guests = getAccompaniedGuests(rs.getInt("user_id"));
-                    return new GuestUser(
+                    return Optional.of(new GuestUser(
                             rs.getInt("user_id"),
                             rs.getString("name"),
                             rs.getString("email"),
                             rs.getString("password"),
                             isActive,
                             guests
-                    );
+                    ));
                 } else {
-                    // If the user is staff/admin, return a regular User object
-                    return new User(
+                    return Optional.of(new User(
                             rs.getInt("user_id"),
                             rs.getString("name"),
                             rs.getString("email"),
                             rs.getString("password"),
                             role,
                             isActive
-                    );
+                    ));
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error during login: " + e.getMessage());
         }
-        return null;
+        return Optional.empty();  // Return empty Optional if user is not found
     }
-
 
     private List<Guest> getAccompaniedGuests(int userId) {
         List<Guest> guests = new ArrayList<>();
@@ -84,43 +85,55 @@ public class UserDaoImpl implements UserDao {
                 guests.add(new Guest(rs.getInt("guest_id"), rs.getString("name"), rs.getInt("age"), userId));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while fetching accompanied guests: " + e.getMessage());
         }
         return guests;
     }
-
-
 
     @Override
     public List<User> getAllStaff() {
         List<User> staffList = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE user_role = 'STAFF'";
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                staffList.add(new User(rs.getInt("user_id"), rs.getString("name"), rs.getString("email"),
-                        rs.getString("password"), UserRole.STAFF, rs.getBoolean("is_active")));
+                staffList.add(new User(
+                        rs.getInt("user_id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        UserRole.STAFF,
+                        rs.getBoolean("is_active")
+                ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while fetching staff: " + e.getMessage());
         }
         return staffList;
     }
 
     @Override
     public List<User> getAllAdmins() {
-        List<User> staffList = new ArrayList<>();
+        List<User> adminList = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE user_role = 'ADMIN'";
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                staffList.add(new User(rs.getInt("user_id"), rs.getString("name"), rs.getString("email"),
-                        rs.getString("password"), UserRole.ADMIN, rs.getBoolean("is_active")));
+                adminList.add(new User(
+                        rs.getInt("user_id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        UserRole.ADMIN,
+                        rs.getBoolean("is_active")
+                ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while fetching admins: " + e.getMessage());
         }
-        return staffList;
+        return adminList;
     }
 
     @Override
@@ -130,45 +143,52 @@ public class UserDaoImpl implements UserDao {
             stmt.setInt(1, userId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while approving staff: " + e.getMessage());
         }
     }
 
     @Override
-    public User getUserById(int userId) {
+    public Optional<User> getUserById(int userId) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt("user_id"),
+                return Optional.of(new User(
+                        rs.getInt("user_id"),
                         rs.getString("name"),
                         rs.getString("email"),
                         rs.getString("password"),
                         UserRole.valueOf(rs.getString("user_role")),
-                        rs.getBoolean("is_active"));
+                        rs.getBoolean("is_active")
+                ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while fetching user by ID: " + e.getMessage());
         }
-        return null;
+        return Optional.empty();  // Return empty Optional if user is not found
     }
 
     @Override
-    public User getUserByEmailId(String emailId) {
+    public Optional<User> getUserByEmailId(String emailId) {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, emailId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt("user_id"), rs.getString("name"), rs.getString("email"),
-                        rs.getString("password"), UserRole.valueOf(rs.getString("user_role")),
-                        rs.getBoolean("is_active"));
+                return Optional.of(new User(
+                        rs.getInt("user_id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        UserRole.valueOf(rs.getString("user_role")),
+                        rs.getBoolean("is_active")
+                ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while fetching user by email ID: " + e.getMessage());
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -177,12 +197,10 @@ public class UserDaoImpl implements UserDao {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next() && rs.getInt(1) > 0) {
-                    return true;
-                }
+                return rs.next() && rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while checking if email exists: " + e.getMessage());
         }
         return false;
     }
@@ -191,7 +209,6 @@ public class UserDaoImpl implements UserDao {
     public int createUser(User user) {
         String query = "INSERT INTO users (name, email, password, user_role, is_active) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
@@ -210,7 +227,7 @@ public class UserDaoImpl implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while creating user: " + e.getMessage());
         }
         return -1;
     }
@@ -222,7 +239,7 @@ public class UserDaoImpl implements UserDao {
             stmt.setInt(1, user.getUserID());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while updating user to inactive: " + e.getMessage());
         }
     }
 
@@ -234,7 +251,7 @@ public class UserDaoImpl implements UserDao {
             stmt.setInt(2, user.getUserID());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while updating user to active: " + e.getMessage());
         }
     }
 
@@ -247,7 +264,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(3, guest.getAge());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Error while adding accompanied guest: " + e.getMessage());
         }
-   }
+    }
 }

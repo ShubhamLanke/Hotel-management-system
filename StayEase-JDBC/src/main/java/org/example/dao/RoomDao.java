@@ -3,6 +3,7 @@ package org.example.dao;
 import org.example.entity.Room;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomDao {
     void addRoom(Room room);
@@ -17,5 +18,5 @@ public interface RoomDao {
 
     void markRoomAvailable(int roomId);
 
-    Room getRoomById(int roomId);
+    Optional<Room> getRoomById(int roomId);
 }

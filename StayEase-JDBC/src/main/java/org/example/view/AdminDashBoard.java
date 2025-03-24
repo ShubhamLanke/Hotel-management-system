@@ -12,6 +12,7 @@ import org.example.entity.User;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class AdminDashBoard {
@@ -146,7 +147,7 @@ public class AdminDashBoard {
     private void grantOrRevokeAdminAccess() {
         System.out.print("Enter admin email ID to approve or deny: ");
         String email = scanner.nextLine().toLowerCase();
-        User user = userController.getUserByEmail(email); // TODO validate Email & regex pattern
+        Optional<User> user = userController.getUserByEmail(email); // TODO validate Email & regex pattern
 
         if (user != null) {
             System.out.println("Grant or Revoke Admin access? (g/r): ");

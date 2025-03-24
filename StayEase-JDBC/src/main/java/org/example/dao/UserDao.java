@@ -4,11 +4,12 @@ import org.example.entity.Guest;
 import org.example.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao {
     void registerUser(User user);
 
-    User loginUser(String email, String password);
+    Optional<User> loginUser(String email, String password);
 
     List<User> getAllStaff();
 
@@ -16,9 +17,9 @@ public interface UserDao {
 
     void approveStaff(int userId);
 
-    User getUserById(int userId);
+    Optional<User> getUserById(int userId);
 
-    User getUserByEmailId(String email);
+    Optional<User> getUserByEmailId(String email);
 
     boolean isEmailExists(String email);
 

@@ -3,11 +3,12 @@ package org.example.service;
 import org.example.entity.Room;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomService {
     void addRoom(Room room);
 
-    void updateRoom(Room room);
+    Optional<Boolean> updateRoom(Room room);
 
     List<Room> getAvailableRooms();
 
@@ -17,5 +18,5 @@ public interface RoomService {
 
     void markRoomAvailable(int roomId);
 
-    Room getRoomById(int roomId);
+    Optional<Room> getRoomById(int roomId);
 }

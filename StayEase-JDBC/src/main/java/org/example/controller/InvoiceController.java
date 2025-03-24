@@ -23,7 +23,6 @@ public class InvoiceController {
 
     public void updatePaymentStatus(int invoiceId, PaymentStatus status) { // TODO response model implement
         invoiceService.updatePaymentStatus(invoiceId, status);
-        System.out.println("Payment status updated!");
     }
 
     public Invoice getInvoiceById(int invoiceId) {

@@ -5,6 +5,7 @@ import org.example.entity.User;
 import org.example.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserController {
     private final UserService userService;
@@ -17,16 +18,17 @@ public class UserController {
         userService.registerUser(user);
     }
 
-    public User getUserById(int userId) {
+    public Optional<User> getUserById(int userId) {
         return userService.getUserById(userId);
     }
 
-    public User getUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         return userService.getUserByEmail(email);
     }
 
     public boolean authenticateUser(String email, String password) {
-        return userService.authenticateUser(email, password);
+        Optional<Boolean> result = userService.authenticateUser(email, password);
+        return result.orElse(false);
     }
 
     public boolean isEmailExists(String email) {
