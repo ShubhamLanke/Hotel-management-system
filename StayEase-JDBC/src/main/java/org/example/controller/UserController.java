@@ -1,8 +1,10 @@
 package org.example.controller;
 
+import org.example.constants.ResponseStatus;
 import org.example.entity.Guest;
 import org.example.entity.User;
 import org.example.service.UserService;
+import org.example.utility.Response;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,48 +16,60 @@ public class UserController {
         this.userService = userService;
     }
 
-    public void registerUser(User user) {
+    public Response registerUser(User user) {
         userService.registerUser(user);
+        return new Response(null, ResponseStatus.SUCCESS, "User registered successfully.");
     }
 
-    public Optional<User> getUserById(int userId) {
-        return userService.getUserById(userId);
+    public Response getUserById(int userId) {
+        return userService.getUserById(userId)
+                .map(user -> new Response(user, ResponseStatus.SUCCESS, "User found."))
+                .orElse(new Response(null, ResponseStatus.ERROR, "User not found."));
     }
 
-    public Optional<User> getUserByEmail(String email) {
-        return userService.getUserByEmail(email);
+    public Response getUserByEmail(String email) {
+        return userService.getUserByEmail(email)
+                .map(user -> new Response(user, ResponseStatus.SUCCESS, "User found by email."))
+                .orElse(new Response(null, ResponseStatus.ERROR, "No user found with this email."));
     }
 
-    public boolean authenticateUser(String email, String password) {
-        Optional<Boolean> result = userService.authenticateUser(email, password);
-        return result.orElse(false);
+    public Response authenticateUser(String email, String password) {
+        boolean result = userService.authenticateUser(email, password);
+        return new Response(result, ResponseStatus.SUCCESS, "User authentication successful.");
     }
 
-    public boolean isEmailExists(String email) {
-        return userService.isEmailExists(email);
+    public Response isEmailExists(String email) {
+        boolean exists = userService.isEmailExists(email);
+        return new Response(exists, ResponseStatus.SUCCESS, exists ? "Email exists." : "Email does not exist.");
     }
 
-    public int createUser(User user) {
-        return userService.createUser(user);
+    public Response createUser(User user) {
+        int userId = userService.createUser(user);
+        return new Response(userId, ResponseStatus.SUCCESS, "User created successfully with ID: " + userId);
     }
 
-    public void updateUserToInactive(User user) {
+    public Response updateUserToInactive(User user) {
         userService.updateUserToInactive(user);
+        return new Response(null, ResponseStatus.SUCCESS, "User marked as inactive.");
     }
 
-    public void updateUserToActive(User user) {
+    public Response updateUserToActive(User user) {
         userService.updateUserToActive(user);
+        return new Response(null, ResponseStatus.SUCCESS, "User marked as active.");
     }
 
-    public List<User> getAllStaff() {
-        return userService.getAllStaff();
+    public Response getAllStaff() {
+        List<User> staffList = userService.getAllStaff();
+        return new Response(staffList, ResponseStatus.SUCCESS, "Staff list retrieved successfully.");
     }
 
-    public List<User> getAllAdmins() {
-        return userService.getAllAdmins();
+    public Response getAllAdmins() {
+        List<User> adminList = userService.getAllAdmins();
+        return new Response(adminList, ResponseStatus.SUCCESS, "Admin list retrieved successfully.");
     }
 
-    public void addAccompaniedGuest(Guest guest) {
+    public Response addAccompaniedGuest(Guest guest) {
         userService.addAccompaniedGuest(guest);
+        return new Response(null, ResponseStatus.SUCCESS, "Guest added successfully.");
     }
 }

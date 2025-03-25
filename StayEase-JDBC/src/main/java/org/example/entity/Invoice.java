@@ -1,9 +1,13 @@
 package org.example.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.constants.PaymentStatus;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 public class Invoice {
     private Integer invoiceId;
     private Integer bookingId;
@@ -21,65 +25,18 @@ public class Invoice {
         this.paymentStatus = paymentStatus;
     }
 
-    public Integer getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(Integer invoiceId) {
-        this.invoiceId = invoiceId;
-    }
-
-    public Integer getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(Integer bookingId) {
-        this.bookingId = bookingId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public LocalDateTime getIssueDate() {
-        return issueDate;
-    }
-
-    public void setIssueDate(LocalDateTime issueDate) {
-        this.issueDate = issueDate;
-    }
-
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
     @Override
     public String toString() {
-        return String.format(
-                "\n---------- INVOICE ----------\n" +
-                        "Invoice ID     : %d\n" +
-                        "Booking ID     : %d\n" +
-                        "User ID        : %d\n" +
-                        "Amount         : Rs.%.2f\n" +
-                        "Issue Date     : %s\n" +
-                        "Payment Status : %s\n" +
-                        "------------------------------\n",
+        return String.format("""
+            ---------- INVOICE ----------
+            Invoice ID     : %d
+            Booking ID     : %d
+            User ID        : %d
+            Amount         : Rs.%.2f
+            Issue Date     : %s
+            Payment Status : %s
+            ------------------------------
+            """,
                 invoiceId,
                 bookingId,
                 userId,

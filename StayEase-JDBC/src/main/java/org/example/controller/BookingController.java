@@ -18,36 +18,52 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    public void createBooking(Booking booking) {
+    public Response createBooking(Booking booking) {
         bookingService.createBooking(booking);
+        return new Response(booking, ResponseStatus.SUCCESS, "Booking created successfully!");
     }
 
-    public void updateBooking(Booking booking) {
+    public Response updateBooking(Booking booking) {
         bookingService.updateBooking(booking);
+        return new Response(booking, ResponseStatus.SUCCESS, "Booking updated successfully!");
     }
 
-    public boolean cancelBooking(int bookingId) {
-        return bookingService.cancelBooking(bookingId);
+    public Response cancelBooking(int bookingId) {
+        boolean isCancelled = bookingService.cancelBooking(bookingId);
+        if (isCancelled) {
+            return new Response(null, ResponseStatus.SUCCESS, "Booking cancelled successfully!");
+        } else {
+            return new Response(null, ResponseStatus.ERROR, "Failed to cancel booking. Booking ID may not exist.");
+        }
     }
 
     public Response getBookingById(int bookingId) {
         return bookingService.getBookingById(bookingId)
                 .map(booking -> new Response(booking, ResponseStatus.SUCCESS, "Booking found!"))
-                .orElse(new Response(null, ResponseStatus.ERROR,"Booking not found!"));
+                .orElse(new Response(null, ResponseStatus.ERROR, "Booking not found!"));
     }
 
-
     public Response getBookingsByUser(int userId) {
-        return bookingService.getBookingsByUser(userId);
+        List<Booking> bookings = bookingService.getBookingsByUser(userId);
+        if (!bookings.isEmpty()) {
+            return new Response(bookings, ResponseStatus.SUCCESS, "Bookings found for user ID: " + userId);
+        } else {
+            return new Response(null, ResponseStatus.ERROR, "No bookings found for user ID: " + userId);
+        }
     }
 
     public Response getConfirmedBookingByUserId(int loggedInGuest) {
         return bookingService.getConfirmedBookingByUserId(loggedInGuest)
                 .map(booking -> new Response(booking, ResponseStatus.SUCCESS, "Confirmed booking found!"))
-                .orElse(new Response(null, ResponseStatus.ERROR, "Booking not found!"));
+                .orElse(new Response(null, ResponseStatus.ERROR, "No confirmed booking found!"));
     }
 
-    public List<Booking> getAllBookings() {
-        return bookingService.getAllBookings();
+    public Response getAllBookings() {
+        List<Booking> bookings = bookingService.getAllBookings();
+        if (!bookings.isEmpty()) {
+            return new Response(bookings, ResponseStatus.SUCCESS, "All bookings retrieved successfully!");
+        } else {
+            return new Response(null, ResponseStatus.ERROR, "No bookings available.");
+        }
     }
 }

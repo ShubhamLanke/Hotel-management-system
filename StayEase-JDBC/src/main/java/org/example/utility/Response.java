@@ -1,8 +1,9 @@
 package org.example.utility;
 
+import lombok.Getter;
 import org.example.constants.ResponseStatus;
-import org.example.entity.Booking;
 
+@Getter
 public class Response {
     private final Object data;
     private final ResponseStatus status;
@@ -14,15 +15,4 @@ public class Response {
         this.message = message;
     }
 
-    public Booking getObjectResponse() {
-        return data;
-    }
-
-    public ResponseStatus getStatus() {
-        return status;
-    }
-
-    public String getMessage(){
-        return message;
-    }
 }

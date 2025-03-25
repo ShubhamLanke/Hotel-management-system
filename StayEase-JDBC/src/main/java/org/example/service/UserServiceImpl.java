@@ -47,18 +47,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Boolean> authenticateUser(String email, String password) {
+    public boolean authenticateUser(String email, String password) {
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new IllegalArgumentException("Email and password cannot be empty.");
         }
-
-        Optional<Optional<User>> userOpt = Optional.ofNullable(userDao.getUserByEmailId(email));
-
-        return userOpt.map(user -> user.get().getPassword().equals(password));
+        return Optional.ofNullable(userDao.getUserByEmailId(email))
+                .map(user -> user.get().getPassword().equals(password))
+                .orElse(false);
     }
-
-
-
 
     @Override
     public Optional<User> getUserByEmail(String email) {

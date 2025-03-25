@@ -13,7 +13,7 @@ public interface InvoiceService {
 
     List<Invoice> getAllInvoices();
 
-    void updatePaymentStatus(int invoiceId, PaymentStatus status);
+    boolean updatePaymentStatus(int invoiceId, PaymentStatus status);
 
     Optional<Invoice> getInvoiceById(int invoiceId);
 

@@ -1,5 +1,10 @@
 package org.example.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class Guest {
     private Integer guestId;
     private String name;
@@ -12,38 +17,6 @@ public class Guest {
         this.guestId = guestId;
         this.name = name;
         this.age = age;
-        this.userId = userId;
-    }
-
-    public Integer getGuestId() {
-        return guestId;
-    }
-
-    public void setGuestId(Integer guestId) {
-        this.guestId = guestId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

@@ -40,7 +40,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void updatePaymentStatus(int invoiceId, PaymentStatus status) {
+    public boolean updatePaymentStatus(int invoiceId, PaymentStatus status) {
         if (invoiceId <= 0) {
             throw new ServiceException("Invalid invoice ID.");
         }
@@ -48,6 +48,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             throw new ServiceException("Payment status cannot be null.");
         }
         invoiceDao.updatePaymentStatus(invoiceId, status);
+        return false;
     }
 
     @Override

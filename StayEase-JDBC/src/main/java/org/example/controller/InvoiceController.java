@@ -27,14 +27,15 @@ public class InvoiceController {
                 .orElse(new Response(null, ResponseStatus.ERROR, "No invoice found for booking ID: " + bookingId));
     }
 
-    public Response updatePaymentStatus(int invoiceId, PaymentStatus status) { // Implemented response model
+    public Response updatePaymentStatus(int invoiceId, PaymentStatus status) {
         boolean isUpdated = invoiceService.updatePaymentStatus(invoiceId, status);
         if (isUpdated) {
-            return new Response(null, ResponseStatus.SUCCESS, "Payment status updated successfully for invoice ID: " + invoiceId);
+            return new Response(null, ResponseStatus.SUCCESS, "Payment status updated successfully for Invoice ID: " + invoiceId);
         } else {
-            return new Response(null, ResponseStatus.ERROR, "Failed to update payment status. Invoice ID: " + invoiceId + " may not exist.");
+            return new Response(null, ResponseStatus.ERROR, "Failed to update payment status. Invoice ID may not exist.");
         }
     }
+
 
     public Response getInvoiceById(int invoiceId) { // Implemented response model
         return invoiceService.getInvoiceById(invoiceId)

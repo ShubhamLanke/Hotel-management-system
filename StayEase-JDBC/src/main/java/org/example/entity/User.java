@@ -1,7 +1,12 @@
 package org.example.entity;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.constants.UserRole;
 
+@Getter
+@Setter
 public class User {
 
     private Integer userID;
@@ -21,54 +26,6 @@ public class User {
         this.password = password;
         this.userRole = userRole;
         this.isActive = isActive;
-    }
-
-    public Integer getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Integer userID) {
-        this.userID = userID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     @Override

@@ -15,7 +15,7 @@ public interface UserService {
 
     List<User> getAllAdmins();
 
-    Optional<Boolean> authenticateUser(String email, String password);
+    boolean authenticateUser(String email, String password);
 
     Optional<User> getUserByEmail(String email);
 

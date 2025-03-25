@@ -1,7 +1,12 @@
 package org.example.entity;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.constants.RoomType;
 
+@Getter
+@Setter
 public class Room {
 
     private Integer roomID;
@@ -19,46 +24,6 @@ public class Room {
         this.roomType = roomType;
         this.price = price;
         this.isAvailable = isAvailable;
-    }
-
-    public Integer getRoomID() {
-        return roomID;
-    }
-
-    public void setRoomID(Integer roomID) {
-        this.roomID = roomID;
-    }
-
-    public int getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(int roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public RoomType getRoomType() {
-        return roomType;
-    }
-
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
     }
 
     @Override

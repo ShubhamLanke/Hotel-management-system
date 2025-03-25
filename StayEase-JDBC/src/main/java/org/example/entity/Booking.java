@@ -1,9 +1,13 @@
 package org.example.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.constants.BookingStatus;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 public class Booking {
     private Integer bookingId;
     private Integer userId;
@@ -21,54 +25,6 @@ public class Booking {
         this.roomId = roomId;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
-        this.status = status;
-    }
-
-    public Integer getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(Integer bookingId) {
-        this.bookingId = bookingId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(Integer roomId) {
-        this.roomId = roomId;
-    }
-
-    public LocalDateTime getCheckIn() {
-        return checkIn;
-    }
-
-    public void setCheckIn(LocalDateTime checkIn) {
-        this.checkIn = checkIn;
-    }
-
-    public LocalDateTime getCheckOut() {
-        return checkOut;
-    }
-
-    public void setCheckOut(LocalDateTime checkOut) {
-        this.checkOut = checkOut;
-    }
-
-    public BookingStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(BookingStatus status) {
         this.status = status;
     }
 

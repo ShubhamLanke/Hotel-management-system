@@ -3,6 +3,7 @@ package org.example.view;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.constants.ResponseStatus;
 import org.example.constants.UserRole;
 import org.example.controller.BookingController;
 import org.example.controller.InvoiceController;
@@ -11,12 +12,14 @@ import org.example.controller.UserController;
 import org.example.entity.Booking;
 import org.example.entity.Room;
 import org.example.entity.User;
+import org.example.utility.Response;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.awt.print.Book;
+import java.util.*;
 import java.util.regex.Pattern;
+
+import static org.example.constants.ResponseStatus.ERROR;
+import static org.example.constants.ResponseStatus.SUCCESS;
 
 public class AdminDashBoard {
     private final RoomController roomController;
@@ -26,7 +29,7 @@ public class AdminDashBoard {
 
     private static final Logger log = LogManager.getLogger(AdminDashBoard.class);
     private final Scanner scanner;
-    private User loggedInAdmin;
+//    private User loggedInAdmin;
 
 
     public AdminDashBoard(RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, Scanner scanner) {
@@ -37,9 +40,9 @@ public class AdminDashBoard {
         this.scanner = scanner;
     }
 
-    public void setLoggedInAdmin(User admin) {
-        this.loggedInAdmin = admin;
-    }
+//    public void setLoggedInAdmin(User admin) {
+//        this.loggedInAdmin = admin;
+//    }
 
     public void displaySuperAdminMenu(User loggedInSuperAdmin) {
         if (loggedInSuperAdmin == null || loggedInSuperAdmin.getUserRole() != UserRole.SUPER_ADMIN) {
@@ -127,12 +130,15 @@ public class AdminDashBoard {
     private void getAllAdmins() {
         log.info("Fetching all admin users.");
 
-        List<User> users = userController.getAllAdmins();
-
-        if (users.isEmpty()) {
-            log.warn("No admin users found.");
-            System.out.println("No users found.");
+        Response userResponse = userController.getAllAdmins(); // No generics
+        if (userResponse.getStatus().equals(ERROR)) {
             return;
+        }
+
+        List<User> users = (List<User>) userResponse.getData();
+        if (Objects.isNull(users)) {
+            log.warn("No admin users found!");
+            System.out.println("No admin users found!");
         }
 
         System.out.println("====================================================================================");
@@ -167,10 +173,10 @@ public class AdminDashBoard {
             return;
         }
 
-        Optional<User> userOpt = userController.getUserByEmail(email);
+        Response userResponse = userController.getUserByEmail(email);
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
+        if (userResponse.getStatus().equals(SUCCESS)) {
+            User user = (User) userResponse.getData();
             System.out.print("Grant or Revoke Admin access? (g/r): ");
             String input = scanner.next().trim().toLowerCase();
 
@@ -258,9 +264,9 @@ public class AdminDashBoard {
     }
 
     private void viewAvailableRooms() {
-        List<Room> availableRooms = roomController.getAvailableRooms();
+        Response roomResponse = roomController.getAvailableRooms();
 
-        if (availableRooms.isEmpty()) {
+        if (roomResponse.getStatus().equals(ERROR)) {
             log.info("No available rooms found.");
             System.out.println("\nNo available rooms found.");
             return;
@@ -271,6 +277,7 @@ public class AdminDashBoard {
                 "Room ID", "Room Number", "Room Type", "Price", "Available");
         System.out.println("================================================================");
 
+        List<Room> availableRooms = (List<Room>) roomResponse.getData();
         availableRooms.forEach(room -> System.out.printf("%-10d %-15d %-15s Rs.%-9.2f %-15s%n",
                 room.getRoomID(),
                 room.getRoomNumber(),
@@ -283,26 +290,28 @@ public class AdminDashBoard {
     }
 
     private void viewAllBookings() {
-        List<Booking> bookings = bookingController.getAllBookings();
-        if (bookings.isEmpty()) {
+        Response bookingResponse = bookingController.getAllBookings();
+        if (bookingResponse.getStatus().equals(ERROR)) {
             System.out.println("\nNo bookings found.");
-        } else {
-            System.out.println("\n=================================================================================================");
-            System.out.printf("%-10s %-10s %-10s %-25s %-25s %-15s%n",
-                    "BookingID", "UserID", "RoomID", "Check-In", "Check-Out", "Status");
-            System.out.println("=================================================================================================");
-
-            for (Booking booking : bookings) {
-                System.out.printf("%-10d %-10d %-10d %-25s %-25s %-15s%n",
-                        booking.getBookingId(),
-                        booking.getUserId(),
-                        booking.getRoomId(),
-                        booking.getCheckIn().toString(),
-                        booking.getCheckOut().toString(),
-                        booking.getStatus().toString());
-            }
-            System.out.println("-------------------------------------------------------------------------------------------------");
+            return;
         }
+        System.out.println("\n=================================================================================================");
+        System.out.printf("%-10s %-10s %-10s %-25s %-25s %-15s%n",
+                "BookingID", "UserID", "RoomID", "Check-In", "Check-Out", "Status");
+        System.out.println("=================================================================================================");
+
+        List<Booking> bookings = (List<Booking>) bookingResponse.getData();
+
+        for (Booking booking : bookings) {
+            System.out.printf("%-10d %-10d %-10d %-25s %-25s %-15s%n",
+                    booking.getBookingId(),
+                    booking.getUserId(),
+                    booking.getRoomId(),
+                    booking.getCheckIn().toString(),
+                    booking.getCheckOut().toString(),
+                    booking.getStatus().toString());
+        }
+        System.out.println("-------------------------------------------------------------------------------------------------");
     }
 
     private void manageStaffs() {
@@ -340,8 +349,9 @@ public class AdminDashBoard {
         }
     }
 
+
     private void getAllStaff() {
-        List<User> users = userController.getAllStaff();
+        Response users = userController.getAllStaff();
         if (users.isEmpty()) {
             System.out.println("\nNo users found.");
         } else {
@@ -360,6 +370,11 @@ public class AdminDashBoard {
             System.out.println("------------------------------------------------------------------------------------");
         }
     }
+
+    private void getAllStaff() {
+
+    }
+
 
     private void approveOrDenyStaffRegistration() {
         System.out.print("Enter staff email ID to approve or deny: ");
