@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.constants.BookingStatus;
 import org.example.dao.BookingDao;
 import org.example.entity.Booking;
 import org.example.exception.BookingNotFoundException;

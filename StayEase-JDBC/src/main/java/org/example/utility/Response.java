@@ -15,4 +15,7 @@ public class Response {
         this.message = message;
     }
 
+    public boolean isSuccess(){
+        return status.equals(ResponseStatus.SUCCESS);
+    }
 }

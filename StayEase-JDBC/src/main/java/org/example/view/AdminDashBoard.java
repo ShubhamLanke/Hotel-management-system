@@ -351,28 +351,25 @@ public class AdminDashBoard {
 
 
     private void getAllStaff() {
-        Response users = userController.getAllStaff();
-        if (users.isEmpty()) {
+        Response userResponse = userController.getAllStaff();
+        List<User> users = (List<User>) userResponse.getData();
+        if (userResponse.getStatus().equals(ERROR)) {
             System.out.println("\nNo users found.");
-        } else {
-            System.out.println("\n======================================================================================");
-            System.out.printf("%-10s %-20s %-30s %-15s %-10s%n", "User ID", "Name", "Email", "Role", "Active");
-            System.out.println("======================================================================================");
-
-            for (User user : users) {
-                System.out.printf("%-10d %-20s %-30s %-15s %-10s%n",
-                        user.getUserID(),
-                        user.getName(),
-                        user.getEmail(),
-                        user.getUserRole().toString(),
-                        user.isActive() ? "Yes" : "No");
-            }
-            System.out.println("------------------------------------------------------------------------------------");
+            return;
         }
-    }
+        System.out.println("\n======================================================================================");
+        System.out.printf("%-10s %-20s %-30s %-15s %-10s%n", "User ID", "Name", "Email", "Role", "Active");
+        System.out.println("======================================================================================");
 
-    private void getAllStaff() {
-
+        for (User user : users) {
+            System.out.printf("%-10d %-20s %-30s %-15s %-10s%n",
+                    user.getUserID(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getUserRole().toString(),
+                    user.isActive() ? "Yes" : "No");
+        }
+        System.out.println("------------------------------------------------------------------------------------");
     }
 
 
@@ -385,28 +382,27 @@ public class AdminDashBoard {
             System.out.println("Invalid email format. Please enter a valid email.");
             return;
         }
-
-        Optional<User> optionalUser = userController.getUserByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            System.out.print("Approve staff registration? (y/n): ");
-            String input = scanner.nextLine().trim();
-
-            if (input.equalsIgnoreCase("y")) {
-                user.setActive(true);
-                userController.updateUserToActive(user);
-                log.info("Staff registration approved: {}", user.getEmail());
-                System.out.println("Staff " + user.getName() + " registration approved.");
-            } else if (input.equalsIgnoreCase("n")) {
-                log.info("Staff registration denied: {}", user.getEmail());
-                System.out.println("Staff " + user.getName() + " registration denied.");
-            } else {
-                log.warn("Invalid choice entered: {}", input);
-                System.out.println("Invalid option. Please enter 'y' for yes or 'n' for no.");
-            }
-        } else {
+        Response userResponse = userController.getUserByEmail(email);
+        if (userResponse.getStatus().equals(ERROR)) {
             log.error("User not found for email: {}", email);
             System.out.println("User not found.");
+            return;
+        }
+        User user = (User) userResponse.getData();
+        System.out.print("Approve staff registration? (y/n): ");
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase("y")) {
+            user.setActive(true);
+            userController.updateUserToActive(user);
+            log.info("Staff registration approved: {}", user.getEmail());
+            System.out.println("Staff " + user.getName() + " registration approved.");
+        } else if (input.equalsIgnoreCase("n")) {
+            log.info("Staff registration denied: {}", user.getEmail());
+            System.out.println("Staff " + user.getName() + " registration denied.");
+        } else {
+            log.warn("Invalid choice entered: {}", input);
+            System.out.println("Invalid option. Please enter 'y' for yes or 'n' for no.");
         }
     }
 
@@ -414,31 +410,30 @@ public class AdminDashBoard {
         System.out.print("Enter staff email ID to approve or deny: ");
         String email = scanner.nextLine().trim().toLowerCase();
 
-        Optional<User> optionalUser = userController.getUserByEmail(email);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            System.out.println("Grant or Revoke access? (g/r): ");
-            char choice = scanner.next().charAt(0);
-            scanner.nextLine(); // Consume the newline to avoid input issues
-
-            if (choice == 'g' || choice == 'G') {
-                user.setActive(true);
-                userController.updateUserToActive(user);
-                System.out.println(user.getName() + " granted access.");
-                log.info("Access granted to staff: {}", user.getEmail());
-            } else if (choice == 'r' || choice == 'R') {
-                user.setActive(false);
-                userController.updateUserToInactive(user);
-                System.out.println(user.getName() + " access revoked.");
-                log.info("Access revoked for staff: {}", user.getEmail());
-            } else {
-                System.out.println("Invalid option.");
-                log.warn("Invalid input '{}' for granting/revoking access.", choice);
-            }
-        } else {
+        Response userResponse = userController.getUserByEmail(email);
+        if (userResponse.getStatus().equals(ERROR)) {
             System.out.println("User not found.");
             log.warn("User with email '{}' not found.", email);
+            return;
+        }
+        User user = (User) userResponse.getData();
+        System.out.println("Grant or Revoke access? (g/r): ");
+        char choice = scanner.next().charAt(0);
+        scanner.nextLine();
+
+        if (choice == 'g' || choice == 'G') {
+            user.setActive(true);
+            userController.updateUserToActive(user);
+            System.out.println(user.getName() + " granted access.");
+            log.info("Access granted to staff: {}", user.getEmail());
+        } else if (choice == 'r' || choice == 'R') {
+            user.setActive(false);
+            userController.updateUserToInactive(user);
+            System.out.println(user.getName() + " access revoked.");
+            log.info("Access revoked for staff: {}", user.getEmail());
+        } else {
+            System.out.println("Invalid option.");
+            log.warn("Invalid input '{}' for granting/revoking access.", choice);
         }
     }
 
@@ -477,11 +472,12 @@ public class AdminDashBoard {
     }
 
     private void markRoomUnderMaintenance() {
-        List<Room> availableRooms = roomController.getAvailableRooms();
-        if (availableRooms.isEmpty()) {
+        Response roomResponse = roomController.getAvailableRooms();
+        if (roomResponse.getStatus().equals(ERROR)) {
             System.out.println("\nNo available rooms found.");
             return;
         }
+        List<Room> availableRooms = (List<Room>) roomResponse.getData();
         System.out.println("\n=================================");
         System.out.println("         Available Rooms         ");
         System.out.println("=================================");
@@ -506,11 +502,13 @@ public class AdminDashBoard {
     }
 
     private void markRoomAsActive() {
-        List<Room> maintenanceRooms = roomController.getRoomsUnderMaintenance();
-        if (maintenanceRooms.isEmpty()) {
+        Response roomResponse = roomController.getRoomsUnderMaintenance();
+        if (roomResponse.getStatus().equals(ERROR)) {
             System.out.println("\nNo rooms under maintenance found.");
             return;
         }
+        List<Room> maintenanceRooms = (List<Room>) roomResponse.getData();
+
         System.out.println("\n=================================");
         System.out.println("     Rooms Under Maintenance     ");
         System.out.println("=================================");
@@ -534,3 +532,4 @@ public class AdminDashBoard {
         }
     }
 }
+
