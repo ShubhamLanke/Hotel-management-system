@@ -13,6 +13,7 @@ import org.example.entity.Booking;
 import org.example.entity.Room;
 import org.example.entity.User;
 import org.example.utility.Response;
+import org.example.utility.Validator;
 
 import java.awt.print.Book;
 import java.util.*;
@@ -167,14 +168,12 @@ public class AdminDashBoard {
         System.out.print("Enter admin email ID to approve or deny: ");
         String email = scanner.nextLine().trim().toLowerCase();
 
-        if (isValidEmail(email)) {
+        if (!Validator.isValidEmail(email)) {
             log.warn("Invalid email format entered: {}", email);
             System.out.println("Invalid email format. Please enter a valid email.");
             return;
         }
-
         Response userResponse = userController.getUserByEmail(email);
-
         if (userResponse.getStatus().equals(SUCCESS)) {
             User user = (User) userResponse.getData();
             System.out.print("Grant or Revoke Admin access? (g/r): ");
@@ -208,11 +207,6 @@ public class AdminDashBoard {
             log.warn("User not found with email: {}", email);
             System.out.println("User not found.");
         }
-    }
-
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        return !Pattern.matches(emailRegex, email);
     }
 
     public void displayAdminMenu(User loggedInAdmin) {
@@ -377,7 +371,7 @@ public class AdminDashBoard {
         System.out.print("Enter staff email ID to approve or deny: ");
         String email = scanner.nextLine().trim().toLowerCase();
 
-        if (isValidEmail(email)) {
+        if (!Validator.isValidEmail(email)) {
             log.warn("Invalid email format entered: {}", email);
             System.out.println("Invalid email format. Please enter a valid email.");
             return;
@@ -410,6 +404,11 @@ public class AdminDashBoard {
         System.out.print("Enter staff email ID to approve or deny: ");
         String email = scanner.nextLine().trim().toLowerCase();
 
+        if (!Validator.isValidEmail(email)) {
+            log.warn("Invalid email format entered: {}", email);
+            System.out.println("Invalid email format. Please enter a valid email.");
+            return;
+        }
         Response userResponse = userController.getUserByEmail(email);
         if (userResponse.getStatus().equals(ERROR)) {
             System.out.println("User not found.");

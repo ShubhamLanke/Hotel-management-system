@@ -2,13 +2,14 @@ package org.example.utility;
 
 import java.util.regex.Pattern;
 
-public class Validation {
+public class Validator {
 
     private static final Pattern MOBILE_PATTERN = Pattern.compile("^[6-9]\\d{9}$");
-    private static final Pattern NAME_PATTERN = Pattern.compile("^[A-Za-z ]+$");
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[A-Za-z]+$");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{4,}$");
 
+    // Ensures a mobile number starts with 6, 7, 8, or 9 and has exactly 10 digits.
     public static boolean isValidMobile(String mobile) {
         return mobile != null && MOBILE_PATTERN.matcher(mobile).matches();
     }

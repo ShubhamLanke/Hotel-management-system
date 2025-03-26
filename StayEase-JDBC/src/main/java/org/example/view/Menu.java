@@ -2,7 +2,6 @@ package org.example.view;
 
 import org.example.constants.BookingStatus;
 import org.example.constants.PaymentStatus;
-import org.example.constants.ResponseStatus;
 import org.example.constants.UserRole;
 import org.example.controller.BookingController;
 import org.example.controller.InvoiceController;
@@ -10,25 +9,25 @@ import org.example.controller.RoomController;
 import org.example.controller.UserController;
 import org.example.entity.*;
 import org.example.utility.Response;
+import org.example.utility.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.print.Book;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static org.example.constants.ResponseStatus.ERROR;
-import static org.example.constants.ResponseStatus.SUCCESS;
 
 public class Menu {
 
     private static final Scanner scanner = new Scanner(System.in);
     private static final Logger log = LoggerFactory.getLogger(Menu.class);
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private Future<?> scheduledTask;
 
     private final RoomController roomController;
     private final UserController userController;
@@ -104,10 +103,25 @@ public class Menu {
     private void registerUser() {
         System.out.print("\nEnter your name: ");
         String name = scanner.nextLine().toUpperCase();
+        if (!Validator.isValidName(name)) {
+            log.warn("Invalid name format entered: {}", name);
+            System.out.println("Invalid name format. Please enter a valid name.");
+            return;
+        }
         System.out.print("Enter your email: ");
         String email = scanner.nextLine().toLowerCase();
+        if (!Validator.isValidEmail(email)) {
+            log.warn("Invalid email format entered: {}", email);
+            System.out.println("Invalid email format. Please enter a valid email.");
+            return;
+        }
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
+        if (!Validator.isValidPassword(password)) {
+            log.warn("Invalid password format entered: {}", email);
+            System.out.println("Invalid password format. Please enter a valid password with At least 1 lowercase, 1 uppercase, 1 digit, 1 special, and 4+ chars.");
+            return;
+        }
         System.out.print("Enter Role (STAFF/GUEST): ");
         String roleInput = scanner.nextLine().toUpperCase();
 
@@ -144,6 +158,11 @@ public class Menu {
     private void loginUser() {
         System.out.print("\nEnter email: ");
         String email = scanner.nextLine().toLowerCase();
+        if (!Validator.isValidEmail(email)) {
+            log.warn("Invalid email format entered: {}", email);
+            System.out.println("Invalid email format. Please enter a valid email.");
+            return;
+        }
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
         Response authenticateUser = userController.authenticateUser(email, password);
@@ -259,6 +278,11 @@ public class Menu {
     public void checkoutByStaff() {
         System.out.println("\nEnter User Email ID for checkout:");
         String userEmail = scanner.nextLine();
+        if (!Validator.isValidEmail(userEmail)) {
+            log.warn("Invalid email format entered: {}", userEmail);
+            System.out.println("Invalid email format. Please enter a valid email.");
+            return;
+        }
 
         Response userResponse = userController.getUserByEmail(userEmail);
         if (!userResponse.isSuccess()) {
@@ -513,6 +537,11 @@ public class Menu {
         log.info("Booking room for a user.");
         System.out.print("Enter user email: ");
         String email = scanner.nextLine();
+        if (!Validator.isValidEmail(email)) {
+            log.warn("Invalid email format entered: {}", email);
+            System.out.println("Invalid email format. Please enter a valid email.");
+            return;
+        }
 
         Response userResponse = userController.getUserByEmail(email);
         User user = (User) userResponse.getData();
@@ -546,8 +575,20 @@ public class Menu {
         System.out.println("User not found! Creating a new user profile...");
         System.out.print("Enter full name: ");
         String name = scanner.nextLine();
+
+        if (!Validator.isValidName(name)) {
+            log.warn("Invalid name format entered: {}", name);
+            System.out.println("Invalid name format. Please enter a valid name.");
+            return null;
+        }
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
+        if (!Validator.isValidPassword(password)) {
+            log.warn("Invalid password format entered: {}", password);
+            System.out.println("Invalid password format. Please enter a valid password.");
+            return null;
+        }
+
         List<Guest> guests = collectGuestDetails();
 
         User newUser = new GuestUser(0, name, email, password, true, guests);
@@ -698,28 +739,48 @@ public class Menu {
         }
     }
 
-    private void scheduleRoomAvailabilityReset(int roomId, LocalDateTime checkOutDate) {
+    //Best use case: When cancellation/modification of the task might be required.
+    public void scheduleRoomAvailabilityReset(int roomId, LocalDateTime checkOutDate) {
         long delay = Duration.between(LocalDateTime.now(), checkOutDate).toMillis();
-//        ExecutorService servuce = Executors.newSingleThread(1);
-//        Future<?> future = service.submit(() -> {
-//
-//        });
 
-//        event base approach
-//        future.cancel(True);
-
-
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.schedule(() -> {
-            Response roomResponse = roomController.getRoomById(roomId);
-            Room room = (Room) roomResponse.getData();
-            if (room != null) {
-                room.setAvailable(true);
-                roomController.updateRoom(room);
-                System.out.println("Room ID " + roomId + " is now available again.");
+        scheduledTask = executorService.submit(() -> {
+            try {
+                Thread.sleep(delay);
+                Response roomResponse = roomController.getRoomById(roomId);
+                Room room = (Room) roomResponse.getData();
+                if (room != null) {
+                    room.setAvailable(true);
+                    roomController.updateRoom(room);
+                    System.out.println("Room ID " + roomId + " is now available again.");
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Room availability reset was cancelled for room ID " + roomId);
+                Thread.currentThread().interrupt(); // Restore interrupt status
             }
-        }, delay, TimeUnit.MILLISECONDS);
+        });
     }
+
+    //For future purpose, when you need to stop the scheduled room availability reset before it executes.
+    public void cancelScheduledReset() {
+        if (scheduledTask != null) {
+            scheduledTask.cancel(true);
+        }
+    }
+
+//    //Best use case: Simple one-time scheduling with no need for cancellation.
+//    private void scheduleRoomAvailabilityReset(int roomId, LocalDateTime checkOutDate) {
+//        long delay = Duration.between(LocalDateTime.now(), checkOutDate).toMillis();
+//        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+//        scheduler.schedule(() -> {
+//            Response roomResponse = roomController.getRoomById(roomId);
+//            Room room = (Room) roomResponse.getData();
+//            if (room != null) {
+//                room.setAvailable(true);
+//                roomController.updateRoom(room);
+//                System.out.println("Room ID " + roomId + " is now available again.");
+//            }
+//        }, delay, TimeUnit.MILLISECONDS);
+//    }
 
     private boolean bookingPaymentChoice() {
         System.out.println("\nDo you want to pay now?");
