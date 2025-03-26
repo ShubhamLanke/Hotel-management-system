@@ -12,3 +12,6 @@
 2025-03-19 12:26:50 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
 2025-03-19 12:27:42 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
 2025-03-26 13:23:32 [main] WARN  Menu - Invalid email format entered: ram
+2025-03-26 13:25:01 [main] WARN  Menu - Invalid email format entered: ram
+2025-03-26 17:57:18 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
+2025-03-26 17:57:18 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
