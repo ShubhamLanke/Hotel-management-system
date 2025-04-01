@@ -41,7 +41,7 @@ public class Menu {
         this.userController = userController;
         this.bookingController = bookingController;
         this.invoiceController = invoiceController;
-        this.adminDashBoard = new AdminDashBoard(roomController, userController, bookingController, invoiceController, scanner);
+        this.adminDashBoard = new AdminDashBoard(roomController, userController, bookingController, invoiceController);
     }
 
     public void displayMainMenu() {
@@ -197,8 +197,7 @@ public class Menu {
 
     private void displayStaffMenu(User loggedInStaff) {
         log.info("Staff menu accessed by: {} (Role: {})", loggedInStaff.getName(), loggedInStaff.getUserRole());
-        if(Boolean.FALSE.equals(loggedInStaff.getUserRole().equals(UserRole.STAFF)))
-        {
+        if (Boolean.FALSE.equals(loggedInStaff.getUserRole().equals(UserRole.STAFF))) {
             System.out.println("Invalid role type!");
             log.error("Invalid role type!");
             return;
@@ -469,10 +468,10 @@ public class Menu {
     public boolean updateRoomAvailability(int roomId, boolean isAvailable) {
         log.info("Attempting to update room availability. Room ID: {}, Availability: {}", roomId, isAvailable);
         Response roomResponse = roomController.getRoomById(roomId);
-        Room room  = (Room) roomResponse.getData();
+        Room room = (Room) roomResponse.getData();
         if (room != null) {
             room.setAvailable(isAvailable);
-            Response updateRoomResponse= roomController.updateRoom(room);
+            Response updateRoomResponse = roomController.updateRoom(room);
 
             if (updateRoomResponse.isSuccess()) {
                 log.info("Room ID: {} availability successfully updated to: {}", roomId, isAvailable);

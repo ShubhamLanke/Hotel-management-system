@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import lombok.extern.log4j.Log4j2;
 import org.example.constants.ResponseStatus;
 import org.example.entity.Booking;
 import org.example.service.BookingService;
@@ -9,10 +10,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+@Log4j2
 public class BookingController {
 
     private final BookingService bookingService;
-    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
 
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
@@ -46,9 +47,9 @@ public class BookingController {
     public Response getBookingsByUser(int userId) {
         List<Booking> bookings = bookingService.getBookingsByUser(userId);
         if (!bookings.isEmpty()) {
-            return new Response(bookings, ResponseStatus.SUCCESS, "Bookings found for user ID: " + userId);
+            return new Response(bookings, ResponseStatus.SUCCESS, "Bookings found");
         } else {
-            return new Response(null, ResponseStatus.ERROR, "No bookings found for user ID: " + userId);
+            return new Response(null, ResponseStatus.ERROR, "No bookings found");
         }
     }
 

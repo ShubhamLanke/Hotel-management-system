@@ -35,7 +35,11 @@ public class UserController {
 
     public Response authenticateUser(String email, String password) {
         boolean result = userService.authenticateUser(email, password);
-        return new Response(result, ResponseStatus.SUCCESS, "User authentication successful.");
+        if(result) {
+            return new Response(true, ResponseStatus.SUCCESS, "User authentication successful.");
+        }else{
+            return new Response(false, ResponseStatus.ERROR,"User authentication failed.");
+        }
     }
 
     public Response isEmailExists(String email) {

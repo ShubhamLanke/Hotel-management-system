@@ -1,24 +1,24 @@
 package org.example.service;
 
-import org.example.constants.BookingStatus;
+import lombok.extern.log4j.Log4j2;
 import org.example.dao.BookingDao;
 import org.example.entity.Booking;
+import org.example.entity.User;
 import org.example.exception.BookingNotFoundException;
 import org.example.exception.ServiceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Log4j2
 public class BookingServiceImpl implements BookingService {
     private final BookingDao bookingDao;
-    private static final Logger log = LoggerFactory.getLogger(BookingServiceImpl.class);
+    private final UserService userService;
 
 
-    public BookingServiceImpl(BookingDao bookingDao) {
+    public BookingServiceImpl(BookingDao bookingDao, UserService userService) {
         this.bookingDao = bookingDao;
+        this.userService = userService;
     }
 
     @Override
@@ -64,7 +64,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getBookingsByUser(int userId) {
-        return bookingDao.getBookingsByUser(userId);
+        Optional<User> user = userService.getUserById(userId);
+        Booking booking = (Booking) bookingDao.getBookingsByUser(userId);
+        if(booking == null){
+            throw new ServiceException("No bookings found for" + user.get().getName());
+        }
+        return (List<Booking>) booking;
     }
 
     @Override

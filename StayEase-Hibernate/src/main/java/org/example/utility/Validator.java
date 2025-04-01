@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public class Validator {
 
     private static final Pattern MOBILE_PATTERN = Pattern.compile("^[6-9]\\d{9}$");
-    private static final Pattern NAME_PATTERN = Pattern.compile("^[A-Za-z]+$");
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[A-Za-z]+( [A-Za-z]+)*$");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{4,}$");
 

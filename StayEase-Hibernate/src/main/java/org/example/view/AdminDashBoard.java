@@ -15,9 +15,8 @@ import org.example.entity.User;
 import org.example.utility.Response;
 import org.example.utility.Validator;
 
-import java.awt.print.Book;
+
 import java.util.*;
-import java.util.regex.Pattern;
 
 import static org.example.constants.ResponseStatus.ERROR;
 import static org.example.constants.ResponseStatus.SUCCESS;
@@ -29,16 +28,15 @@ public class AdminDashBoard {
     private final InvoiceController invoiceController;
 
     private static final Logger log = LogManager.getLogger(AdminDashBoard.class);
-    private final Scanner scanner;
+    private final Scanner scanner = new Scanner(System.in);
 //    private User loggedInAdmin;
 
 
-    public AdminDashBoard(RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, Scanner scanner) {
+    public AdminDashBoard(RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController) {
         this.roomController = roomController;
         this.userController = userController;
         this.bookingController = bookingController;
         this.invoiceController = invoiceController;
-        this.scanner = scanner;
     }
 
 //    public void setLoggedInAdmin(User admin) {
@@ -51,7 +49,7 @@ public class AdminDashBoard {
             return;
         }
 
-        while (true) { // TODO update code to generic for accepting options as argument
+        while (true) {
             System.out.println("\n===== Super Admin Dashboard =====");
             System.out.println("Welcome, " + loggedInSuperAdmin.getName() + "!");
             System.out.println("Role: " + loggedInSuperAdmin.getUserRole());

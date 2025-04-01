@@ -1,14 +1,16 @@
 package org.example.entity;
 
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.constants.UserRole;
 
 @Getter
 @Setter
+@Entity
 public class User {
-
+    @Id
     private Integer userID;
     private String name;
     private String email;

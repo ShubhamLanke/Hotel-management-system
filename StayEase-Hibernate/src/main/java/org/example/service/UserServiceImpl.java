@@ -1,5 +1,6 @@
 package org.example.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.example.dao.UserDao;
 import org.example.entity.Guest;
 import org.example.entity.User;
@@ -7,6 +8,7 @@ import org.example.entity.User;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
@@ -51,8 +53,8 @@ public class UserServiceImpl implements UserService {
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new IllegalArgumentException("Email and password cannot be empty.");
         }
-        return Optional.ofNullable(userDao.getUserByEmailId(email))
-                .map(user -> user.get().getPassword().equals(password))
+        return userDao.getUserByEmailId(email)
+                .map(user -> user.getPassword().equals(password))
                 .orElse(false);
     }
 

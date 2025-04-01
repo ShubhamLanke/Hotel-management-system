@@ -1,16 +1,15 @@
 package org.example.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.example.dao.RoomDao;
 import org.example.entity.Room;
 import org.example.exception.RoomNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 public class RoomServiceImpl implements RoomService {
-    private static final Logger logger = LoggerFactory.getLogger(RoomServiceImpl.class);
     private final RoomDao roomDao;
 
     public RoomServiceImpl(RoomDao roomDao) {
@@ -26,7 +25,7 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room number must be a positive integer.");
         }
         roomDao.addRoom(room);
-        logger.info("Room added successfully: {}", room);
+        log.info("Room added successfully: {}", room);
     }
 
     @Override
@@ -44,10 +43,10 @@ public class RoomServiceImpl implements RoomService {
 
         try {
             roomDao.updateRoom(room);
-            logger.info("Room updated successfully: {}", room);
+            log.info("Room updated successfully: {}", room);
             return Optional.of(true);
         } catch (Exception e) {
-            logger.error("Failed to update room with ID {}: {}", room.getRoomID(), e.getMessage(), e);
+            log.error("Failed to update room with ID {}: {}", room.getRoomID(), e.getMessage(), e);
             return Optional.empty();
         }
     }
@@ -74,9 +73,9 @@ public class RoomServiceImpl implements RoomService {
 
         try {
             roomDao.markRoomUnderMaintenance(roomId);
-            logger.info("Room with ID {} marked as under maintenance.", roomId);
+            log.info("Room with ID {} marked as under maintenance.", roomId);
         } catch (Exception e) {
-            logger.error("Failed to mark room with ID {} as under maintenance: {}", roomId, e.getMessage(), e);
+            log.error("Failed to mark room with ID {} as under maintenance: {}", roomId, e.getMessage(), e);
             throw new RuntimeException("Failed to mark room as under maintenance.", e);
         }
     }
@@ -93,9 +92,9 @@ public class RoomServiceImpl implements RoomService {
 
         try {
             roomDao.markRoomAvailable(roomId);
-            logger.info("Room with ID {} marked as available.", roomId);
+            log.info("Room with ID {} marked as available.", roomId);
         } catch (Exception e) {
-            logger.error("Failed to mark room with ID {} as available: {}", roomId, e.getMessage(), e);
+            log.error("Failed to mark room with ID {} as available: {}", roomId, e.getMessage(), e);
             throw new RuntimeException("Failed to mark room as available.", e);
         }
     }
@@ -107,9 +106,9 @@ public class RoomServiceImpl implements RoomService {
         }
         Optional<Room> room = roomDao.getRoomById(roomId);
         if (room.isPresent()) {
-            logger.info("Fetched room with ID {}: {}", roomId, room);
+            log.info("Fetched room with ID {}: {}", roomId, room);
         } else {
-            logger.warn("Room with ID {} not found.", roomId);
+            log.warn("Room with ID {} not found.", roomId);
         }
         return room;
     }

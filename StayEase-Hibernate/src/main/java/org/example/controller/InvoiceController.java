@@ -36,7 +36,6 @@ public class InvoiceController {
         }
     }
 
-
     public Response getInvoiceById(int invoiceId) { // Implemented response model
         return invoiceService.getInvoiceById(invoiceId)
                 .map(invoice -> new Response(invoice, ResponseStatus.SUCCESS, "Invoice found successfully."))

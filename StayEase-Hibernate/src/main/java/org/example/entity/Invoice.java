@@ -1,5 +1,7 @@
 package org.example.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.constants.PaymentStatus;
@@ -8,7 +10,9 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@Entity
 public class Invoice {
+    @Id
     private Integer invoiceId;
     private Integer bookingId;
     private Integer userId;

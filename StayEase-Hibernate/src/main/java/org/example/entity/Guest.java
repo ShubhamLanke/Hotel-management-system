@@ -1,11 +1,15 @@
 package org.example.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Entity
 public class Guest {
+    @Id
     private Integer guestId;
     private String name;
     private int age;
