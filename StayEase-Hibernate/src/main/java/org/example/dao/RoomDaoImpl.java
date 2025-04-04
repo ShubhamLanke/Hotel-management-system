@@ -1,29 +1,25 @@
 package org.example.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.example.entity.Room;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
+import org.example.persistence.PersistenceManager;
 
 import java.util.List;
 import java.util.Optional;
+
 @Log4j2
 public class RoomDaoImpl implements RoomDao {
-    private final SessionFactory sessionFactory;
-
-    public RoomDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Override
+    @Transactional
     public void addRoom(Room room) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.save(room);
-            transaction.commit();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            entityManager.persist(room);
+            entityManager.getTransaction().commit();
             log.info("Room added successfully: {}", room);
         } catch (Exception e) {
             log.error("Error adding room: {}", room, e);
@@ -31,11 +27,12 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
+    @Transactional
     public void updateRoom(Room room) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.update(room);
-            transaction.commit();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            entityManager.merge(room);
+            entityManager.getTransaction().commit();
             log.info("Room updated successfully: {}", room);
         } catch (Exception e) {
             log.error("Error updating room: {}", room, e);
@@ -44,35 +41,38 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public List<Room> getAvailableRooms() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Room> query = session.createQuery("FROM Room WHERE isAvailable = true", Room.class);
-            return query.list();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            TypedQuery<Room> query = entityManager.createQuery(
+                    "SELECT r FROM Room r WHERE r.isAvailable = true", Room.class);
+            return query.getResultList();
         } catch (Exception e) {
             log.error("Error fetching available rooms.", e);
+            return List.of();
         }
-        return List.of();
     }
 
     @Override
     public List<Room> getRoomsUnderMaintenance() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Room> query = session.createQuery("FROM Room WHERE isAvailable = false", Room.class);
-            return query.list();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            TypedQuery<Room> query = entityManager.createQuery(
+                    "SELECT r FROM Room r WHERE r.isAvailable = false", Room.class);
+            return query.getResultList();
         } catch (Exception e) {
             log.error("Error fetching rooms under maintenance.", e);
+            return List.of();
         }
-        return List.of();
     }
 
     @Override
+    @Transactional
     public void markRoomUnderMaintenance(int roomId) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            Room room = session.get(Room.class, roomId);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Room room = entityManager.find(Room.class, roomId);
             if (room != null) {
                 room.setAvailable(false);
-                session.update(room);
-                transaction.commit();
+                entityManager.merge(room);
+                entityManager.getTransaction().commit();
                 log.info("Room with ID {} marked as under maintenance.", roomId);
             }
         } catch (Exception e) {
@@ -81,14 +81,15 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
+    @Transactional
     public void markRoomAvailable(int roomId) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            Room room = session.get(Room.class, roomId);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Room room = entityManager.find(Room.class, roomId);
             if (room != null) {
                 room.setAvailable(true);
-                session.update(room);
-                transaction.commit();
+                entityManager.merge(room);
+                entityManager.getTransaction().commit();
                 log.info("Room with ID {} marked as available.", roomId);
             }
         } catch (Exception e) {
@@ -98,12 +99,12 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public Optional<Room> getRoomById(int roomId) {
-        try (Session session = sessionFactory.openSession()) {
-            Room room = session.get(Room.class, roomId);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            Room room = entityManager.find(Room.class, roomId);
             return Optional.ofNullable(room);
         } catch (Exception e) {
             log.error("Error fetching room with ID {}", roomId, e);
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 }

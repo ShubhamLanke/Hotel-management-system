@@ -1,82 +1,89 @@
 package org.example.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import org.example.constants.PaymentStatus;
 import org.example.entity.Invoice;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+import org.example.persistence.PersistenceManager;
+
 import java.util.List;
 import java.util.Optional;
 
 public class InvoiceDaoImpl implements InvoiceDao {
-    private final SessionFactory sessionFactory;
-
-    public InvoiceDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Override
+    @Transactional
     public int generateInvoice(Invoice invoice) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            int id = (int) session.save(invoice);
-            transaction.commit();
-            return id;
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            entityManager.persist(invoice);
+            entityManager.getTransaction().commit();
+            return invoice.getInvoiceId();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-            return -1;
+            throw new RuntimeException("Error generating invoice", e);
         }
     }
 
     @Override
     public Optional<Invoice> getInvoiceByBookingId(int bookingId) {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Invoice> query = session.createQuery("FROM Invoice WHERE bookingId = :bookingId", Invoice.class);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            TypedQuery<Invoice> query = entityManager.createQuery(
+                    "SELECT i FROM Invoice i WHERE i.bookingId = :bookingId", Invoice.class);
             query.setParameter("bookingId", bookingId);
-            return query.uniqueResultOptional();
+
+            List<Invoice> resultList = query.getResultList();
+            return resultList.stream().findFirst();
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching invoice by booking ID: " + bookingId, e);
         }
     }
 
     @Override
     public Optional<Invoice> getInvoiceById(int invoiceId) {
-        try (Session session = sessionFactory.openSession()) {
-            return Optional.ofNullable(session.get(Invoice.class, invoiceId));
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            Invoice invoice = entityManager.find(Invoice.class, invoiceId);
+            return Optional.ofNullable(invoice);
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching invoice by ID: " + invoiceId, e);
         }
     }
 
     @Override
     public List<Invoice> getAllInvoices() {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Invoice", Invoice.class).list();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            TypedQuery<Invoice> query = entityManager.createQuery("SELECT i FROM Invoice i", Invoice.class);
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching all invoices", e);
         }
     }
 
     @Override
+    @Transactional
     public void updatePaymentStatus(int invoiceId, PaymentStatus status) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            Invoice invoice = session.get(Invoice.class, invoiceId);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Invoice invoice = entityManager.find(Invoice.class, invoiceId);
             if (invoice != null) {
                 invoice.setPaymentStatus(status);
-                session.update(invoice);
+                entityManager.merge(invoice);
             }
-            transaction.commit();
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            throw new RuntimeException("Error updating payment status for invoice ID: " + invoiceId, e);
         }
     }
 
     @Override
     public List<Invoice> getInvoiceByUserId(int userId) {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Invoice> query = session.createQuery("FROM Invoice WHERE userId = :userId", Invoice.class);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            TypedQuery<Invoice> query = entityManager.createQuery(
+                    "SELECT i FROM Invoice i WHERE i.userId = :userId", Invoice.class);
             query.setParameter("userId", userId);
-            return query.list();
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching invoices for user ID: " + userId, e);
         }
     }
 }

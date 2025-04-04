@@ -3,6 +3,11 @@ package org.example;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import lombok.extern.log4j.Log4j2;
+import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -21,45 +26,51 @@ import org.example.dao.UserDaoImpl;
 import org.example.service.*;
 import org.example.view.AdminDashBoard;
 import org.example.view.Menu;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.hibernate.service.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
+@Log4j2
 public class Main {
     public static void main(String[] args) {
+        RoomService roomService = new RoomServiceImpl(new RoomDaoImpl());
+        UserService userService = new UserServiceImpl(new UserDaoImpl());
+        BookingService bookingService = new BookingServiceImpl(new BookingDaoImpl(), userService);
+        InvoiceService invoiceService = new InvoiceServiceImpl(new InvoiceDaoImpl());
 
+        RoomController roomController = new RoomController(roomService);
+        UserController userController = new UserController(userService);
+        BookingController bookingController = new BookingController(bookingService);
+        InvoiceController invoiceController = new InvoiceController(invoiceService);
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit");
-        EntityManager entityManager = emf.createEntityManager();;
-        try {
-            entityManager.getTransaction().begin();
+        AdminDashBoard adminDashBoard = new AdminDashBoard( roomController, userController, bookingController, invoiceController);
 
-            Product product =new Product();
-            product.setId(101);
-            product.setName("Smartphone");
+        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard);
+        menu.displayMainMenu();
 
-            entityManager.persist(product);
-            entityManager.getTransaction().commit();
-        } finally {
-            entityManager.close();
-        }
-
-//        RoomService roomService = new RoomServiceImpl(new RoomDaoImpl());
-//        UserService userService = new UserServiceImpl(new UserDaoImpl());
-//        BookingService bookingService = new BookingServiceImpl(new BookingDaoImpl(), userService);
-//        InvoiceService invoiceService = new InvoiceServiceImpl(new InvoiceDaoImpl());
+//        Map<String, String> properties = new HashMap<>();
+//        properties.put("hibernate.show_sql", "true");
+//        properties.put("hibernate.hbm2ddl.auto", "create");
 //
-//        RoomController roomController = new RoomController(roomService);
-//        UserController userController = new UserController(userService);
-//        BookingController bookingController = new BookingController(bookingService);
-//        InvoiceController invoiceController = new InvoiceController(invoiceService);
+////        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit")) {
 //
-//        AdminDashBoard adminDashBoard = new AdminDashBoard( roomController, userController, bookingController, invoiceController);
+//        try (EntityManagerFactory emf = new HibernatePersistenceProvider()
+//                .createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), properties)) {
 //
-//        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard);
-//        menu.displayMainMenu();
-
+//            try (EntityManager entityManager = emf.createEntityManager()) { // Use try-with-resources for EntityManager
+//                entityManager.getTransaction().begin();
+//
+//                var v1 = new Product();
+//                v1.setName("CPU");
+//                entityManager.persist(v1);
+//                entityManager.getTransaction().commit();
+//            }
+//        }
     }
 }

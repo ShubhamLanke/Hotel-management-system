@@ -1,138 +1,151 @@
 package org.example.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.example.entity.Guest;
 import org.example.entity.User;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+import org.example.persistence.PersistenceManager;
 
 import java.util.List;
 import java.util.Optional;
 
 @Log4j2
 public class UserDaoImpl implements UserDao {
-    private final SessionFactory sessionFactory;
-
-    public UserDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Override
+    @Transactional
     public void registerUser(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.save(user);
-            transaction.commit();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            entityManager.persist(user);
+            entityManager.getTransaction().commit();
+            log.info("User registered successfully: {}", user);
         } catch (Exception e) {
-            log.error("Error while registering user: " + e.getMessage());
+            log.error("Error while registering user: {}", e.getMessage(), e);
             throw new RuntimeException("Email is already registered!");
         }
     }
 
     @Override
     public Optional<User> loginUser(String email, String password) {
-        try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("FROM User WHERE email = :email AND password = :password AND isActive = true", User.class);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            TypedQuery<User> query = entityManager.createQuery(
+                    "FROM User WHERE email = :email AND password = :password AND isActive = true", User.class);
             query.setParameter("email", email);
             query.setParameter("password", password);
-            User user = query.uniqueResult();
-            return Optional.ofNullable(user);
+            return Optional.ofNullable(query.getSingleResult());
         } catch (Exception e) {
-            log.error("Error during login: " + e.getMessage());
+            log.error("Error during login: {}", e.getMessage(), e);
             return Optional.empty();
         }
     }
 
     @Override
     public List<User> getAllStaff() {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM User WHERE userRole = 'STAFF'", User.class).list();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            return entityManager.createQuery("FROM User WHERE userRole = 'STAFF'", User.class).getResultList();
         }
     }
 
     @Override
     public List<User> getAllAdmins() {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM User WHERE userRole = 'ADMIN'", User.class).list();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            return entityManager.createQuery("FROM User WHERE userRole = 'ADMIN'", User.class).getResultList();
         }
     }
 
     @Override
+    @Transactional
     public void approveStaff(int userId) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            User user = session.get(User.class, userId);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            User user = entityManager.find(User.class, userId);
             if (user != null) {
                 user.setActive(true);
-                session.update(user);
+                entityManager.merge(user);
+                entityManager.getTransaction().commit();
+                log.info("User with ID {} approved as staff.", userId);
             }
-            transaction.commit();
+        } catch (Exception e) {
+            log.error("Error approving staff with ID {}: {}", userId, e.getMessage(), e);
         }
     }
 
     @Override
     public Optional<User> getUserById(int userId) {
-        try (Session session = sessionFactory.openSession()) {
-            return Optional.ofNullable(session.get(User.class, userId));
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            return Optional.ofNullable(entityManager.find(User.class, userId));
         }
     }
 
     @Override
     public Optional<User> getUserByEmailId(String emailId) {
-        try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("FROM User WHERE email = :email", User.class);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            TypedQuery<User> query = entityManager.createQuery("FROM User WHERE email = :email", User.class);
             query.setParameter("email", emailId);
-            return Optional.ofNullable(query.uniqueResult());
+            return Optional.ofNullable(query.getSingleResult());
+        } catch (Exception e) {
+            log.error("Error fetching user by email {}: {}", emailId, e.getMessage(), e);
+            return Optional.empty();
         }
     }
 
     @Override
     public boolean isEmailExists(String email) {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Long> query = session.createQuery("SELECT COUNT(*) FROM User WHERE email = :email", Long.class);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            TypedQuery<Long> query = entityManager.createQuery(
+                    "SELECT COUNT(u) FROM User u WHERE u.email = :email", Long.class);
             query.setParameter("email", email);
-            return query.uniqueResult() > 0;
+            return query.getSingleResult() > 0;
         }
     }
 
     @Override
+    @Transactional
     public int createUser(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            int userId = (int) session.save(user);
-            transaction.commit();
-            return userId;
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            entityManager.persist(user);
+            entityManager.flush();
+            entityManager.getTransaction().commit();
+            return user.getUserID();
+        } catch (Exception e) {
+            log.error("Error creating user: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to create user");
         }
     }
 
     @Override
+    @Transactional
     public void updateUserToInactive(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
             user.setActive(false);
-            session.update(user);
-            transaction.commit();
+            entityManager.merge(user);
+            entityManager.getTransaction().commit();
         }
     }
 
     @Override
+    @Transactional
     public void updateUserToActive(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
             user.setActive(true);
-            session.update(user);
-            transaction.commit();
+            entityManager.merge(user);
+            entityManager.getTransaction().commit();
         }
     }
 
     @Override
+    @Transactional
     public void addAccompaniedGuest(Guest guest) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.save(guest);
-            transaction.commit();
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+            entityManager.persist(guest);
+            entityManager.getTransaction().commit();
         }
     }
 }
