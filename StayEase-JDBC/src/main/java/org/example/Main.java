@@ -19,11 +19,9 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
         RoomService roomService = new RoomServiceImpl(new RoomDaoImpl());
         UserService userService = new UserServiceImpl(new UserDaoImpl());
-        BookingService bookingService = new BookingServiceImpl(new BookingDaoImpl());
+        BookingService bookingService = new BookingServiceImpl(new BookingDaoImpl(), userService);
         InvoiceService invoiceService = new InvoiceServiceImpl(new InvoiceDaoImpl());
 
         RoomController roomController = new RoomController(roomService);
@@ -31,10 +29,9 @@ public class Main {
         BookingController bookingController = new BookingController(bookingService);
         InvoiceController invoiceController = new InvoiceController(invoiceService);
 
-        AdminDashBoard adminDashBoard = new AdminDashBoard( roomController, userController, bookingController, invoiceController, scanner);
+        AdminDashBoard adminDashBoard = new AdminDashBoard( roomController, userController, bookingController, invoiceController);
 
         Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard);
         menu.displayMainMenu();
-
     }
 }
