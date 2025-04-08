@@ -1,18 +1,17 @@
 package org.example.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
 import org.example.constants.PaymentStatus;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
+@Data
 @Entity
+@Table(name = "invoices")
 public class Invoice {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer invoiceId;
     private Integer bookingId;
     private Integer userId;

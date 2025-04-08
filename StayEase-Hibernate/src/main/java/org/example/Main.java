@@ -39,38 +39,45 @@ import java.util.Scanner;
 @Log4j2
 public class Main {
     public static void main(String[] args) {
-        RoomService roomService = new RoomServiceImpl(new RoomDaoImpl());
-        UserService userService = new UserServiceImpl(new UserDaoImpl());
-        BookingService bookingService = new BookingServiceImpl(new BookingDaoImpl(), userService);
-        InvoiceService invoiceService = new InvoiceServiceImpl(new InvoiceDaoImpl());
-
-        RoomController roomController = new RoomController(roomService);
-        UserController userController = new UserController(userService);
-        BookingController bookingController = new BookingController(bookingService);
-        InvoiceController invoiceController = new InvoiceController(invoiceService);
-
-        AdminDashBoard adminDashBoard = new AdminDashBoard( roomController, userController, bookingController, invoiceController);
-
-        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard);
-        menu.displayMainMenu();
-
-//        Map<String, String> properties = new HashMap<>();
-//        properties.put("hibernate.show_sql", "true");
-//        properties.put("hibernate.hbm2ddl.auto", "create");
+//        RoomService roomService = new RoomServiceImpl(new RoomDaoImpl());
+//        UserService userService = new UserServiceImpl(new UserDaoImpl());
+//        BookingService bookingService = new BookingServiceImpl(new BookingDaoImpl(), userService);
+//        InvoiceService invoiceService = new InvoiceServiceImpl(new InvoiceDaoImpl());
 //
-////        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit")) {
+//        RoomController roomController = new RoomController(roomService);
+//        UserController userController = new UserController(userService);
+//        BookingController bookingController = new BookingController(bookingService);
+//        InvoiceController invoiceController = new InvoiceController(invoiceService);
 //
-//        try (EntityManagerFactory emf = new HibernatePersistenceProvider()
-//                .createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), properties)) {
+//        AdminDashBoard adminDashBoard = new AdminDashBoard( roomController, userController, bookingController, invoiceController);
 //
-//            try (EntityManager entityManager = emf.createEntityManager()) { // Use try-with-resources for EntityManager
-//                entityManager.getTransaction().begin();
-//
-//                var v1 = new Product();
-//                v1.setName("CPU");
-//                entityManager.persist(v1);
-//                entityManager.getTransaction().commit();
-//            }
-//        }
+//        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard);
+//        menu.displayMainMenu();
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.hbm2ddl.auto", "create");
+
+//        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit")) {
+
+        try (EntityManagerFactory emf = new HibernatePersistenceProvider()
+                .createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), properties)) {
+
+            try (EntityManager entityManager = emf.createEntityManager()) {
+                entityManager.getTransaction().begin();
+
+                Persons p = new Persons();
+                p.setName("Shubham");
+
+                Passport passport = new Passport();
+                passport.setNumber("SDK214JIT");
+
+                p.setPassport(passport);
+
+                entityManager.persist(p);
+                entityManager.persist(passport);
+                entityManager.getTransaction().commit();
+            }
+        }
     }
 }

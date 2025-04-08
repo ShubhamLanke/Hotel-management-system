@@ -1,23 +1,27 @@
 package org.example.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
 import org.example.constants.BookingStatus;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
+@Data
 @Entity
+@Table(name = "bookings")   
 public class Booking {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer bookingId;
+
     private Integer userId;
+
     private Integer roomId;
+
     private LocalDateTime checkIn;
+
     private LocalDateTime checkOut;
+
     private BookingStatus status;
 
     public Booking() {

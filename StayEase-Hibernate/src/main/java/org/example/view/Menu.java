@@ -151,7 +151,7 @@ public class Menu {
             System.out.println("User Type: " + user.getUserRole());
 
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid role! Please enter either STAFF or GUEST.");
+            log.error("Invalid role! Please enter either STAFF or GUEST.", e);
         }
     }
 

@@ -1,10 +1,3 @@
-2025-04-08 12:48:16 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 12:48:17 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7d1cfb8b
-2025-04-08 12:48:17 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 12:48:17 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 12:48:17 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 12:48:17 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 12:48:18 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-04-08 12:48:19 ERROR RoomDaoImpl - Error fetching available rooms.
 java.lang.IllegalArgumentException: org.hibernate.query.sqm.UnknownEntityException: Could not resolve root entity 'Room'
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:143) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
@@ -41,22 +34,6 @@ Caused by: org.hibernate.query.sqm.UnknownEntityException: Could not resolve roo
 	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:831) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
 	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:882) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
 	... 7 more
-2025-04-08 15:01:18 WARN  Menu - Invalid password format entered: ram@gmail.com
-2025-04-08 15:01:56 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 15:01:56 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@34f22f9d
-2025-04-08 15:01:56 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 15:01:56 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 15:01:56 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 15:01:56 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 15:01:58 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-04-08 15:06:21 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 15:06:24 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@659eef7
-2025-04-08 15:06:24 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 15:06:24 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 15:06:25 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 15:06:25 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 15:06:33 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-04-08 15:07:32 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m7s868ms852µs200ns).
 2025-04-08 15:07:32 ERROR Menu - Invalid role! Please enter either STAFF or GUEST.
 java.lang.IllegalArgumentException: org.hibernate.query.sqm.UnknownEntityException: Could not resolve root entity 'User'
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:143) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
@@ -93,54 +70,3 @@ Caused by: org.hibernate.query.sqm.UnknownEntityException: Could not resolve roo
 	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:831) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
 	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:882) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
 	... 7 more
-2025-04-08 17:23:12 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 17:23:12 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1b7c473a
-2025-04-08 17:23:12 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 17:23:12 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 17:23:12 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 17:23:12 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 17:23:13 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-04-08 17:23:51 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 17:23:51 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1fde5d22
-2025-04-08 17:23:51 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 17:23:51 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 17:23:51 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 17:23:51 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 17:25:58 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 17:25:58 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@53de625d
-2025-04-08 17:25:58 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 17:25:58 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 17:25:58 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 17:25:58 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 17:27:30 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 17:27:31 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6155d082
-2025-04-08 17:27:31 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 17:27:31 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 17:27:31 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 17:27:31 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 17:33:22 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 17:33:22 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@53de625d
-2025-04-08 17:33:22 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 17:33:22 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 17:33:22 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 17:33:22 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 17:36:46 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 17:36:46 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1b7c473a
-2025-04-08 17:36:46 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 17:36:46 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 17:36:47 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 17:36:47 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 17:36:48 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-04-08 17:36:48 WARN  SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
-2025-04-08 17:36:48 WARN  SqlExceptionHelper - table "passport" does not exist, skipping
-2025-04-08 17:37:05 INFO  HikariDataSource - HikariPool-1 - Starting...
-2025-04-08 17:37:06 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@16ce702d
-2025-04-08 17:37:06 INFO  HikariDataSource - HikariPool-1 - Start completed.
-2025-04-08 17:37:06 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
-2025-04-08 17:37:06 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
-2025-04-08 17:37:06 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-04-08 17:37:08 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-04-08 17:37:08 WARN  SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
-2025-04-08 17:37:08 WARN  SqlExceptionHelper - relation "persons" does not exist, skipping
-2025-04-08 17:37:08 WARN  SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
-2025-04-08 17:37:08 WARN  SqlExceptionHelper - table "persons" does not exist, skipping

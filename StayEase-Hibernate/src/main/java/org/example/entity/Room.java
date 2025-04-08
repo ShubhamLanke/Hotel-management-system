@@ -1,17 +1,15 @@
 package org.example.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.example.constants.RoomType;
 
-@Getter
-@Setter
+@Data
 @Entity
+@Table(name = "rooms")
 public class Room {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer roomID;
     private int roomNumber;
     private RoomType roomType;
