@@ -2,6 +2,7 @@ package org.example.dao;
 
 import org.example.constants.PaymentStatus;
 import org.example.entity.Invoice;
+import org.example.entity.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,5 +20,5 @@ public interface InvoiceDao {
 
     Optional<Invoice> getInvoiceById(int invoiceId);
 
-    List<Invoice> getInvoiceByUserId(int userID);
+    List<Invoice> getInvoiceByUserId(User user);
 }

@@ -97,11 +97,11 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
         return List.of(
                 "org.example.Passport",
                 "org.example.Persons",
-                "org/example/entity/User.java",
-                "org/example/entity/Guest.java",
-                "org/example/entity/Booking.java",
-                "org/example/entity/Room.java",
-                "org/example/entity/Invoice.java"
+                "org.example.entity.User",
+                "org.example.entity.Guest",
+                "org.example.entity.Booking",
+                "org.example.entity.Room",
+                "org.example.entity.Invoice"
         );
     }
 

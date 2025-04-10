@@ -65,11 +65,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookingsByUser(int userId) {
         Optional<User> user = userService.getUserById(userId);
-        Booking booking = (Booking) bookingDao.getBookingsByUser(userId);
+        List<Booking> booking = bookingDao.getBookingsByUser(user.get());
         if(booking == null){
             throw new ServiceException("No bookings found for" + user.get().getName());
         }
-        return (List<Booking>) booking;
+        return booking;
     }
 
     @Override

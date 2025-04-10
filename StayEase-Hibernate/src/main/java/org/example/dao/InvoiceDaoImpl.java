@@ -5,6 +5,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.example.constants.PaymentStatus;
 import org.example.entity.Invoice;
+import org.example.entity.User;
 import org.example.persistence.PersistenceManager;
 
 import java.util.List;
@@ -76,14 +77,14 @@ public class InvoiceDaoImpl implements InvoiceDao {
     }
 
     @Override
-    public List<Invoice> getInvoiceByUserId(int userId) {
+    public List<Invoice> getInvoiceByUserId(User user) {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             TypedQuery<Invoice> query = entityManager.createQuery(
-                    "SELECT i FROM Invoice i WHERE i.userId = :userId", Invoice.class);
-            query.setParameter("userId", userId);
+                    "SELECT i FROM Invoice i WHERE i.user = :user", Invoice.class);
+            query.setParameter("user", user);
             return query.getResultList();
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching invoices for user ID: " + userId, e);
+            throw new RuntimeException("Error fetching invoices for user ID: " + user.getUserID(), e);
         }
     }
 }

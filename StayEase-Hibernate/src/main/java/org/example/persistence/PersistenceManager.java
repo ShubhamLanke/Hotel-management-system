@@ -13,7 +13,7 @@ public class PersistenceManager {
 
     static {
         Map<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.show_sql", "true");
+//        properties.put("hibernate.show_sql", "true");
         properties.put("hibernate.hbm2ddl.auto", "update");
 
         CustomPersistenceUnitInfo persistenceUnitInfo = new CustomPersistenceUnitInfo();

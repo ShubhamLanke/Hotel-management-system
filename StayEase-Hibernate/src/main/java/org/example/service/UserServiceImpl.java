@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addAccompaniedGuest(Guest guest) {
-        if (guest == null || guest.getUserId() <= 0) {
+        if (guest == null || guest.getUser().getUserID() <= 0) {
             throw new IllegalArgumentException("Invalid guest details.");
         }
         userDao.addAccompaniedGuest(guest);

@@ -3,6 +3,7 @@ package org.example.service;
 import org.example.constants.PaymentStatus;
 import org.example.dao.InvoiceDao;
 import org.example.entity.Invoice;
+import org.example.entity.User;
 import org.example.exception.ServiceException;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.Optional;
 
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceDao invoiceDao;
+    private final UserService userService;
 
-    public InvoiceServiceImpl(InvoiceDao invoiceDao) {
+    public InvoiceServiceImpl(InvoiceDao invoiceDao, UserService userService) {
         this.invoiceDao = invoiceDao;
+        this.userService = userService;
     }
 
     @Override
@@ -64,6 +67,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (userID <= 0) {
             throw new ServiceException("Invalid user ID.");
         }
-        return invoiceDao.getInvoiceByUserId(userID);
+        Optional<User> user = userService.getUserById(userID);
+        return invoiceDao.getInvoiceByUserId(user.get());
     }
 }

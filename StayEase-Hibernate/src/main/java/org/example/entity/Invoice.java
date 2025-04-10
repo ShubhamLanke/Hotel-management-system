@@ -10,19 +10,36 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "invoices")
 public class Invoice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "invoice_id")
     private Integer invoiceId;
-    private Integer bookingId;
-    private Integer userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", nullable = false)
+    private Booking booking;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     private double amount;
+
+    @Column(name = "issue_date")
     private LocalDateTime issueDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
-    public Invoice(Integer invoiceId, Integer bookingId, Integer userId, double amount, LocalDateTime issueDate, PaymentStatus paymentStatus) {
+    public Invoice() {
+    }
+
+    public Invoice(Integer invoiceId, Booking booking, User user, double amount, LocalDateTime issueDate, PaymentStatus paymentStatus) {
         this.invoiceId = invoiceId;
-        this.bookingId = bookingId;
-        this.userId = userId;
+        this.booking = booking;
+        this.user = user;
         this.amount = amount;
         this.issueDate = issueDate;
         this.paymentStatus = paymentStatus;
@@ -41,8 +58,8 @@ public class Invoice {
             ------------------------------
             """,
                 invoiceId,
-                bookingId,
-                userId,
+                booking != null ? booking.getBookingId() : null,
+                user != null ? user.getUserID() : null,
                 amount,
                 issueDate,
                 paymentStatus

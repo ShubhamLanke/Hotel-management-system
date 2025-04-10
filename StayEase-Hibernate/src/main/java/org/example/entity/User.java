@@ -7,18 +7,32 @@ import org.example.constants.UserRole;
 @Data
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Integer userID;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", nullable = false)
     private UserRole userRole;
+
+    @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
-    public User() {
-    }
+    public User() {}
 
     public User(Integer userID, String name, String email, String password, UserRole userRole, boolean isActive) {
         this.userID = userID;

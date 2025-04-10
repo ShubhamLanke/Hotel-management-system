@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public class UserController {
     private final UserService userService;
+    Response response;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -18,17 +19,17 @@ public class UserController {
 
     public Response registerUser(User user) {
         userService.registerUser(user);
-        return new Response(null, ResponseStatus.SUCCESS, "User registered successfully.");
+        return response = new Response(null, ResponseStatus.SUCCESS, "User registered successfully.");
     }
 
     public Response getUserById(int userId) {
-        return userService.getUserById(userId)
+        return response = userService.getUserById(userId)
                 .map(user -> new Response(user, ResponseStatus.SUCCESS, "User found."))
                 .orElse(new Response(null, ResponseStatus.ERROR, "User not found."));
     }
 
     public Response getUserByEmail(String email) {
-        return userService.getUserByEmail(email)
+        return response = userService.getUserByEmail(email)
                 .map(user -> new Response(user, ResponseStatus.SUCCESS, "User found by email."))
                 .orElse(new Response(null, ResponseStatus.ERROR, "No user found with this email."));
     }
@@ -36,44 +37,44 @@ public class UserController {
     public Response authenticateUser(String email, String password) {
         boolean result = userService.authenticateUser(email, password);
         if(result) {
-            return new Response(true, ResponseStatus.SUCCESS, "User authentication successful.");
+            return response = new Response(true, ResponseStatus.SUCCESS, "User authentication successful.");
         }else{
-            return new Response(false, ResponseStatus.ERROR,"User authentication failed.");
+            return response = new Response(false, ResponseStatus.ERROR,"User authentication failed.");
         }
     }
 
     public Response isEmailExists(String email) {
         boolean exists = userService.isEmailExists(email);
-        return new Response(exists, ResponseStatus.SUCCESS, exists ? "Email exists." : "Email does not exist.");
+        return response = new Response(exists, ResponseStatus.SUCCESS, exists ? "Email exists." : "Email does not exist.");
     }
 
     public Response createUser(User user) {
         int userId = userService.createUser(user);
-        return new Response(userId, ResponseStatus.SUCCESS, "User created successfully with ID: " + userId);
+        return response = new Response(userId, ResponseStatus.SUCCESS, "User created successfully with ID: " + userId);
     }
 
     public Response updateUserToInactive(User user) {
         userService.updateUserToInactive(user);
-        return new Response(null, ResponseStatus.SUCCESS, "User marked as inactive.");
+        return response = new Response(null, ResponseStatus.SUCCESS, "User marked as inactive.");
     }
 
     public Response updateUserToActive(User user) {
         userService.updateUserToActive(user);
-        return new Response(null, ResponseStatus.SUCCESS, "User marked as active.");
+        return response = new Response(null, ResponseStatus.SUCCESS, "User marked as active.");
     }
 
     public Response getAllStaff() {
         List<User> staffList = userService.getAllStaff();
-        return new Response(staffList, ResponseStatus.SUCCESS, "Staff list retrieved successfully.");
+        return response = new Response(staffList, ResponseStatus.SUCCESS, "Staff list retrieved successfully.");
     }
 
     public Response getAllAdmins() {
         List<User> adminList = userService.getAllAdmins();
-        return new Response(adminList, ResponseStatus.SUCCESS, "Admin list retrieved successfully.");
+        return response = new Response(adminList, ResponseStatus.SUCCESS, "Admin list retrieved successfully.");
     }
 
     public Response addAccompaniedGuest(Guest guest) {
         userService.addAccompaniedGuest(guest);
-        return new Response(null, ResponseStatus.SUCCESS, "Guest added successfully.");
+        return response = new Response(null, ResponseStatus.SUCCESS, "Guest added successfully.");
     }
 }

@@ -15,31 +15,33 @@ public class BookingController {
 
     private final BookingService bookingService;
 
+    Response response;
+
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
     public Response createBooking(Booking booking) {
         bookingService.createBooking(booking);
-        return new Response(booking, ResponseStatus.SUCCESS, "Booking created successfully!");
+        return response =  new Response(booking, ResponseStatus.SUCCESS, "Booking created successfully!");
     }
 
     public Response updateBooking(Booking booking) {
         bookingService.updateBooking(booking);
-        return new Response(booking, ResponseStatus.SUCCESS, "Booking updated successfully!");
+        return response = new Response(booking, ResponseStatus.SUCCESS, "Booking updated successfully!");
     }
 
     public Response cancelBooking(int bookingId) {
         boolean isCancelled = bookingService.cancelBooking(bookingId);
         if (isCancelled) {
-            return new Response(null, ResponseStatus.SUCCESS, "Booking cancelled successfully!");
+            return response = new Response(null, ResponseStatus.SUCCESS, "Booking cancelled successfully!");
         } else {
-            return new Response(null, ResponseStatus.ERROR, "Failed to cancel booking. Booking ID may not exist.");
+            return response = new Response(null, ResponseStatus.ERROR, "Failed to cancel booking. Booking ID may not exist.");
         }
     }
 
     public Response getBookingById(int bookingId) {
-        return bookingService.getBookingById(bookingId)
+        return response = bookingService.getBookingById(bookingId)
                 .map(booking -> new Response(booking, ResponseStatus.SUCCESS, "Booking found!"))
                 .orElse(new Response(null, ResponseStatus.ERROR, "Booking not found!"));
     }
@@ -47,14 +49,14 @@ public class BookingController {
     public Response getBookingsByUser(int userId) {
         List<Booking> bookings = bookingService.getBookingsByUser(userId);
         if (!bookings.isEmpty()) {
-            return new Response(bookings, ResponseStatus.SUCCESS, "Bookings found");
+            return response = new Response(bookings, ResponseStatus.SUCCESS, "Bookings found");
         } else {
-            return new Response(null, ResponseStatus.ERROR, "No bookings found");
+            return response = new Response(null, ResponseStatus.ERROR, "No bookings found");
         }
     }
 
     public Response getConfirmedBookingByUserId(int loggedInGuest) {
-        return bookingService.getConfirmedBookingByUserId(loggedInGuest)
+        return response = bookingService.getConfirmedBookingByUserId(loggedInGuest)
                 .map(booking -> new Response(booking, ResponseStatus.SUCCESS, "Confirmed booking found!"))
                 .orElse(new Response(null, ResponseStatus.ERROR, "No confirmed booking found!"));
     }
@@ -62,9 +64,9 @@ public class BookingController {
     public Response getAllBookings() {
         List<Booking> bookings = bookingService.getAllBookings();
         if (!bookings.isEmpty()) {
-            return new Response(bookings, ResponseStatus.SUCCESS, "All bookings retrieved successfully!");
+            return response = new Response(bookings, ResponseStatus.SUCCESS, "All bookings retrieved successfully!");
         } else {
-            return new Response(null, ResponseStatus.ERROR, "No bookings available.");
+            return response = new Response(null, ResponseStatus.ERROR, "No bookings available.");
         }
     }
 }

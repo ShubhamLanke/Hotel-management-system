@@ -297,8 +297,8 @@ public class AdminDashBoard {
         for (Booking booking : bookings) {
             System.out.printf("%-10d %-10d %-10d %-25s %-25s %-15s%n",
                     booking.getBookingId(),
-                    booking.getUserId(),
-                    booking.getRoomId(),
+                    booking.getUser().getUserID(),
+                    booking.getRoom().getRoomID(),
                     booking.getCheckIn().toString(),
                     booking.getCheckOut().toString(),
                     booking.getStatus().toString());

@@ -3,6 +3,7 @@ package org.example.dao;
 import lombok.extern.log4j.Log4j2;
 import org.example.constants.BookingStatus;
 import org.example.entity.Booking;
+import org.example.entity.User;
 import org.example.persistence.PersistenceManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -22,7 +23,7 @@ public class BookingDaoImpl implements BookingDao {
                 transaction.commit();
             } catch (Exception e) {
                 transaction.rollback();
-                log.error("Error while creating booking for user ID: {}", booking.getUserId(), e);
+                log.error("Error while creating booking for user ID: {}", booking.getUser().getUserID(), e);
             }
         }
     }
@@ -72,15 +73,15 @@ public class BookingDaoImpl implements BookingDao {
     }
 
     @Override
-    public List<Booking> getBookingsByUser(int userId) {
+    public List<Booking> getBookingsByUser(User user) {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             return entityManager.createQuery(
-                            "SELECT b FROM Booking b WHERE b.userId = :userId ORDER BY b.checkIn DESC",
+                            "SELECT b FROM Booking b WHERE b.user = :user ORDER BY b.checkIn DESC",
                             Booking.class)
-                    .setParameter("userId", userId)
+                    .setParameter("user", user)
                     .getResultList();
         } catch (Exception e) {
-            log.error("Error fetching bookings for user ID: " + userId, e);
+            log.error("Error fetching bookings for user ID: " + user.getUserID(), e);
         }
         return List.of();
     }

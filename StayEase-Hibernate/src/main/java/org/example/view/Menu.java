@@ -81,7 +81,16 @@ public class Menu {
 
     private void viewAvailableRooms() {
         Response roomResponse = roomController.getAvailableRooms();
-        List<Room> availableRooms = (List<Room>) roomResponse.getData();
+        Object data = roomResponse.getData();
+        List<Room> availableRooms = new ArrayList<>();
+
+        if (data instanceof List<?>) {
+            for (Object obj : (List<?>) data) {
+                if (obj instanceof Room room) {
+                    availableRooms.add(room);
+                }
+            }
+        }
         if (roomResponse.getStatus().equals(ERROR)) {
             System.out.println("\nNo available rooms found.");
         } else {
@@ -329,7 +338,7 @@ public class Menu {
         bookingController.updateBooking(activeBooking);
         log.info("Booking ID: {} status updated to COMPLETED", activeBooking.getBookingId());
 
-        Response roomResponse = roomController.getRoomById(activeBooking.getRoomId());
+        Response roomResponse = roomController.getRoomById(activeBooking.getRoom().getRoomID());
         Room bookedRoom = (Room) roomResponse.getData();
         if (bookedRoom != null) {
             bookedRoom.setAvailable(true);
@@ -370,14 +379,14 @@ public class Menu {
             if (cancleBookingResponse.isSuccess()) {
                 log.info("Booking ID: {} successfully canceled", bookingId);
 
-                boolean updateSuccess = updateRoomAvailability(booking.getRoomId(), true);
+                boolean updateSuccess = updateRoomAvailability(booking.getRoom().getRoomID(), true);
                 if (updateSuccess) {
                     invoice.setPaymentStatus(PaymentStatus.CANCELED);
                     invoiceController.updatePaymentStatus(invoice.getInvoiceId(), PaymentStatus.CANCELED);
-                    log.info("Room availability updated for Room ID: {} and payment status set to CANCELED", booking.getRoomId());
+                    log.info("Room availability updated for Room ID: {} and payment status set to CANCELED", booking.getRoom().getRoomID());
                     System.out.println("Booking successfully canceled, and room availability updated.");
                 } else {
-                    log.error("Failed to update room availability for Room ID: {}", booking.getRoomId());
+                    log.error("Failed to update room availability for Room ID: {}", booking.getRoom().getRoomID());
                     System.out.println("Booking canceled, but failed to update room availability.");
                 }
             } else {
@@ -392,9 +401,26 @@ public class Menu {
 
     public void cancelBookingByUser(User user) {
         Response bookingResponse = bookingController.getBookingsByUser(user.getUserID());
-        List<Booking> allBookings = (List<Booking>) bookingResponse.getData();
+        Object data = bookingResponse.getData();
+        List<Booking> allBookings = new ArrayList<>();
+
+        if (data instanceof List<?>) {
+            for (Object obj : (List<?>) data) {
+                if (obj instanceof Booking) {
+                    allBookings.add((Booking) obj);
+                }
+            }
+        }
+
+        if (allBookings.isEmpty()) {
+            System.out.println("\nNo Bookings found for ".concat(user.getName()).concat(" at moment!"));
+            log.warn("No bookings found for {} at moment!", user.getName());
+            return;
+        }
+
         List<Booking> eligibleBookings = allBookings.stream()
-                .filter(booking -> booking.getStatus() == BookingStatus.CONFIRMED || booking.getStatus() == BookingStatus.PENDING)
+                .filter(booking -> booking.getStatus() == BookingStatus.CONFIRMED
+                        || booking.getStatus() == BookingStatus.PENDING)
                 .toList();
 
         if (eligibleBookings.isEmpty()) {
@@ -419,18 +445,31 @@ public class Menu {
             log.info("Booking cancellation aborted.");
         }
     }
-
     private void displayEligibleBookings(List<Booking> bookings) {
-        log.info("Your eligible bookings for cancellation:");
+        System.out.println("\nEligible Bookings for Cancellation:");
+        System.out.println("=====================================================================================");
+        System.out.printf("%-5s %-12s %-10s %-12s %-20s %-20s%n",
+                "No.", "Booking ID", "Status", "Room No.", "Check-In", "Check-Out");
+        System.out.println("-------------------------------------------------------------------------------------");
+
         for (int i = 0; i < bookings.size(); i++) {
             Booking booking = bookings.get(i);
+            System.out.printf("%-5d %-12d %-10s %-12d %-20s %-20s%n",
+                    (i + 1),
+                    booking.getBookingId(),
+                    booking.getStatus(),
+                    booking.getRoom().getRoomID(),
+                    booking.getCheckIn(),
+                    booking.getCheckOut());
             log.info("{}. Booking ID: {}, Status: {}, Room Number: {}, Check-in: {}, Check-out: {}",
-                    (i + 1), booking.getBookingId(), booking.getStatus(), booking.getRoomId(),
+                    (i + 1), booking.getBookingId(), booking.getStatus(), booking.getRoom().getRoomID(),
                     booking.getCheckIn(), booking.getCheckOut());
         }
+        System.out.println("=====================================================================================\n");
     }
 
     private int getValidBookingSelection(int maxSelection) {
+        System.out.println("\nEnter the booking id you wish to cancel:");
         log.info("Enter the number of the booking you wish to cancel: ");
         try {
             int selection = Integer.parseInt(scanner.nextLine());
@@ -457,10 +496,10 @@ public class Menu {
             log.error("Failed to cancel the booking with ID: {}", booking.getBookingId());
             return false;
         }
-        boolean updateSuccess = updateRoomAvailability(booking.getRoomId(), true);
+        boolean updateSuccess = updateRoomAvailability(booking.getRoom().getRoomID(), true);
         if (!updateSuccess) {
             log.warn("Booking ID: {} canceled, but failed to update room availability for Room ID: {}.",
-                    booking.getBookingId(), booking.getRoomId());
+                    booking.getBookingId(), booking.getRoom().getRoomID());
         }
         return updateSuccess;
     }
@@ -527,7 +566,7 @@ public class Menu {
     private void displayInvoice(Booking booking, Invoice invoice) {
         System.out.println("\n------ INVOICE ------");
         System.out.printf("Booking ID: %d%nUser Email: %s%nRoom Number: %d%nTotal Amount: %.2f%nBooking Status: %s%nPayment Status: %s%nCheck-in Date: %s%nCheck-out Date: %s%n",
-                booking.getBookingId(), booking.getUserId(), booking.getRoomId(), invoice.getAmount(),
+                booking.getBookingId(), booking.getUser().getUserID(), booking.getRoom().getRoomID(), invoice.getAmount(),
                 booking.getStatus(), invoice.getPaymentStatus(), booking.getCheckIn(), booking.getCheckOut());
         System.out.println("----------------------\n");
     }
@@ -589,14 +628,13 @@ public class Menu {
         }
 
         List<Guest> guests = collectGuestDetails();
-
         User newUser = new GuestUser(0, name, email, password, true, guests);
         Response userResponse = userController.createUser(newUser);
         User user = (User) userResponse.getData();
         newUser.setUserID(user.getUserID());
 
         for (Guest guest : guests) {
-            guest.setUserId(user.getUserID());
+            guest.setUser(user);
             userController.addAccompaniedGuest(guest);
         }
 
@@ -620,7 +658,7 @@ public class Menu {
             System.out.print("Enter guest age for guest " + (i + 1) + ": ");
             int age = scanner.nextInt();
             scanner.nextLine();
-            guests.add(new Guest(0, name, age, 0));
+            guests.add(new Guest(null, name, age, null));
         }
 
         log.info("Collected details for {} guest(s)", guests.size());
@@ -656,9 +694,9 @@ public class Menu {
         LocalDateTime checkOut = checkIn.plusDays(duration);
 
         log.info("Creating booking for user {} in room {} from {} to {}", user.getEmail(), room.getRoomNumber(), checkIn, checkOut);
-        return new Booking(0, user.getUserID(), room.getRoomID(), checkIn, checkOut, BookingStatus.CONFIRMED);
-    }
+        return new Booking(user, room, checkIn, checkOut, BookingStatus.CONFIRMED);
 
+    }
 
     private void finalizeBooking(Booking booking, Room room) {
         bookingController.createBooking(booking);
@@ -670,7 +708,17 @@ public class Menu {
 
     private void bookRoomByUser(User loggedInUser) {
         Response roomResponse = roomController.getAvailableRooms();
-        List<Room> availableRooms = (List<Room>) roomResponse.getData();
+        Object data = roomResponse.getData();
+        List<Room> availableRooms = new ArrayList<>();
+
+        if (data instanceof List<?>) {
+            for (Object obj : (List<?>) data) {
+                if (obj instanceof Room room) {
+                    availableRooms.add(room);
+                }
+            }
+        }
+
         if (availableRooms.isEmpty()) {
             System.out.println("No available rooms at the moment.");
             return;
@@ -679,7 +727,7 @@ public class Menu {
         System.out.println("\nAvailable Rooms:");
         for (Room room : availableRooms) {
             System.out.println("Room ID: " + room.getRoomID() + " | Room Number: " + room.getRoomNumber() + " | Type: " +
-                    room.getRoomType() + " | Price: " + room.getPrice() + " | Available: " + (room.isAvailable() ? "Yes" : "No"));
+                    room.getRoomType() + " | Price: " + room.getPrice());
         }
 
         System.out.print("\nEnter Room ID to book: ");
@@ -703,20 +751,29 @@ public class Menu {
         } else {
             checkInDate = LocalDateTime.parse(checkInDateString, formatter);
         }
-        System.out.print("Enter duration (in days): ");
-        int duration = scanner.nextInt();
-        scanner.nextLine();
+
+        int duration;
+        while (true) {
+            System.out.print("Enter duration (in days): ");
+            duration = scanner.nextInt();
+            scanner.nextLine();
+            if (duration > 0) {
+                break;
+            } else {
+                System.out.println("The duration must be greater than 0.");
+            }
+        }
 
         LocalDateTime checkOutDate = checkInDate.plusDays(duration);
 
         Room selectedRoom = availableRooms.stream().filter(room -> room.getRoomID() == roomId).findFirst().orElse(null);
         if (selectedRoom == null) {
-            System.out.println("Error: Room not found.");
+            System.out.println("Room you're trying to book might have booked by someone else!");
             return;
         }
 
         double totalAmount = selectedRoom.getPrice() * duration;
-        Booking newBooking = new Booking(0, loggedInUser.getUserID(), roomId, checkInDate, checkOutDate, BookingStatus.CONFIRMED);
+        Booking newBooking = new Booking(loggedInUser, selectedRoom, checkInDate, checkOutDate, BookingStatus.CONFIRMED);
         bookingController.createBooking(newBooking);
         selectedRoom.setAvailable(false);
         roomController.updateRoom(selectedRoom);
@@ -837,7 +894,7 @@ public class Menu {
     private void displayBookingHistory(User user) {
         Response bookingResponse = bookingController.getBookingsByUser(user.getUserID());
         List<Booking> bookings = (List<Booking>) bookingResponse.getData();
-        if (bookings.isEmpty()) {
+        if (Objects.isNull(bookings) || bookings.isEmpty()) {
             System.out.println("No bookings found for this user.");
         } else {
             System.out.println("           Booking History        ");
@@ -859,7 +916,7 @@ public class Menu {
 
             try {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();
 
                 switch (choice) {
                     case 1 -> {
@@ -920,14 +977,14 @@ public class Menu {
 
             for (Invoice invoice : invoices) {
                 System.out.println("Invoice ID: " + invoice.getInvoiceId());
-                System.out.println("Booking ID: " + invoice.getBookingId());
+                System.out.println("Booking ID: " + invoice.getBooking().getBookingId());
                 System.out.println("Date: " + invoice.getIssueDate());
                 System.out.println("Amount: " + invoice.getAmount());
                 System.out.println("Payment Status: " + invoice.getPaymentStatus());
                 System.out.println("--------------------------");
 
                 log.info("Displayed invoice: ID {} | Booking ID {} | Amount: {} | Payment Status: {}",
-                        invoice.getInvoiceId(), invoice.getBookingId(), invoice.getAmount(), invoice.getPaymentStatus());
+                        invoice.getInvoiceId(), invoice.getBooking().getBookingId(), invoice.getAmount(), invoice.getPaymentStatus());
             }
         }
     }
@@ -936,10 +993,20 @@ public class Menu {
         log.info("User {} requested to view their bookings.", loggedInGuest.getUserID());
 
         Response bookingResponse = bookingController.getBookingsByUser(loggedInGuest.getUserID());
-        List<Booking> bookings = (List<Booking>) bookingResponse.getData();
+        Object data = bookingResponse.getData();
+        List<Booking> bookings = new ArrayList<>();
+
+        if (data instanceof List<?>) {
+            for (Object obj : (List<?>) data) {
+                if (obj instanceof Booking booking) {
+                    bookings.add(booking);
+                }
+            }
+        }
+
         if (bookings.isEmpty()) {
-            log.warn("No bookings found for user {}.", loggedInGuest.getUserID());
-            System.out.println("No bookings found.");
+            log.warn("No bookings found for {}.", loggedInGuest.getName());
+            System.out.println("\nNo bookings found for " + loggedInGuest.getName());
         } else {
             System.out.println("\n=========================================");
             System.out.println("              Booking History             ");
@@ -963,8 +1030,13 @@ public class Menu {
         log.info("Generating invoice for user {} | Booking ID: {} | Amount: {} | Paid: {}",
                 userId, bookingId, totalAmount, isPaid);
 
+        Response bookingResponse = bookingController.getBookingById(bookingId);
+        Booking booking = (Booking) bookingResponse.getData();
+        Response userResponse = userController.getUserById(userId);
+        User user = (User) userResponse.getData();
+
         PaymentStatus paymentStatus = isPaid ? PaymentStatus.PAID : PaymentStatus.PENDING;
-        Response invoiceResponse = invoiceController.generateInvoice(new Invoice(0, bookingId, userId, totalAmount, LocalDateTime.now(), paymentStatus));
+        Response invoiceResponse = invoiceController.generateInvoice(new Invoice(null, booking, user, totalAmount, LocalDateTime.now(), paymentStatus));
         Invoice invoice = (Invoice) invoiceResponse.getData();
         if (invoice.getInvoiceId() > 0) {
             log.info("Invoice successfully generated: ID {}", invoice.getInvoiceId());
