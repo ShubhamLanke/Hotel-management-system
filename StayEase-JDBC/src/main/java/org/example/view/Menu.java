@@ -1,5 +1,6 @@
 package org.example.view;
 
+import org.example.consoleinterface.RecordHandler;
 import org.example.constants.BookingStatus;
 import org.example.constants.PaymentStatus;
 import org.example.constants.UserRole;
@@ -41,11 +42,14 @@ public class Menu {
 
     private final AdminDashBoard adminDashBoard;
 
-    public Menu(RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, AdminDashBoard adminDashBoard) {
+    private final RecordHandler recordHandler;
+
+    public Menu(RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, AdminDashBoard adminDashBoard, RecordHandler recordHandler) {
         this.roomController = roomController;
         this.userController = userController;
         this.bookingController = bookingController;
         this.invoiceController = invoiceController;
+        this.recordHandler = recordHandler;
         this.adminDashBoard = new AdminDashBoard(roomController, userController, bookingController, invoiceController);
     }
 
@@ -90,6 +94,7 @@ public class Menu {
         if (roomResponse.getStatus().equals(ERROR)) {
             System.out.println("\nNo available rooms found.");
         } else {
+            recordHandler.printTable(availableRooms,"Available Rooms");
             System.out.println("\n=======================================================");
             System.out.printf("%-10s %-15s %-15s %-10s %n",
                     "Room ID", "Room Number", "Room Type", "Price");
@@ -196,7 +201,7 @@ public class Menu {
             }
         } else {
             log.warn("Invalid login attempt for email: {}", email);
-            System.out.println("Invalid credentials. Please try again.");
+            System.out.println("\nInvalid credentials. Please try again.");
         }
     }
 
@@ -634,8 +639,8 @@ public class Menu {
 
     private void displayAvailableRooms(List<Room> rooms) {
         System.out.println("\nAvailable Rooms:");
-        rooms.forEach(room -> System.out.printf("Room ID: %d | Room Number: %d | Type: %s | Price: %.2f | Available: %s%n",
-                room.getRoomID(), room.getRoomNumber(), room.getRoomType(), room.getPrice(), (room.isAvailable() ? "Yes" : "No")));
+        rooms.forEach(room -> System.out.printf("Room ID: %d | Room Number: %d | Type: %s | Price: %.2f%n",
+                room.getRoomID(), room.getRoomNumber(), room.getRoomType(), room.getPrice()));
     }
 
     private Room getRoomSelection(List<Room> availableRooms) {
@@ -826,6 +831,7 @@ public class Menu {
         if (booking != null) {
             displayBookingHistory(user);
         } else {
+            System.out.println("No bookings found for "+user.getName());
             log.info("No bookings found for {}",user.getName());
         }
     }

@@ -1,160 +1,38 @@
-2025-03-19 12:20:43 [main] INFO  Menu - 
-==============================
-2025-03-19 12:20:43 [main] INFO  Menu -   Welcome to StayEase Hotel!
-2025-03-19 12:20:43 [main] INFO  Menu - ==============================
-2025-03-19 12:20:43 [main] INFO  Menu - 1. View Available Rooms
-2025-03-19 12:20:43 [main] INFO  Menu - 2. Register User
-2025-03-19 12:20:43 [main] INFO  Menu - 3. Login
-2025-03-19 12:20:43 [main] INFO  Menu - ------------------------------
-2025-03-19 12:20:43 [main] INFO  Menu - Enter your choice: 
-2025-03-19 12:21:38 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
-2025-03-19 12:24:45 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
-2025-03-19 12:26:50 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
-2025-03-19 12:27:42 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
-2025-03-26 13:23:32 [main] WARN  Menu - Invalid email format entered: ram
-2025-03-26 13:25:01 [main] WARN  Menu - Invalid email format entered: ram
-2025-03-26 17:57:18 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
-2025-03-26 17:57:18 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
-2025-03-28 11:13:27 [main] WARN  Menu - Invalid name format entered: SAMIT BORDE
-2025-03-28 11:17:35 [main] INFO  Menu - Login successful: SAMIT BORDE (GUEST)
-2025-03-28 11:17:51 [main] INFO  Menu - User 17 is viewing their bookings
-2025-03-28 11:17:51 [main] INFO  Menu - User 17 requested to view their bookings.
-2025-03-28 11:36:49 [main] INFO  Menu - Login successful: SAMIT BORDE (GUEST)
-2025-03-28 11:36:52 [main] INFO  Menu - User 17 is viewing their bookings
-2025-03-28 11:36:52 [main] INFO  Menu - User 17 requested to view their bookings.
-2025-03-28 11:38:04 [main] WARN  Menu - Invalid name format entered: SAMITBORDE@GMAIL.COM
-2025-03-28 11:38:24 [main] INFO  Menu - Login successful: SAMIT BORDE (GUEST)
-2025-03-28 11:38:32 [main] INFO  Menu - User 17 is viewing their bookings
-2025-03-28 11:38:32 [main] INFO  Menu - User 17 requested to view their bookings.
-2025-03-28 11:41:20 [main] INFO  Menu - Login successful: SAMIT BORDE (GUEST)
-2025-03-28 11:48:15 [main] WARN  Menu - Invalid login attempt for email: samitborde@gmail.com
-2025-03-28 11:49:58 [main] WARN  Menu - Invalid email format entered: samirborde@gmail
-2025-03-28 11:54:17 [main] WARN  Menu - Invalid login attempt for email: samirrra@gmail.com
-2025-03-28 12:25:42 [main] WARN  Menu - Invalid login attempt for email: shubha@gmail.com
-2025-03-28 12:25:53 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
-2025-03-28 12:25:53 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
-2025-03-28 12:43:40 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
-2025-03-28 12:43:46 [main] WARN  Menu - Invalid email format entered: dg
-2025-03-28 12:43:54 [main] ERROR Menu - Invalid input! Please enter a number between 1 and 4.
-2025-03-28 12:44:07 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
-2025-03-28 12:44:07 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
-2025-03-28 12:50:56 [main] INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
-2025-03-28 12:51:23 [main] INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
-2025-03-28 13:00:31 [main] WARN  Menu - Invalid login attempt for email: shubhamlanke@gmail.com
-2025-03-28 13:00:44 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
-2025-03-28 13:00:44 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
-2025-03-28 13:00:46 [main] INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
-2025-03-28 13:01:50 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
-2025-03-28 13:01:50 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
-2025-03-28 13:01:51 [main] INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
-2025-03-28 13:01:58 [main] INFO  Menu - No bookings found for SAMIT BORDE
-2025-03-28 13:06:20 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
-2025-03-28 13:06:20 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
-2025-03-28 13:06:22 [main] INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
-2025-03-28 13:06:33 [main] INFO  Menu - No bookings found for SAMIT BORDE
-2025-03-28 13:06:38 [main] INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
-2025-03-28 13:10:09 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
-2025-03-28 13:10:09 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
-2025-03-28 13:10:11 [main] INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
-2025-03-28 13:12:16 [main] INFO  Menu - User SHUBHAM LANKE selected: View Available Rooms
-2025-03-28 13:15:48 [main] INFO  Menu - User SHUBHAM LANKE is logging out
-2025-03-28 13:16:14 [main] ERROR RoomDaoImpl - Error fetching available rooms.
-org.postgresql.util.PSQLException: ERROR: column "id" does not exist
-  Position: 56
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:356) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:341) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:317) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeQuery(PgStatement.java:266) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.example.dao.RoomDaoImpl.getAvailableRooms(RoomDaoImpl.java:55) [classes/:?]
-	at org.example.service.RoomServiceImpl.getAvailableRooms(RoomServiceImpl.java:57) [classes/:?]
-	at org.example.controller.RoomController.getAvailableRooms(RoomController.java:31) [classes/:?]
-	at org.example.view.Menu.viewAvailableRooms(Menu.java:88) [classes/:?]
-	at org.example.view.Menu.displayMainMenu(Menu.java:69) [classes/:?]
-	at org.example.Main.main(Main.java:35) [classes/:?]
-2025-03-28 13:18:22 [main] INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
-2025-03-28 13:18:22 [main] INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
-2025-03-28 13:18:27 [main] INFO  Menu - User SHUBHAM LANKE selected: View Available Rooms
-2025-03-28 13:18:32 [main] INFO  Menu - User SHUBHAM LANKE selected: Book a Room
-2025-03-28 13:18:32 [main] INFO  Menu - Booking room for a user.
-2025-03-28 13:19:17 [main] INFO  Menu - Creating booking for user samitborde@gmail.com in room 404 from 2025-03-28T12:00:14.924532100 to 2025-03-30T12:00:14.924532100
-2025-03-28 13:19:17 [main] INFO  BookingServiceImpl - Booking created successfully with ID: 46
-2025-03-28 13:19:17 [main] INFO  RoomDaoImpl - Fetched room with ID 16: Room{roomID=16, roomNumber=404, roomType=DELUXE, price=10000.0, isAvailable=true}
-2025-03-28 13:19:17 [main] INFO  RoomDaoImpl - Room updated successfully: Room{roomID=16, roomNumber=404, roomType=DELUXE, price=10000.0, isAvailable=false}
-2025-03-28 13:19:17 [main] INFO  RoomServiceImpl - Room updated successfully: Room{roomID=16, roomNumber=404, roomType=DELUXE, price=10000.0, isAvailable=false}
-2025-03-28 13:19:17 [main] INFO  Menu - Room booked successfully for user: samitborde@gmail.com
-2025-04-03 16:01:08 [main] INFO  DatabaseConnection - Database connection established successfully.
-2025-04-03 16:02:21 [main] ERROR RoomDaoImpl - Error fetching available rooms.
-org.postgresql.util.PSQLException: An I/O error occurred while sending to the backend.
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:399) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:356) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:341) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:317) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.jdbc.PgStatement.executeQuery(PgStatement.java:266) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.example.dao.RoomDaoImpl.getAvailableRooms(RoomDaoImpl.java:55) [classes/:?]
-	at org.example.service.RoomServiceImpl.getAvailableRooms(RoomServiceImpl.java:57) [classes/:?]
-	at org.example.controller.RoomController.getAvailableRooms(RoomController.java:31) [classes/:?]
-	at org.example.view.Menu.viewAvailableRooms(Menu.java:88) [classes/:?]
-	at org.example.view.Menu.displayMainMenu(Menu.java:69) [classes/:?]
-	at org.example.Main.main(Main.java:35) [classes/:?]
-Caused by: java.net.SocketException: Connection reset by peer
-	at sun.nio.ch.SocketDispatcher.write0(Native Method) ~[?:?]
-	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54) ~[?:?]
-	at sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394) ~[?:?]
-	at sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410) ~[?:?]
-	at sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440) ~[?:?]
-	at sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819) ~[?:?]
-	at java.net.Socket$SocketOutputStream.write(Socket.java:1195) ~[?:?]
-	at org.postgresql.util.internal.PgBufferedOutputStream.flushBuffer(PgBufferedOutputStream.java:41) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.util.internal.PgBufferedOutputStream.flush(PgBufferedOutputStream.java:48) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.core.PGStream.flush(PGStream.java:707) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.core.v3.QueryExecutorImpl.sendSync(QueryExecutorImpl.java:1575) ~[postgresql-42.7.5.jar:42.7.5]
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:370) ~[postgresql-42.7.5.jar:42.7.5]
-	... 12 more
-2025-04-03 16:02:34 [main] WARN  Menu - Invalid name format entered: 212
-2025-04-03 16:02:35 [main] WARN  Menu - Invalid name format entered: 2
-2025-04-03 16:02:35 [main] INFO  Menu - Invalid choice! Please enter a number between 1 and 4.
-2025-04-03 16:02:36 [main] WARN  Menu - Invalid name format entered: 
-2025-04-03 16:02:52 [main] WARN  Menu - Invalid login attempt for email: shubhamlanke@gmail.com
-2025-04-03 16:03:07 [main] ERROR DatabaseConnection - Database connection failed (Attempt 1 of 12): The connection attempt failed.
-2025-04-03 16:03:07 [main] ERROR DatabaseConnection - Retrying in 5 seconds...
-2025-04-03 16:03:12 [main] ERROR DatabaseConnection - Database connection failed (Attempt 2 of 12): The connection attempt failed.
-2025-04-03 16:03:12 [main] ERROR DatabaseConnection - Retrying in 5 seconds...
-2025-04-03 16:03:17 [main] ERROR DatabaseConnection - Database connection failed (Attempt 3 of 12): The connection attempt failed.
-2025-04-03 16:03:17 [main] ERROR DatabaseConnection - Retrying in 5 seconds...
-2025-04-03 16:03:22 [main] ERROR DatabaseConnection - Database connection failed (Attempt 4 of 12): The connection attempt failed.
-2025-04-03 16:03:22 [main] ERROR DatabaseConnection - Retrying in 5 seconds...
-2025-04-03 16:03:27 [main] ERROR DatabaseConnection - Database connection failed (Attempt 5 of 12): The connection attempt failed.
-2025-04-03 16:03:27 [main] ERROR DatabaseConnection - Retrying in 5 seconds...
-2025-04-03 16:03:33 [main] INFO  DatabaseConnection - Database connection established successfully.
-2025-04-08 15:28:14 [main] INFO  DatabaseConnection - Database connection established successfully.
-2025-04-08 15:29:22 [main] INFO  Menu - Login successful: RAM TAWADE (GUEST)
-2025-04-08 15:29:39 [main] INFO  Menu - User 18 is viewing their bookings
-2025-04-08 15:29:39 [main] INFO  Menu - User 18 requested to view their bookings.
-2025-04-08 15:32:09 [main] INFO  DatabaseConnection - Database connection established successfully.
-2025-04-08 15:32:22 [main] INFO  Menu - Login successful: RAM TAWADE (GUEST)
-2025-04-08 15:32:27 [main] INFO  Menu - User 18 is viewing their bookings
-2025-04-08 15:32:27 [main] INFO  Menu - User RAM TAWADE requested to view their bookings.
-2025-04-08 15:34:17 [main] INFO  DatabaseConnection - Database connection established successfully.
-2025-04-08 15:34:44 [main] INFO  Menu - Login successful: RAM TAWADE (GUEST)
-2025-04-08 15:34:47 [main] INFO  Menu - User RAM TAWADE is booking a room
-2025-04-08 15:36:33 [main] INFO  DatabaseConnection - Database connection established successfully.
-2025-04-08 15:36:44 [main] WARN  Menu - Invalid login attempt for email: ram@gmail.com
-2025-04-08 15:37:28 [main] INFO  Menu - Login successful: RAM TAWADE (GUEST)
-2025-04-08 15:37:35 [main] INFO  Menu - User RAM TAWADE is booking a room
-2025-04-08 15:37:40 [main] INFO  BookingServiceImpl - Booking created successfully with ID: 47
-2025-04-08 15:37:40 [main] INFO  RoomDaoImpl - Fetched room with ID 1: Room{roomID=1, roomNumber=101, roomType=SINGLE, price=2500.0, isAvailable=true}
-2025-04-08 15:37:40 [main] INFO  RoomDaoImpl - Room updated successfully: Room{roomID=1, roomNumber=101, roomType=SINGLE, price=2500.0, isAvailable=false}
-2025-04-08 15:37:40 [main] INFO  RoomServiceImpl - Room updated successfully: Room{roomID=1, roomNumber=101, roomType=SINGLE, price=2500.0, isAvailable=false}
-2025-04-08 15:37:55 [main] INFO  Menu - Generating invoice for user 18 | Booking ID: 47 | Amount: 5000.0 | Paid: false
-2025-04-08 15:38:20 [main] INFO  DatabaseConnection - Database connection established successfully.
-2025-04-08 15:38:40 [main] INFO  Menu - Login successful: RAM TAWADE (GUEST)
-2025-04-08 15:38:44 [main] INFO  Menu - User RAM TAWADE is viewing their bookings
-2025-04-08 15:38:44 [main] INFO  Menu - User RAM TAWADE requested to view their bookings.
-2025-04-08 15:38:44 [main] INFO  Menu - Displayed booking: ID 47 | Check-in: 2025-04-08T12:00:37.819051 | Check-out: 2025-04-10T12:00:37.819051 | Status: CONFIRMED
+2025-04-11 17:17:30 INFO  DatabaseConnection - Database connection established successfully.
+2025-04-11 17:21:00 WARN  Menu - Invalid login attempt for email: shubhamlanke@gmail.com
+2025-04-11 17:25:05 INFO  DatabaseConnection - Database connection established successfully.
+2025-04-11 17:25:21 WARN  Menu - Invalid login attempt for email: shubhamlanke@gmail.com
+2025-04-11 17:26:43 WARN  Menu - Invalid login attempt for email: shubhamlanke@gmail.com
+2025-04-11 17:28:38 ERROR Menu - Invalid input! Please enter a number between 1 and 4.
+2025-04-11 17:28:39 ERROR Menu - Invalid input! Please enter a number between 1 and 4.
+2025-04-11 17:28:42 WARN  Menu - Invalid email format entered: a
+2025-04-11 17:28:42 ERROR Menu - Invalid input! Please enter a number between 1 and 4.
+2025-04-11 17:28:45 WARN  Menu - Invalid email format entered: a
+2025-04-11 17:28:58 WARN  Menu - Invalid login attempt for email: shuabha@gmail.com
+2025-04-11 17:29:21 WARN  Menu - Invalid login attempt for email: shubham@gmail.com
+2025-04-11 17:31:00 WARN  Menu - Invalid login attempt for email: shubham@gmail.com
+2025-04-11 17:31:41 WARN  Menu - Invalid login attempt for email: shubham@gmail.com
+2025-04-11 17:32:17 WARN  Menu - Invalid login attempt for email: shubhamlane@gmail.com
+2025-04-11 17:32:41 WARN  Menu - Invalid login attempt for email: shubham@gmail.com
+2025-04-11 17:32:56 INFO  DatabaseConnection - Database connection established successfully.
+2025-04-11 17:33:11 WARN  Menu - Invalid login attempt for email: shubhamlanke@gmail.com
+2025-04-11 17:33:33 ERROR Menu - Invalid input! Please enter a number between 1 and 4.
+2025-04-11 17:37:23 INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
+2025-04-11 17:37:23 INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
+2025-04-11 17:38:37 INFO  Menu - User SHUBHAM LANKE is logging out
+2025-04-11 17:38:48 WARN  Menu - Invalid login attempt for email: s@gmail.com
+2025-04-11 17:40:36 WARN  Menu - Invalid login attempt for email: shubham@gmail.com
+2025-04-11 17:43:44 INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
+2025-04-11 17:43:44 INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
+2025-04-11 17:43:48 INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
+2025-04-11 17:43:54 INFO  Menu - No bookings found for SAURAV SHARMA
+2025-04-11 18:09:11 INFO  Menu - User SHUBHAM LANKE selected: Check Guest Details
+2025-04-11 18:09:19 INFO  Menu - No bookings found for SAURAV SHARMA
+2025-04-11 18:11:17 INFO  Menu - User SHUBHAM LANKE selected: Book a Room
+2025-04-11 18:11:17 INFO  Menu - Booking room for a user.
+2025-04-11 18:12:08 WARN  Menu - Invalid room selection or operation canceled.
+2025-04-11 18:12:16 INFO  Menu - User SHUBHAM LANKE selected: View Available Rooms
+2025-04-11 18:24:18 INFO  DatabaseConnection - Database connection established successfully.
+2025-04-11 18:24:30 INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
+2025-04-11 18:24:30 INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
+2025-04-11 18:24:32 INFO  Menu - User SHUBHAM LANKE selected: View Available Rooms

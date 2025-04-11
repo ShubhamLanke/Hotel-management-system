@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.consoleinterface.RecordHandler;
 import org.example.controller.BookingController;
 import org.example.controller.InvoiceController;
 import org.example.controller.RoomController;
@@ -30,8 +31,9 @@ public class Main {
         InvoiceController invoiceController = new InvoiceController(invoiceService);
 
         AdminDashBoard adminDashBoard = new AdminDashBoard( roomController, userController, bookingController, invoiceController);
+        RecordHandler recordHandler = new RecordHandler();
 
-        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard);
+        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard, recordHandler);
         menu.displayMainMenu();
     }
 }
