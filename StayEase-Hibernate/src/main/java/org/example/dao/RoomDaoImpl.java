@@ -43,7 +43,7 @@ public class RoomDaoImpl implements RoomDao {
     public List<Room> getAvailableRooms() {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             TypedQuery<Room> query = entityManager.createQuery(
-                    "SELECT r FROM Room r WHERE r.isAvailable = true", Room.class);
+                    "SELECT r FROM Room r WHERE r.isAvailable = true ORDER BY r.roomID ASC", Room.class);
             return query.getResultList();
         } catch (Exception e) {
             log.error("Error fetching available rooms.", e);

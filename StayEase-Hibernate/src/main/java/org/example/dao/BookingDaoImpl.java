@@ -76,9 +76,10 @@ public class BookingDaoImpl implements BookingDao {
     public List<Booking> getBookingsByUser(User user) {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             return entityManager.createQuery(
-                            "SELECT b FROM Booking b WHERE b.user = :user ORDER BY b.checkIn DESC",
+                            "SELECT b FROM Booking b WHERE b.user = :user ORDER BY b.checkIn DESC LIMIT 3",
                             Booking.class)
                     .setParameter("user", user)
+                    .setMaxResults(3)
                     .getResultList();
         } catch (Exception e) {
             log.error("Error fetching bookings for user ID: " + user.getUserID(), e);
@@ -87,17 +88,17 @@ public class BookingDaoImpl implements BookingDao {
     }
 
     @Override
-    public Optional<Booking> getConfirmedBookingByUserId(int userId) {
+    public Optional<Booking> getConfirmedBookingByUserId(User user) {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             Booking booking = entityManager.createQuery(
-                            "SELECT b FROM Booking b WHERE b.userId = :userId AND b.status = :status",
+                            "SELECT b FROM Booking b WHERE b.user = :user AND b.status = :status",
                             Booking.class)
-                    .setParameter("userId", userId)
+                    .setParameter("user", user)
                     .setParameter("status", BookingStatus.CONFIRMED)
                     .getSingleResult();
             return Optional.ofNullable(booking);
         } catch (Exception e) {
-            log.error("Error occurred while fetching confirmed booking for user ID: " + userId, e);
+            log.error("Error occurred while fetching confirmed booking for user ID: " + user.getUserID(), e);
         }
         return Optional.empty();
     }

@@ -32,7 +32,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public Optional<Invoice> getInvoiceByBookingId(int bookingId) {
         if (bookingId <= 0) {
-            throw new ServiceException("Invalid booking ID.");
+            return Optional.empty();
         }
         return invoiceDao.getInvoiceByBookingId(bookingId);
     }

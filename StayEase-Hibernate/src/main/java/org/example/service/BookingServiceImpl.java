@@ -74,7 +74,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Optional<Booking> getConfirmedBookingByUserId(int userId) {
-        return bookingDao.getConfirmedBookingByUserId(userId);
+        return userService.getUserById(userId)
+                .flatMap(bookingDao::getConfirmedBookingByUserId);
     }
 
     @Override

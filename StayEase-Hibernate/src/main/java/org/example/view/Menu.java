@@ -284,7 +284,7 @@ public class Menu {
     }
 
     public void checkoutByStaff() {
-        System.out.println("\nEnter User Email ID for checkout:");
+        System.out.println("Enter User Email ID for checkout: ");
         String userEmail = scanner.nextLine();
         if (!Validator.isValidEmail(userEmail)) {
             log.warn("Invalid email format entered: {}", userEmail);
@@ -306,7 +306,7 @@ public class Menu {
         Booking activeBooking = (Booking) bookingResponse.getData();
         if (!bookingResponse.isSuccess()) {
             log.warn("No active confirmed booking found for user: {}", userEmail);
-            System.out.println("----------------------------------");
+            System.out.println("\nNo active confirmed booking found for user: "+ userEmail);
             return;
         }
         Response invoiceResponse = invoiceController.getInvoiceByBookingId(activeBooking.getBookingId());
@@ -600,7 +600,8 @@ public class Menu {
 
         Room selectedRoom = getRoomSelection(availableRooms);
         if (selectedRoom == null) {
-            log.warn("Invalid room selection or operation canceled.");
+            System.out.println("Operation canceled, the room you've selected might have booked by other already.");
+            log.warn("Operation canceled, the room you've selected might have booked by other already.");
             return;
         }
 
@@ -967,9 +968,9 @@ public class Menu {
 
         Response invoiceResponse = invoiceController.getInvoiceByUserId(loggedInGuest.getUserID());
         List<Invoice> invoices = (List<Invoice>) invoiceResponse.getData();
-        if (invoices.isEmpty()) {
+        if (Objects.isNull(invoices) || invoices.isEmpty()) {
+            System.out.println("\nNo invoices found for user "+loggedInGuest.getName());
             log.warn("No invoices found for user {}.", loggedInGuest.getUserID());
-            System.out.println("No invoice found.");
         } else {
             System.out.println("\n==========================");
             System.out.println("      Invoice History     ");
