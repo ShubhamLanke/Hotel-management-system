@@ -18,14 +18,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(User user) {
-        if (userDao.isEmailExists(user.getEmail())) {
-            throw new RuntimeException("Email already registered!");
-        }
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be empty.");
+            log.warn("Email cannot be empty.");
+            return;
         }
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty.");
+            log.warn("Password cannot be empty.");
+            return;
+        }
+        if (userDao.isEmailExists(user.getEmail())) {
+            log.warn("Registration attempt failed: Email already exists - {}", user.getEmail());
+            return;
         }
         userDao.registerUser(user);
     }
@@ -71,7 +74,6 @@ public class UserServiceImpl implements UserService {
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("Email cannot be empty.");
         }
-
         return userDao.isEmailExists(email);
     }
 

@@ -7,6 +7,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import lombok.extern.log4j.Log4j2;
+import org.example.consoleinterface.MenuHandler;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -48,10 +49,11 @@ public class Main {
         UserController userController = new UserController(userService);
         BookingController bookingController = new BookingController(bookingService);
         InvoiceController invoiceController = new InvoiceController(invoiceService);
+        MenuHandler menuHandler = new MenuHandler(new Scanner(System.in));
 
         AdminDashBoard adminDashBoard = new AdminDashBoard( roomController, userController, bookingController, invoiceController);
 
-        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard);
+        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard, menuHandler);
         menu.displayMainMenu();
 
 //        Map<String, String> properties = new HashMap<>();

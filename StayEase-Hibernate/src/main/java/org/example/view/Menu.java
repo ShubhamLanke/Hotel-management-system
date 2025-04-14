@@ -1,5 +1,6 @@
 package org.example.view;
 
+import org.example.consoleinterface.MenuHandler;
 import org.example.constants.BookingStatus;
 import org.example.constants.PaymentStatus;
 import org.example.constants.UserRole;
@@ -33,51 +34,75 @@ public class Menu {
     private final UserController userController;
     private final BookingController bookingController;
     private final InvoiceController invoiceController;
+    private final MenuHandler menuHandler;
 
     private final AdminDashBoard adminDashBoard;
 
-    public Menu(RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, AdminDashBoard adminDashBoard) {
+    public Menu(RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, AdminDashBoard adminDashBoard, MenuHandler menuHandler) {
         this.roomController = roomController;
         this.userController = userController;
         this.bookingController = bookingController;
         this.invoiceController = invoiceController;
+        this.menuHandler = menuHandler;
         this.adminDashBoard = new AdminDashBoard(roomController, userController, bookingController, invoiceController);
     }
 
+//    public void displayMainMenu() {
+//        while (1 > 0) {
+//            System.out.println("\n==============================");
+//            System.out.println("  Welcome to StayEase Hotel!");
+//            System.out.println("==============================");
+//            System.out.println("1. View Available Rooms");
+//            System.out.println("2. Register User");
+//            System.out.println("3. Login");
+//            System.out.println("------------------------------");
+//            System.out.print("Enter your choice: ");
+//
+//            try {
+//                int choice = scanner.nextInt();
+//                scanner.nextLine();
+//
+//                switch (choice) {
+//                    case 1:
+//                        viewAvailableRooms();
+//                        break;
+//                    case 2:
+//                        registerUser();
+//                        break;
+//                    case 3:
+//                        loginUser();
+//                        break;
+//                    default:
+//                        log.info("Invalid choice! Please enter a number between 1 and 4.");
+//                }
+//            } catch (InputMismatchException e) {
+//                log.error("Invalid input! Please enter a number between 1 and 4.");
+//                scanner.nextLine();
+//            }
+//        }
+//    }
+
     public void displayMainMenu() {
-        while (1 > 0) {
-            System.out.println("\n==============================");
-            System.out.println("  Welcome to StayEase Hotel!");
-            System.out.println("==============================");
-            System.out.println("1. View Available Rooms");
-            System.out.println("2. Register User");
-            System.out.println("3. Login");
-            System.out.println("------------------------------");
-            System.out.print("Enter your choice: ");
+        while (1>0) {
+            menuHandler.displayMenu("Welcome to StayEase Hotel!", new String[]{
+                    "View Available Rooms", "Register User", "Login"
+            });
 
             try {
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-
+                int choice = menuHandler.getUserChoice();
                 switch (choice) {
-                    case 1:
-                        viewAvailableRooms();
-                        break;
-                    case 2:
-                        registerUser();
-                        break;
-                    case 3:
-                        loginUser();
-                        break;
-                    default:
-                        log.info("Invalid choice! Please enter a number between 1 and 4.");
+                    case 1 -> viewAvailableRooms();
+                    case 2 -> registerUser();
+                    case 3 -> loginUser();
+                    default -> System.out.println("Invalid choice! Please enter a valid option.");
                 }
             } catch (InputMismatchException e) {
-                log.error("Invalid input! Please enter a number between 1 and 4.");
+                log.error("Invalid input! Please enter a number from above options.");
                 scanner.nextLine();
             }
         }
     }
+
 
     private void viewAvailableRooms() {
         Response roomResponse = roomController.getAvailableRooms();
@@ -143,19 +168,21 @@ public class Menu {
             user.setPassword(password);
             user.setUserRole(role);
             Response userResponse = userController.isEmailExists(email);
-            if (!userResponse.isSuccess()) {
+            if (userResponse.isSuccess()) {
                 System.out.println("Error: This email is already registered. Please use a different email.");
                 return;
             }
             if (role == UserRole.GUEST) {
                 user.setActive(true);
-                System.out.println("Guest registered successfully!");
             } else {
                 user.setActive(false);
                 System.out.println("Staff registration request submitted! Awaiting admin approval.");
             }
-
-            userController.registerUser(user);
+            Response registerUserResponse = userController.registerUser(user);
+            if (registerUserResponse.getStatus().equals(ERROR)){
+                log.error("Unable to register user");
+                return;
+            }
             System.out.println("\nCongratulations " + user.getName() + "! You can log in now!");
             System.out.println("User Type: " + user.getUserRole());
 
@@ -306,7 +333,7 @@ public class Menu {
         Booking activeBooking = (Booking) bookingResponse.getData();
         if (!bookingResponse.isSuccess()) {
             log.warn("No active confirmed booking found for user: {}", userEmail);
-            System.out.println("\nNo active confirmed booking found for user: "+ userEmail);
+            System.out.println("\nNo active confirmed booking found for user: " + userEmail);
             return;
         }
         Response invoiceResponse = invoiceController.getInvoiceByBookingId(activeBooking.getBookingId());
@@ -445,6 +472,7 @@ public class Menu {
             log.info("Booking cancellation aborted.");
         }
     }
+
     private void displayEligibleBookings(List<Booking> bookings) {
         System.out.println("\nEligible Bookings for Cancellation:");
         System.out.println("=====================================================================================");
@@ -780,7 +808,6 @@ public class Menu {
         roomController.updateRoom(selectedRoom);
         scheduleRoomAvailabilityReset(roomId, checkOutDate);
 
-        System.out.println("\nBooking confirmed for " + loggedInUser.getName() + "!");
         System.out.println("Room ID: " + roomId + " | Check In Date: " + checkInDate + " | Check Out Date: " + checkOutDate);
         System.out.println("Total Amount: Rs." + totalAmount);
 
@@ -790,6 +817,7 @@ public class Menu {
         Invoice invoice = (Invoice) invoiceResponse.getData();
         if (invoice != null) {
             System.out.println("\nInvoice generated successfully for " + loggedInUser.getName());
+            System.out.println("\nBooking confirmed for " + loggedInUser.getName() + "!");
             System.out.println(invoice);
         } else {
             System.out.println("Invoice generation failed.");
@@ -936,12 +964,18 @@ public class Menu {
                         log.info("User {} is viewing their invoice", loggedInGuest.getUserID());
                         viewInvoice(loggedInGuest);
                     }
-                    case 5 -> log.info("User {} is logging out", loggedInGuest.getUserID());
-                    default -> log.warn("Invalid menu choice {} by user {}", choice, loggedInGuest.getUserID());
+                    case 5 -> {
+                        log.info("User {} is logging out", loggedInGuest.getUserID());
+                        System.out.println("User is logging out...");
+                    }
+                    default -> {
+                        System.out.println("Invalid menu choice.");
+                        log.warn("Invalid menu choice {} by user {}", choice, loggedInGuest.getUserID());
+                    }
                 }
             } catch (InputMismatchException e) {
                 log.error("Invalid input by user {}: {}", loggedInGuest.getUserID(), e.getMessage());
-                System.out.println("Invalid input! Please enter a number between 1 and 5.");
+                System.out.println("Invalid input! Please enter a number from above options.");
                 scanner.nextLine();
                 choice = -1;
             }
@@ -969,7 +1003,7 @@ public class Menu {
         Response invoiceResponse = invoiceController.getInvoiceByUserId(loggedInGuest.getUserID());
         List<Invoice> invoices = (List<Invoice>) invoiceResponse.getData();
         if (Objects.isNull(invoices) || invoices.isEmpty()) {
-            System.out.println("\nNo invoices found for user "+loggedInGuest.getName());
+            System.out.println("\nNo invoices found for user " + loggedInGuest.getName());
             log.warn("No invoices found for user {}.", loggedInGuest.getUserID());
         } else {
             System.out.println("\n==========================");
@@ -1038,14 +1072,14 @@ public class Menu {
 
         PaymentStatus paymentStatus = isPaid ? PaymentStatus.PAID : PaymentStatus.PENDING;
         Response invoiceResponse = invoiceController.generateInvoice(new Invoice(null, booking, user, totalAmount, LocalDateTime.now(), paymentStatus));
-        Invoice invoice = (Invoice) invoiceResponse.getData();
-        if (invoice.getInvoiceId() > 0) {
-            log.info("Invoice successfully generated: ID {}", invoice.getInvoiceId());
+        Integer invoiceId = (Integer) invoiceResponse.getData();
+        if (invoiceId > 0) {
+            log.info("Invoice successfully generated: ID {}", invoiceId);
         } else {
             log.error("Invoice generation failed for user {} and booking ID {}", userId, bookingId);
         }
 
-        return invoice.getInvoiceId();
+        return invoiceId;
     }
 
 }

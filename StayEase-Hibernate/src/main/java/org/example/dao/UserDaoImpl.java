@@ -24,7 +24,6 @@ public class UserDaoImpl implements UserDao {
             log.info("User registered successfully: {}", user);
         } catch (Exception e) {
             log.error("Error while registering user: {}", e.getMessage(), e);
-            throw new RuntimeException("Email is already registered!");
         }
     }
 
@@ -83,7 +82,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> getUserByEmailId(String emailId) {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
-            TypedQuery<User> query = entityManager.createQuery("FROM User WHERE email = :email", User.class);
+            TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);
             query.setParameter("email", emailId);
             return Optional.ofNullable(query.getSingleResult());
         } catch (Exception e) {
