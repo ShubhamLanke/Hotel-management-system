@@ -1,0 +1,796 @@
+2025-04-14 13:08:51 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 13:08:52 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7803bfd
+2025-04-14 13:08:52 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 13:08:52 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 13:08:52 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 13:08:52 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 13:08:54 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-14 13:08:54 WARN  ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:575) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:515) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.migrateTable(AbstractSchemaMigrator.java:333) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:84) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at java.util.HashMap.forEach(HashMap.java:1429) [?:?]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:334) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:458) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1506) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.HibernatePersistenceProvider.createContainerEntityManagerFactory(HibernatePersistenceProvider.java:144) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.persistence.PersistenceManager.<clinit>(PersistenceManager.java:22) [classes/:?]
+	at org.example.dao.RoomDaoImpl.getAvailableRooms(RoomDaoImpl.java:44) [classes/:?]
+	at org.example.service.RoomServiceImpl.getAvailableRooms(RoomServiceImpl.java:56) [classes/:?]
+	at org.example.controller.RoomController.getAvailableRooms(RoomController.java:32) [classes/:?]
+	at org.example.view.Menu.viewAvailableRooms(Menu.java:114) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:96) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" contains null values
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:356) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:341) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:317) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:312) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 23 more
+2025-04-14 13:09:30 INFO  Menu - Login successful: SHUBHAM LANKE (STAFF)
+2025-04-14 13:09:30 INFO  Menu - Staff menu accessed by: SHUBHAM LANKE (Role: STAFF)
+2025-04-14 13:12:41 INFO  Menu - User SHUBHAM LANKE is exiting the system
+2025-04-14 13:20:11 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 13:20:11 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1b7c473a
+2025-04-14 13:20:11 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 13:20:11 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 13:20:11 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 13:20:12 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 13:20:13 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-14 13:20:13 WARN  ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:575) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:515) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.migrateTable(AbstractSchemaMigrator.java:333) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:84) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at java.util.HashMap.forEach(HashMap.java:1429) [?:?]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:334) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:458) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1506) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.HibernatePersistenceProvider.createContainerEntityManagerFactory(HibernatePersistenceProvider.java:144) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.persistence.PersistenceManager.<clinit>(PersistenceManager.java:22) [classes/:?]
+	at org.example.dao.RoomDaoImpl.getAvailableRooms(RoomDaoImpl.java:44) [classes/:?]
+	at org.example.service.RoomServiceImpl.getAvailableRooms(RoomServiceImpl.java:56) [classes/:?]
+	at org.example.controller.RoomController.getAvailableRooms(RoomController.java:32) [classes/:?]
+	at org.example.view.Menu.viewAvailableRooms(Menu.java:108) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:94) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" contains null values
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:356) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:341) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:317) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:312) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 23 more
+2025-04-14 13:28:27 INFO  Menu - Login successful: ADMIN (ADMIN)
+2025-04-14 13:29:20 INFO  AdminDashBoard - Displayed 15 available rooms.
+2025-04-14 13:29:43 ERROR BookingDaoImpl - Error occurred while fetching all bookings
+java.lang.IllegalArgumentException: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'invoice' of 'org.example.entity.Booking' [SELECT b FROM Booking b JOIN FETCH b.user JOIN FETCH b.room JOIN FETCH b.invoice ORDER BY b.checkIn DESC]
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:143) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:167) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:173) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:890) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.createQuery(SessionImpl.java:215) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.BookingDaoImpl.getAllBookings(BookingDaoImpl.java:109) [classes/:?]
+	at org.example.service.BookingServiceImpl.getAllBookings(BookingServiceImpl.java:83) [classes/:?]
+	at org.example.controller.BookingController.getAllBookings(BookingController.java:65) [classes/:?]
+	at org.example.view.AdminDashBoard.viewAllBookings(AdminDashBoard.java:285) [classes/:?]
+	at org.example.view.AdminDashBoard.displayAdminMenu(AdminDashBoard.java:237) [classes/:?]
+	at org.example.view.Menu.loginUser(Menu.java:218) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:96) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.hibernate.query.sqm.UnknownPathException: Could not resolve attribute 'invoice' of 'org.example.entity.Booking' [SELECT b FROM Booking b JOIN FETCH b.user JOIN FETCH b.room JOIN FETCH b.invoice ORDER BY b.checkIn DESC]
+	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:88) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:831) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:882) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 9 more
+Caused by: org.hibernate.query.sqm.PathElementException: Could not resolve attribute 'invoice' of 'org.example.entity.Booking'
+	at org.hibernate.query.sqm.SqmPathSource.getSubPathSource(SqmPathSource.java:95) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.QualifiedJoinPathConsumer.createJoin(QualifiedJoinPathConsumer.java:192) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.QualifiedJoinPathConsumer$AttributeJoinDelegate.consumeIdentifier(QualifiedJoinPathConsumer.java:270) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.QualifiedJoinPathConsumer.consumeIdentifier(QualifiedJoinPathConsumer.java:106) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimplePath(SemanticQueryBuilder.java:5262) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitIndexedPathAccessFragment(SemanticQueryBuilder.java:5211) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGeneralPathFragment(SemanticQueryBuilder.java:5186) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitGeneralPathFragment(SemanticQueryBuilder.java:274) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.grammars.hql.HqlParser$GeneralPathFragmentContext.accept(HqlParser.java:4719) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitPath(SemanticQueryBuilder.java:5177) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitPath(SemanticQueryBuilder.java:274) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.grammars.hql.HqlParser$PathContext.accept(HqlParser.java:4514) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.getJoin(SemanticQueryBuilder.java:2268) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.consumeJoin(SemanticQueryBuilder.java:2212) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitEntityWithJoins(SemanticQueryBuilder.java:2025) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFromClause(SemanticQueryBuilder.java:2004) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuery(SemanticQueryBuilder.java:1235) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:1032) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:274) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.grammars.hql.HqlParser$QuerySpecExpressionContext.accept(HqlParser.java:2132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:1017) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:274) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.grammars.hql.HqlParser$SimpleQueryGroupContext.accept(HqlParser.java:2003) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectStatement(SemanticQueryBuilder.java:487) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitStatement(SemanticQueryBuilder.java:446) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:319) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:71) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:831) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:882) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 9 more
+2025-04-14 14:06:08 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=55s981ms646µs900ns).
+2025-04-14 14:54:12 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 14:54:12 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@f74e835
+2025-04-14 14:54:12 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 14:54:12 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 14:54:12 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 14:54:12 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 14:54:14 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-14 14:54:14 WARN  ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:575) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:515) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.migrateTable(AbstractSchemaMigrator.java:333) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:84) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at java.util.HashMap.forEach(HashMap.java:1429) [?:?]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:334) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:458) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1506) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.HibernatePersistenceProvider.createContainerEntityManagerFactory(HibernatePersistenceProvider.java:144) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.persistence.PersistenceManager.<clinit>(PersistenceManager.java:22) [classes/:?]
+	at org.example.dao.RoomDaoImpl.getAvailableRooms(RoomDaoImpl.java:44) [classes/:?]
+	at org.example.service.RoomServiceImpl.getAvailableRooms(RoomServiceImpl.java:56) [classes/:?]
+	at org.example.controller.RoomController.getAvailableRooms(RoomController.java:32) [classes/:?]
+	at org.example.view.Menu.viewAvailableRooms(Menu.java:108) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:94) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" contains null values
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:356) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:341) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:317) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:312) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 23 more
+2025-04-14 14:57:44 WARN  Menu - Invalid name format entered:  
+2025-04-14 14:58:07 WARN  Menu - Invalid name format entered: RAM 
+2025-04-14 14:58:40 WARN  Menu - Invalid email format entered: v
+2025-04-14 14:59:08 WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42703
+2025-04-14 14:59:08 ERROR SqlExceptionHelper - ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+2025-04-14 14:59:08 ERROR UserDaoImpl - Error while registering user: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.InsertReturningDelegate.executeAndExtractReturning(InsertReturningDelegate.java:96) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.AbstractReturningDelegate.performMutation(AbstractReturningDelegate.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:47) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:95) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:85) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:388) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:302) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:221) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:135) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:774) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:758) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.registerUser(UserDaoImpl.java:22) [classes/:?]
+	at org.example.service.UserServiceImpl.registerUser(UserServiceImpl.java:30) [classes/:?]
+	at org.example.controller.UserController.registerUser(UserController.java:21) [classes/:?]
+	at org.example.view.Menu.registerUser(Menu.java:183) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:95) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:180) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:129) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 29 more
+2025-04-14 15:00:04 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 15:00:04 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@21a21c64
+2025-04-14 15:00:04 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 15:00:04 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 15:00:04 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 15:00:04 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 15:00:06 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-14 15:00:06 WARN  ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:575) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:515) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.migrateTable(AbstractSchemaMigrator.java:333) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:84) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at java.util.HashMap.forEach(HashMap.java:1429) [?:?]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:334) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:458) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1506) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.HibernatePersistenceProvider.createContainerEntityManagerFactory(HibernatePersistenceProvider.java:144) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.persistence.PersistenceManager.<clinit>(PersistenceManager.java:22) [classes/:?]
+	at org.example.dao.UserDaoImpl.isEmailExists(UserDaoImpl.java:97) [classes/:?]
+	at org.example.service.UserServiceImpl.isEmailExists(UserServiceImpl.java:75) [classes/:?]
+	at org.example.controller.UserController.isEmailExists(UserController.java:47) [classes/:?]
+	at org.example.view.Menu.registerUser(Menu.java:170) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:95) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" contains null values
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:356) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:341) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:317) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:312) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 23 more
+2025-04-14 15:00:07 WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42703
+2025-04-14 15:00:07 ERROR SqlExceptionHelper - ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+2025-04-14 15:00:07 ERROR UserDaoImpl - Error while registering user: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.InsertReturningDelegate.executeAndExtractReturning(InsertReturningDelegate.java:96) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.AbstractReturningDelegate.performMutation(AbstractReturningDelegate.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:47) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:95) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:85) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:388) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:302) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:221) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:135) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:774) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:758) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.registerUser(UserDaoImpl.java:22) [classes/:?]
+	at org.example.service.UserServiceImpl.registerUser(UserServiceImpl.java:30) [classes/:?]
+	at org.example.controller.UserController.registerUser(UserController.java:21) [classes/:?]
+	at org.example.view.Menu.registerUser(Menu.java:183) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:95) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:180) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:129) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 29 more
+2025-04-14 15:09:30 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 15:09:30 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7c7d3c46
+2025-04-14 15:09:30 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 15:09:30 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 15:09:31 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 15:09:31 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 15:09:33 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-14 15:09:33 WARN  ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists users add column user_type varchar(31) not null" via JDBC [ERROR: column "user_type" of relation "users" contains null values]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:575) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:515) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.migrateTable(AbstractSchemaMigrator.java:333) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:84) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at java.util.HashMap.forEach(HashMap.java:1429) [?:?]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:334) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:458) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1506) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.jpa.HibernatePersistenceProvider.createContainerEntityManagerFactory(HibernatePersistenceProvider.java:144) [hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.persistence.PersistenceManager.<clinit>(PersistenceManager.java:22) [classes/:?]
+	at org.example.dao.UserDaoImpl.isEmailExists(UserDaoImpl.java:96) [classes/:?]
+	at org.example.service.UserServiceImpl.isEmailExists(UserServiceImpl.java:82) [classes/:?]
+	at org.example.controller.UserController.isEmailExists(UserController.java:47) [classes/:?]
+	at org.example.view.Menu.registerUser(Menu.java:170) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:95) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" contains null values
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:356) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:341) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:317) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:312) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 23 more
+2025-04-14 15:09:33 WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42703
+2025-04-14 15:09:33 ERROR SqlExceptionHelper - ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+2025-04-14 15:09:33 ERROR UserDaoImpl - Error while registering user: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.InsertReturningDelegate.executeAndExtractReturning(InsertReturningDelegate.java:96) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.AbstractReturningDelegate.performMutation(AbstractReturningDelegate.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:47) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:95) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:85) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:388) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:302) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:221) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:135) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:774) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:758) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.registerUser(UserDaoImpl.java:22) [classes/:?]
+	at org.example.service.UserServiceImpl.registerUser(UserServiceImpl.java:37) [classes/:?]
+	at org.example.controller.UserController.registerUser(UserController.java:21) [classes/:?]
+	at org.example.view.Menu.registerUser(Menu.java:183) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:95) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:180) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:129) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 29 more
+2025-04-14 15:09:51 ERROR UserDaoImpl - Error fetching user by email ram@gmail.com: No result found for query [FROM User WHERE email = :email]
+jakarta.persistence.NoResultException: No result found for query [FROM User WHERE email = :email]
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:558) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.getUserByEmailId(UserDaoImpl.java:87) [classes/:?]
+	at org.example.service.UserServiceImpl.authenticateUser(UserServiceImpl.java:63) [classes/:?]
+	at org.example.controller.UserController.authenticateUser(UserController.java:38) [classes/:?]
+	at org.example.view.Menu.loginUser(Menu.java:202) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:96) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+2025-04-14 15:09:51 WARN  Menu - Invalid login attempt for email: ram@gmail.com
+2025-04-14 15:11:41 ERROR UserDaoImpl - Error fetching user by email ram@gmail.com: No result found for query [FROM User WHERE email = :email]
+jakarta.persistence.NoResultException: No result found for query [FROM User WHERE email = :email]
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:558) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.getUserByEmailId(UserDaoImpl.java:87) [classes/:?]
+	at org.example.service.UserServiceImpl.authenticateUser(UserServiceImpl.java:63) [classes/:?]
+	at org.example.controller.UserController.authenticateUser(UserController.java:38) [classes/:?]
+	at org.example.view.Menu.loginUser(Menu.java:202) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:96) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+2025-04-14 15:14:53 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m11s792ms465µs800ns).
+2025-04-14 15:14:53 WARN  Menu - Invalid login attempt for email: ram@gmail.com
+2025-04-14 15:15:20 ERROR UserDaoImpl - Error fetching user by email ram@gmail.com: No result found for query [SELECT u FROM User u WHERE u.email = :email]
+jakarta.persistence.NoResultException: No result found for query [SELECT u FROM User u WHERE u.email = :email]
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:558) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.getUserByEmailId(UserDaoImpl.java:87) [classes/:?]
+	at org.example.service.UserServiceImpl.authenticateUser(UserServiceImpl.java:63) [classes/:?]
+	at org.example.controller.UserController.authenticateUser(UserController.java:38) [classes/:?]
+	at org.example.view.Menu.loginUser(Menu.java:202) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:96) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+2025-04-14 15:15:21 WARN  Menu - Invalid login attempt for email: ram@gmail.com
+2025-04-14 15:24:15 ERROR UserDaoImpl - Error fetching user by email ram@gmail.com: No result found for query [SELECT u FROM User u WHERE u.email = :email]
+jakarta.persistence.NoResultException: No result found for query [SELECT u FROM User u WHERE u.email = :email]
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:558) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.getUserByEmailId(UserDaoImpl.java:87) [classes/:?]
+	at org.example.service.UserServiceImpl.authenticateUser(UserServiceImpl.java:63) [classes/:?]
+	at org.example.controller.UserController.authenticateUser(UserController.java:38) [classes/:?]
+	at org.example.view.Menu.loginUser(Menu.java:202) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:96) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+2025-04-14 15:24:15 WARN  Menu - Invalid login attempt for email: ram@gmail.com
+2025-04-14 15:24:15 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m50s618ms714µs600ns).
+2025-04-14 15:24:43 ERROR UserDaoImpl - Error fetching user by email ram@gmail.com: No result found for query [SELECT u FROM User u WHERE u.email = :email]
+jakarta.persistence.NoResultException: No result found for query [SELECT u FROM User u WHERE u.email = :email]
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:558) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.getUserByEmailId(UserDaoImpl.java:87) [classes/:?]
+	at org.example.service.UserServiceImpl.authenticateUser(UserServiceImpl.java:63) [classes/:?]
+	at org.example.controller.UserController.authenticateUser(UserController.java:38) [classes/:?]
+	at org.example.view.Menu.loginUser(Menu.java:202) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:96) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+2025-04-14 15:24:43 WARN  Menu - Invalid login attempt for email: ram@gmail.com
+2025-04-14 15:32:25 WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42703
+2025-04-14 15:32:25 ERROR SqlExceptionHelper - ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+2025-04-14 15:33:07 ERROR UserDaoImpl - Error while registering user: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.InsertReturningDelegate.executeAndExtractReturning(InsertReturningDelegate.java:96) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.AbstractReturningDelegate.performMutation(AbstractReturningDelegate.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:47) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:95) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:85) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:388) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:302) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:221) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:135) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:774) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:758) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.registerUser(UserDaoImpl.java:22) [classes/:?]
+	at org.example.service.UserServiceImpl.registerUser(UserServiceImpl.java:37) [classes/:?]
+	at org.example.controller.UserController.registerUser(UserController.java:21) [classes/:?]
+	at org.example.view.Menu.registerUser(Menu.java:183) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Menu.java:95) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:180) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:129) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 29 more
+2025-04-14 15:52:48 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m10s275ms975µs400ns).
+2025-04-14 15:53:37 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=49s117ms984µs200ns).
+2025-04-14 15:55:10 WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42703
+2025-04-14 15:55:10 ERROR SqlExceptionHelper - ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+2025-04-14 15:55:10 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=57s931ms282µs800ns).
+2025-04-14 16:02:49 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m38s428ms749µs200ns).
+2025-04-14 16:02:49 ERROR UserDaoImpl - Error while registering user: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.InsertReturningDelegate.executeAndExtractReturning(InsertReturningDelegate.java:96) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.AbstractReturningDelegate.performMutation(AbstractReturningDelegate.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:47) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:95) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:85) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:388) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:302) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:221) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:135) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:774) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:758) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.registerUser(UserDaoImpl.java:22) [classes/:?]
+	at org.example.service.UserServiceImpl.registerUser(UserServiceImpl.java:37) [classes/:?]
+	at org.example.controller.UserController.registerUser(UserController.java:21) [classes/:?]
+	at org.example.view.Menu.registerUser(Unknown Source) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Unknown Source) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:180) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:129) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 29 more
+2025-04-14 16:03:10 WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42703
+2025-04-14 16:03:10 ERROR SqlExceptionHelper - ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+2025-04-14 16:03:11 ERROR UserDaoImpl - Error while registering user: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.InsertReturningDelegate.executeAndExtractReturning(InsertReturningDelegate.java:96) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.AbstractReturningDelegate.performMutation(AbstractReturningDelegate.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:47) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:95) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:85) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:388) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:302) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:221) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:135) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:774) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:758) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.registerUser(UserDaoImpl.java:22) [classes/:?]
+	at org.example.service.UserServiceImpl.registerUser(UserServiceImpl.java:37) [classes/:?]
+	at org.example.controller.UserController.registerUser(UserController.java:21) [classes/:?]
+	at org.example.view.Menu.registerUser(Menu.java:181) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Unknown Source) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:180) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:129) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 29 more
+2025-04-14 16:20:14 WARN  Menu - Invalid name format entered: AISHA KHAN'
+2025-04-14 16:20:50 WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42703
+2025-04-14 16:20:50 ERROR SqlExceptionHelper - ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+2025-04-14 16:21:01 ERROR UserDaoImpl - Error while registering user: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: column "user_type" of relation "users" does not exist
+  Position: 60] [insert into users (email,is_active,name,password,user_role,user_type) values (?,?,?,?,?,'User') returning user_id]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:145) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.InsertReturningDelegate.executeAndExtractReturning(InsertReturningDelegate.java:96) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.id.insert.AbstractReturningDelegate.performMutation(AbstractReturningDelegate.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:47) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:95) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:85) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:670) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:291) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:272) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:388) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:302) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:221) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:135) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:774) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:758) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.UserDaoImpl.registerUser(UserDaoImpl.java:22) [classes/:?]
+	at org.example.service.UserServiceImpl.registerUser(UserServiceImpl.java:33) [classes/:?]
+	at org.example.controller.UserController.registerUser(UserController.java:21) [classes/:?]
+	at org.example.view.Menu.registerUser(Menu.java:181) [classes/:?]
+	at org.example.view.Menu.displayMainMenu(Unknown Source) [classes/:?]
+	at org.example.Main.main(Main.java:57) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "user_type" of relation "users" does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194) ~[postgresql-42.7.4.jar:42.7.4]
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:180) ~[postgresql-42.7.4.jar:42.7.4]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44) ~[HikariCP-6.3.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java) ~[HikariCP-6.3.0.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.execute(ResultSetReturnImpl.java:129) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 29 more
+2025-04-14 16:24:28 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 16:24:28 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2ed3b1f5
+2025-04-14 16:24:28 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 16:24:28 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 16:24:28 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 16:24:28 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 16:24:30 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-14 16:24:38 INFO  UserDaoImpl - User registered successfully: User{userID=19, name='AISHA KHAN', email='aisha@gmail.com', password='!Q1q', userRole=GUEST, isActive=true}
+2025-04-14 16:25:09 WARN  Menu - Invalid email format entered: aisha@gmial.com
+2025-04-14 17:08:11 INFO  Menu - Login successful: AISHA KHAN (GUEST)
+2025-04-14 17:08:17 INFO  Menu - User 19 is viewing their bookings
+2025-04-14 17:08:17 INFO  Menu - User 19 requested to view their bookings.
+2025-04-14 17:08:17 WARN  Menu - No bookings found for AISHA KHAN.
+2025-04-14 17:08:24 WARN  Menu - Invalid menu choice 0 by user 19
+2025-04-14 17:10:39 WARN  Menu - Invalid menu choice 0 by user 19
+2025-04-14 17:10:43 WARN  Menu - Invalid menu choice 0 by user 19
+2025-04-14 17:12:51 WARN  Menu - Invalid menu choice 0 by user 19
+2025-04-14 17:13:30 INFO  Menu - User 19 is canceling a booking
+2025-04-14 17:13:30 WARN  Menu - No bookings found for AISHA KHAN at moment!
+2025-04-14 17:15:26 INFO  Menu - User 19 is canceling a booking
+2025-04-14 17:15:26 WARN  Menu - No bookings found for AISHA KHAN at moment!
+2025-04-14 17:15:55 INFO  Menu - User 19 is canceling a booking
+2025-04-14 17:15:55 WARN  Menu - No bookings found for AISHA KHAN at moment!
+2025-04-14 17:16:07 WARN  Menu - Invalid menu choice 0 by user 19
+2025-04-14 17:16:23 WARN  Menu - Invalid menu choice 0 by user 19
+2025-04-14 17:16:30 WARN  Menu - Invalid menu choice 0 by user 19
+2025-04-14 17:16:41 WARN  Menu - Invalid menu choice 0 by user 19
+2025-04-14 17:16:54 WARN  Menu - Invalid menu choice 111 by user 19
+2025-04-14 17:17:22 WARN  Menu - Invalid menu choice 123 by user 19
+2025-04-14 17:18:15 INFO  Menu - User 19 is logging out
+2025-04-14 17:18:42 INFO  Menu - Login successful: AISHA KHAN (GUEST)
+2025-04-14 17:18:49 INFO  Menu - User 19 is viewing their invoice
+2025-04-14 17:18:49 INFO  Menu - User 19 requested to view their invoices.
+2025-04-14 17:18:49 WARN  Menu - No invoices found for user 19.
+2025-04-14 17:19:38 INFO  Menu - User 19 is viewing their bookings
+2025-04-14 17:19:38 INFO  Menu - User 19 requested to view their bookings.
+2025-04-14 17:19:38 WARN  Menu - No bookings found for AISHA KHAN.
+2025-04-14 17:23:38 WARN  Menu - Invalid menu choice 10 by user 19
+2025-04-14 17:23:50 WARN  Menu - Invalid menu choice 11 by user 19
+2025-04-14 17:24:27 INFO  Menu - User 19 is booking a room
+2025-04-14 17:28:21 INFO  BookingServiceImpl - Booking created successfully with ID: 50
+2025-04-14 17:28:21 INFO  RoomDaoImpl - Room updated successfully: Room{roomID=1, roomNumber=101, roomType=SINGLE, price=2500.0, isAvailable=false}
+2025-04-14 17:28:21 INFO  RoomServiceImpl - Room updated successfully: Room{roomID=1, roomNumber=101, roomType=SINGLE, price=2500.0, isAvailable=false}
+2025-04-14 17:30:52 INFO  Menu - Generating invoice for user 19 | Booking ID: 50 | Amount: 5000.0 | Paid: false
+2025-04-14 18:42:45 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 18:42:45 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@21d8bcbe
+2025-04-14 18:42:45 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 18:42:45 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 18:42:45 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 18:42:45 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 18:42:47 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-14 18:42:48 WARN  UserServiceImpl - Registration attempt failed: Email already exists - aisha@gmail.com
+2025-04-14 18:44:06 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 18:44:06 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3f28bd56
+2025-04-14 18:44:06 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 18:44:06 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 18:44:06 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 18:44:06 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 18:44:08 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-14 18:44:09 WARN  UserServiceImpl - Registration attempt failed: Email already exists - aisha@gmail.com
+2025-04-14 18:48:31 WARN  UserServiceImpl - Registration attempt failed: Email already exists - aisha@gmail.com
+2025-04-14 18:48:31 WARN  HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m54s756ms246µs).
+2025-04-14 18:48:54 INFO  HikariDataSource - HikariPool-1 - Starting...
+2025-04-14 18:48:54 INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2e029d61
+2025-04-14 18:48:54 INFO  HikariDataSource - HikariPool-1 - Start completed.
+2025-04-14 18:48:54 INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: my-persistence-unit]
+2025-04-14 18:48:54 INFO  Version - HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+2025-04-14 18:48:54 INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-04-14 18:48:56 INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)

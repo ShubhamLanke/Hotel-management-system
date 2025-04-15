@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.example.constants.PaymentStatus;
+import org.example.entity.Booking;
 import org.example.entity.Invoice;
 import org.example.entity.User;
 import org.example.persistence.PersistenceManager;
@@ -27,16 +28,19 @@ public class InvoiceDaoImpl implements InvoiceDao {
     }
 
     @Override
-    public Optional<Invoice> getInvoiceByBookingId(int bookingId) {
+    public Optional<Invoice> getInvoiceByBooking(Booking booking) {
+
+        Booking booking1 = new Booking();
+        booking1.setBookingId(booking.getBookingId());
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             TypedQuery<Invoice> query = entityManager.createQuery(
-                    "SELECT i FROM Invoice i WHERE i.bookingId = :bookingId", Invoice.class);
-            query.setParameter("bookingId", bookingId);
+                    "SELECT i FROM Invoice i WHERE i.booking = :booking", Invoice.class);
+            query.setParameter("booking", booking1);
 
             List<Invoice> resultList = query.getResultList();
             return resultList.stream().findFirst();
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching invoice by booking ID: " + bookingId, e);
+            throw new RuntimeException("Error fetching invoice by booking ID: " + booking, e);
         }
     }
 

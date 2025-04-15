@@ -31,7 +31,6 @@ public class MenuHandler {
         String paddedTitle = " ".repeat(leftPadding) + title + " ".repeat(rightPadding);
 
         // Display menu
-        System.out.println("\n");
         System.out.println(border);
         System.out.println(paddedTitle);
         System.out.println(border);

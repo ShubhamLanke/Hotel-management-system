@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.constants.PaymentStatus;
+import org.example.entity.Booking;
 import org.example.entity.Invoice;
 import org.example.entity.User;
 
@@ -12,7 +13,7 @@ public interface InvoiceDao {
 
     int generateInvoice(Invoice invoice);
 
-    Optional<Invoice> getInvoiceByBookingId(int bookingId);
+    Optional<Invoice> getInvoiceByBooking(Booking booking);
 
     List<Invoice> getAllInvoices();
 

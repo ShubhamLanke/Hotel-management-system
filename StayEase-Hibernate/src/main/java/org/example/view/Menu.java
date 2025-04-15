@@ -47,64 +47,7 @@ public class Menu {
         this.adminDashBoard = new AdminDashBoard(roomController, userController, bookingController, invoiceController);
     }
 
-//    public void displayMainMenu() {
-//        while (1 > 0) {
-//            System.out.println("\n==============================");
-//            System.out.println("  Welcome to StayEase Hotel!");
-//            System.out.println("==============================");
-//            System.out.println("1. View Available Rooms");
-//            System.out.println("2. Register User");
-//            System.out.println("3. Login");
-//            System.out.println("------------------------------");
-//            System.out.print("Enter your choice: ");
-//
-//            try {
-//                int choice = scanner.nextInt();
-//                scanner.nextLine();
-//
-//                switch (choice) {
-//                    case 1:
-//                        viewAvailableRooms();
-//                        break;
-//                    case 2:
-//                        registerUser();
-//                        break;
-//                    case 3:
-//                        loginUser();
-//                        break;
-//                    default:
-//                        log.info("Invalid choice! Please enter a number between 1 and 4.");
-//                }
-//            } catch (InputMismatchException e) {
-//                log.error("Invalid input! Please enter a number between 1 and 4.");
-//                scanner.nextLine();
-//            }
-//        }
-//    }
-
-    public void displayMainMenu() {
-        while (1>0) {
-            menuHandler.displayMenu("Welcome to StayEase Hotel!", new String[]{
-                    "View Available Rooms", "Register User", "Login"
-            });
-
-            try {
-                int choice = menuHandler.getUserChoice();
-                switch (choice) {
-                    case 1 -> viewAvailableRooms();
-                    case 2 -> registerUser();
-                    case 3 -> loginUser();
-                    default -> System.out.println("Invalid choice! Please enter a valid option.");
-                }
-            } catch (InputMismatchException e) {
-                log.error("Invalid input! Please enter a number from above options.");
-                scanner.nextLine();
-            }
-        }
-    }
-
-
-    private void viewAvailableRooms() {
+    public void viewAvailableRooms() {
         Response roomResponse = roomController.getAvailableRooms();
         Object data = roomResponse.getData();
         List<Room> availableRooms = new ArrayList<>();
@@ -119,6 +62,7 @@ public class Menu {
         if (roomResponse.getStatus().equals(ERROR)) {
             System.out.println("\nNo available rooms found.");
         } else {
+
             System.out.println("\n=======================================================");
             System.out.printf("%-10s %-15s %-15s %-10s %n",
                     "Room ID", "Room Number", "Room Type", "Price");
@@ -134,104 +78,64 @@ public class Menu {
         }
     }
 
-    private void registerUser() {
-        System.out.print("\nEnter your name: ");
-        String name = scanner.nextLine().toUpperCase();
-        if (!Validator.isValidName(name)) {
-            log.warn("Invalid name format entered: {}", name);
-            System.out.println("Invalid name format. Please enter a valid name.");
-            return;
-        }
-        System.out.print("Enter your email: ");
-        String email = scanner.nextLine().toLowerCase();
-        if (!Validator.isValidEmail(email)) {
-            log.warn("Invalid email format entered: {}", email);
-            System.out.println("Invalid email format. Please enter a valid email.");
-            return;
-        }
-        System.out.print("Enter your password: ");
-        String password = scanner.nextLine();
-        if (!Validator.isValidPassword(password)) {
-            log.warn("Invalid password format entered: {}", email);
-            System.out.println("Invalid password format. Please enter a valid password with At least 1 lowercase, 1 uppercase, 1 digit, 1 special, and 4+ chars.");
-            return;
-        }
-        System.out.print("Enter Role (STAFF/GUEST): ");
-        String roleInput = scanner.nextLine().toUpperCase();
-
-        try {
-            UserRole role = UserRole.valueOf(roleInput);
-
-            User user = new User();
-            user.setName(name);
-            user.setEmail(email);
-            user.setPassword(password);
-            user.setUserRole(role);
-            Response userResponse = userController.isEmailExists(email);
-            if (userResponse.isSuccess()) {
-                System.out.println("Error: This email is already registered. Please use a different email.");
-                return;
-            }
-            if (role == UserRole.GUEST) {
-                user.setActive(true);
-            } else {
-                user.setActive(false);
-                System.out.println("Staff registration request submitted! Awaiting admin approval.");
-            }
-            Response registerUserResponse = userController.registerUser(user);
-            if (registerUserResponse.getStatus().equals(ERROR)){
-                log.error("Unable to register user");
-                return;
-            }
-            System.out.println("\nCongratulations " + user.getName() + "! You can log in now!");
-            System.out.println("User Type: " + user.getUserRole());
-
-        } catch (IllegalArgumentException e) {
-            log.error("Invalid role! Please enter either STAFF or GUEST.", e);
-        }
-    }
-
     private void loginUser() {
-        System.out.print("\nEnter email: ");
-        String email = scanner.nextLine().toLowerCase();
-        if (!Validator.isValidEmail(email)) {
-            log.warn("Invalid email format entered: {}", email);
-            System.out.println("Invalid email format. Please enter a valid email.");
-            return;
-        }
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
-        Response authenticateUser = userController.authenticateUser(email, password);
-        if (authenticateUser.isSuccess()) {
-            Response userResponse = userController.getUserByEmail(email);
+        while (true) {
+            System.out.print("\nEnter email (or 0 to cancel): ");
+            String email = scanner.nextLine().toLowerCase();
 
-            if (userResponse.isSuccess()) {
-                User user = (User) userResponse.getData();
-                if (user.getUserRole() != UserRole.SUPER_ADMIN && !user.isActive()) {
-                    log.warn("Inactive account login attempt: {}", email);
-                    System.out.println(user.getName() + ", your account is currently inactive. Please contact the administrator.");
-                    return;
-                }
-                log.info("Login successful: {} ({})", user.getName(), user.getUserRole());
+            if (email.equals("0")) return;
 
-                switch (user.getUserRole()) {
-                    case STAFF -> displayStaffMenu(user);
-                    case GUEST -> displayUserMenu(user);
-                    case ADMIN -> adminDashBoard.displayAdminMenu(user);
-                    case SUPER_ADMIN -> adminDashBoard.displaySuperAdminMenu(user);
-                    default -> log.error("Unknown user role for user: {}", email);
-                }
-            } else {
-                log.warn("User not found: {}", email);
-                System.out.println("User not found. Please try again.");
+            if (!Validator.isValidEmail(email)) {
+                log.warn("Invalid email format entered: {}", email);
+                System.out.println("❌ Invalid email format. Please enter a valid email.");
+                continue;
             }
-        } else {
-            log.warn("Invalid login attempt for email: {}", email);
-            System.out.println("Invalid credentials. Please try again.");
+
+            System.out.print("Enter password (or 0 to cancel): ");
+            String password = scanner.nextLine();
+
+            if (password.equals("0")) return;
+
+            Response authResponse = userController.authenticateUser(email, password);
+            if (!authResponse.isSuccess()) {
+                log.warn("Invalid login attempt for email: {}", email);
+                System.out.println("❌ Invalid credentials. Please try again.");
+                continue;
+            }
+
+            Response userResponse = userController.getUserByEmail(email);
+            if (!userResponse.isSuccess()) {
+                log.warn("User not found after successful authentication: {}", email);
+                System.out.println("❗ User not found. Please try again.");
+                continue;
+            }
+
+            User user = (User) userResponse.getData();
+
+            if (user.getUserRole() != UserRole.SUPER_ADMIN && !user.isActive()) {
+                log.warn("Inactive account login attempt: {}", email);
+                System.out.println("❗ " + user.getName() + ", your account is currently inactive. Please contact the administrator.");
+                return;
+            }
+
+            log.info("Login successful: {} ({})", user.getName(), user.getUserRole());
+            System.out.println("\n✅ Login successful "+user.getName() + " (" + user.getUserRole() + ")");
+
+            switch (user.getUserRole()) {
+                case STAFF -> displayStaffMenu(user);
+                case GUEST -> displayUserMenu(user);
+                case ADMIN -> adminDashBoard.displayAdminMenu(user);
+                case SUPER_ADMIN -> adminDashBoard.displaySuperAdminMenu(user);
+                default -> {
+                    log.error("Unknown user role for user: {}", email);
+                    System.out.println("❗ Unknown user role. Contact support.");
+                }
+            }
+            break;
         }
     }
 
-    private void displayStaffMenu(User loggedInStaff) {
+    public void displayStaffMenu(User loggedInStaff) {
         log.info("Staff menu accessed by: {} (Role: {})", loggedInStaff.getName(), loggedInStaff.getUserRole());
         if (Boolean.FALSE.equals(loggedInStaff.getUserRole().equals(UserRole.STAFF))) {
             System.out.println("Invalid role type!");
@@ -735,7 +639,7 @@ public class Menu {
                 room.getRoomID(), booking.getCheckIn(), booking.getCheckOut(), room.getPrice() * Duration.between(booking.getCheckIn(), booking.getCheckOut()).toDays());
     }
 
-    private void bookRoomByUser(User loggedInUser) {
+    public void bookRoomByUser(User loggedInUser) {
         Response roomResponse = roomController.getAvailableRooms();
         Object data = roomResponse.getData();
         List<Room> availableRooms = new ArrayList<>();
@@ -938,11 +842,10 @@ public class Menu {
         }
     }
 
-    private void displayUserMenu(User loggedInGuest) {
+    public void displayUserMenu(User loggedInGuest) {
         int choice;
         do {
             printUserMenu(loggedInGuest);
-
             try {
                 choice = scanner.nextInt();
                 scanner.nextLine();
@@ -950,6 +853,7 @@ public class Menu {
                 switch (choice) {
                     case 1 -> {
                         log.info("User {} is booking a room", loggedInGuest.getUserID());
+                        System.out.println("Menu class is linked to use menu");
                         bookRoomByUser(loggedInGuest);
                     }
                     case 2 -> {
@@ -961,8 +865,8 @@ public class Menu {
                         cancelBookingByUser(loggedInGuest);
                     }
                     case 4 -> {
-                        log.info("User {} is viewing their invoice", loggedInGuest.getUserID());
-                        viewInvoice(loggedInGuest);
+                        log.info("User {} is viewing their invoice", loggedInGuest.getUserID());                        viewInvoice(loggedInGuest);
+
                     }
                     case 5 -> {
                         log.info("User {} is logging out", loggedInGuest.getUserID());
@@ -983,17 +887,9 @@ public class Menu {
     }
 
     private void printUserMenu(User user) {
-        System.out.println("\n====== User Menu ======");
-        System.out.println("Welcome, " + user.getName() + "!");
+        System.out.println("\nWelcome, " + user.getName() + "!");
         System.out.println("Role: " + user.getUserRole());
-        System.out.println("=========================");
-        System.out.println("1. Book a Room");
-        System.out.println("2. View My Bookings");
-        System.out.println("3. Cancel My Booking");
-        System.out.println("4. View Booking Invoice");
-        System.out.println("5. Logout");
-        System.out.println("-------------------------");
-        System.out.print("Enter your choice: ");
+        menuHandler.displayMenu("User Menu", new String[]{"Book a Room","View My Bookings","Cancel My Booking","View Booking Invoice","Logout"});
     }
 
 
@@ -1024,7 +920,7 @@ public class Menu {
         }
     }
 
-    private void viewBooking(User loggedInGuest) {
+    public void viewBooking(User loggedInGuest) {
         log.info("User {} requested to view their bookings.", loggedInGuest.getUserID());
 
         Response bookingResponse = bookingController.getBookingsByUser(loggedInGuest.getUserID());

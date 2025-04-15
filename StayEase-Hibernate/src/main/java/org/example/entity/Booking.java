@@ -5,6 +5,7 @@ import lombok.Data;
 import org.example.constants.BookingStatus;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -42,6 +43,18 @@ public class Booking {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Booking booking = (Booking) o;
+        return Objects.equals(bookingId, booking.bookingId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(bookingId);
     }
 
     @Override

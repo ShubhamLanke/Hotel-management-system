@@ -47,11 +47,8 @@ public class BookingServiceImpl implements BookingService {
             }
             bookingDao.cancelBooking(bookingId);
             return true;
-        } catch (BookingNotFoundException e) {
-            log.error("Booking cancellation failed for ID {}: {}", bookingId, e.getMessage());
-            return false;
         } catch (Exception e) {
-            log.error("Unexpected error while canceling booking ID {}: {}", bookingId, e.getMessage());
+            log.error("Unexpected error while canceling booking ID {}: {}", bookingId, e);
             return false;
         }
     }

@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.constants.PaymentStatus;
 import org.example.dao.InvoiceDao;
+import org.example.entity.Booking;
 import org.example.entity.Invoice;
 import org.example.entity.User;
 import org.example.exception.ServiceException;
@@ -10,12 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class InvoiceServiceImpl implements InvoiceService {
-    private final InvoiceDao invoiceDao;
     private final UserService userService;
+    private final BookingService bookingService;
 
-    public InvoiceServiceImpl(InvoiceDao invoiceDao, UserService userService) {
+    private final InvoiceDao invoiceDao;
+
+    public InvoiceServiceImpl(InvoiceDao invoiceDao, UserService userService, BookingService bookingService) {
         this.invoiceDao = invoiceDao;
         this.userService = userService;
+        this.bookingService = bookingService;
     }
 
     @Override
@@ -34,7 +38,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (bookingId <= 0) {
             return Optional.empty();
         }
-        return invoiceDao.getInvoiceByBookingId(bookingId);
+        Optional<Booking> booking = bookingService.getBookingById(bookingId);
+        return invoiceDao.getInvoiceByBooking(booking.get());
     }
 
     @Override
