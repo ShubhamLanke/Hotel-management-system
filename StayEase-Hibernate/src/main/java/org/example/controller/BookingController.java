@@ -8,7 +8,9 @@ import org.example.utility.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.print.Book;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 public class BookingController {
@@ -30,14 +32,16 @@ public class BookingController {
         bookingService.updateBooking(booking);
         return response = new Response(booking, ResponseStatus.SUCCESS, "Booking updated successfully!");
     }
-
     public Response cancelBooking(int bookingId) {
-        boolean isCancelled = bookingService.cancelBooking(bookingId);
-        if (isCancelled) {
-            return response = new Response(null, ResponseStatus.SUCCESS, "Booking cancelled successfully!");
-        } else {
-            return response = new Response(null, ResponseStatus.ERROR, "Failed to cancel booking. Booking ID may not exist.");
+        Optional<Booking> optionalBooking = bookingService.getBookingById(bookingId);
+        if (optionalBooking.isPresent()) {
+            Booking booking = optionalBooking.get();
+            boolean isCancelled = bookingService.cancelBooking(bookingId);
+            if (isCancelled) {
+                return response = new Response(booking, ResponseStatus.SUCCESS, "Booking cancelled successfully!");
+            }
         }
+        return response = new Response(null, ResponseStatus.ERROR, "Failed to cancel booking. Booking ID may not exist.");
     }
 
     public Response getBookingById(int bookingId) {

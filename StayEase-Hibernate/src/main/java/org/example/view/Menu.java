@@ -543,7 +543,7 @@ public class Menu {
     }
 
     private User createNewUser(String email) {
-        System.out.println("User not found! Creating a new user profile...");
+        System.out.println("User not found! Creating a new user profile.!");
         System.out.print("Enter full name: ");
         String name = scanner.nextLine();
 
