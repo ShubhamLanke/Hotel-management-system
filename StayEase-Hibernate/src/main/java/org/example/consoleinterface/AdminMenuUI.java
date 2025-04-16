@@ -1,9 +1,8 @@
-package org.example.view;
+package org.example.consoleinterface;
 
-
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.constants.ResponseStatus;
 import org.example.constants.UserRole;
 import org.example.controller.BookingController;
 import org.example.controller.InvoiceController;
@@ -14,55 +13,49 @@ import org.example.entity.Room;
 import org.example.entity.User;
 import org.example.utility.Response;
 import org.example.utility.Validator;
+import org.example.view.AdminDashBoard;
 
-
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 import static org.example.constants.ResponseStatus.ERROR;
 import static org.example.constants.ResponseStatus.SUCCESS;
 
-public class AdminDashBoard {
+@Log4j2
+public class AdminMenuUI {
+
+    private final MenuHandler menuHandler;
     private final RoomController roomController;
     private final UserController userController;
     private final BookingController bookingController;
     private final InvoiceController invoiceController;
 
-    private static final Logger log = LogManager.getLogger(AdminDashBoard.class);
-    private final Scanner scanner = new Scanner(System.in);
-//    private User loggedInAdmin;
+    private final Scanner scanner;
 
-
-    public AdminDashBoard(RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController) {
+    public AdminMenuUI(MenuHandler menuHandler, RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, Scanner scanner) {
+        this.menuHandler = menuHandler;
         this.roomController = roomController;
         this.userController = userController;
         this.bookingController = bookingController;
         this.invoiceController = invoiceController;
+        this.scanner = scanner;
     }
 
-//    public void setLoggedInAdmin(User admin) {
-//        this.loggedInAdmin = admin;
-//    }
 
     public void displaySuperAdminMenu(User loggedInSuperAdmin) {
         if (loggedInSuperAdmin == null || loggedInSuperAdmin.getUserRole() != UserRole.SUPER_ADMIN) {
             System.out.println("Error: No Super Admin is logged in!");
             return;
         }
-
+        System.out.println("===============================");
+        System.out.println("Welcome, " + loggedInSuperAdmin.getName() + "!");
+        System.out.println("Role: " + loggedInSuperAdmin.getUserRole());
         while (true) {
-            System.out.println("\n===== Super Admin Dashboard =====");
-            System.out.println("Welcome, " + loggedInSuperAdmin.getName() + "!");
-            System.out.println("Role: " + loggedInSuperAdmin.getUserRole());
-            System.out.println("===============================");
-            System.out.println("1. View Available Rooms");
-            System.out.println("2. View All Bookings");
-            System.out.println("3. Manage Rooms");
-            System.out.println("4. Manage staff");
-            System.out.println("5. Manage Admins");
-            System.out.println("6. Logout");
-            System.out.println("-------------------------------");
 
-            System.out.print("Enter your choice: ");
+            menuHandler.displayMenu("Super Admin Dashboard", new String[]{
+                    "View Available Rooms", "View All Bookings", "Manage Rooms", "Manage Staff", "Manage Admin", "Logout"});
             try {
                 int choice = scanner.nextInt();
                 scanner.nextLine();
@@ -96,14 +89,7 @@ public class AdminDashBoard {
     }
 
     private void manageAdmins() {
-        System.out.println("\n=======================================");
-        System.out.println("              Manage Admins             ");
-        System.out.println("=======================================");
-        System.out.println("1. View All admins");
-        System.out.println("2. Grant or Revoke admin Access");
-        System.out.println("3. Return back to menu");
-        System.out.println("---------------------------------------");
-        System.out.print("Enter your choice: ");
+        menuHandler.displayMenu("Manage Admins", new String[]{"View All Admins", "Grant or Revoke Admin Access", "Return Back to Menu"});
         try {
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -212,19 +198,12 @@ public class AdminDashBoard {
             System.out.println("Error: No admin is logged in!");
             return;
         }
-
+        System.out.println("============================");
+        System.out.println("Welcome, " + loggedInAdmin.getName() + "!");
+        System.out.println("Role: " + loggedInAdmin.getUserRole());
         while (true) {
-            System.out.println("\n===== Admin Dashboard =====");
-            System.out.println("Welcome, " + loggedInAdmin.getName() + "!");
-            System.out.println("Role: " + loggedInAdmin.getUserRole());
-            System.out.println("============================");
-            System.out.println("1. View Available Rooms");
-            System.out.println("2. View All Bookings");
-            System.out.println("3. Manage Rooms");
-            System.out.println("4. Manage Staff");
-            System.out.println("5. Logout");
-            System.out.println("----------------------------");
-            System.out.print("Enter your choice: ");
+            menuHandler.displayMenu("Admin Dashboard", new String[]{
+                    "View Available Rooms", "View All Bookings", "Manage Rooms", "Manage Staff", "Logout"});
             try {
                 int choice = scanner.nextInt();
                 scanner.nextLine();
@@ -529,4 +508,3 @@ public class AdminDashBoard {
         }
     }
 }
-

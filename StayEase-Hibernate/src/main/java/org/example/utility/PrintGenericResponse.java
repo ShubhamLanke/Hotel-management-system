@@ -1,6 +1,14 @@
 package org.example.utility;
 
+import org.example.entity.Booking;
+import org.example.entity.Invoice;
+import org.example.entity.Room;
+import org.example.entity.User;
+
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,4 +54,50 @@ public class PrintGenericResponse {
         System.out.println(lineEnd);
     }
 
+    public void printInvoice(Booking booking, Invoice invoice) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+
+        System.out.println("==================================================");
+        System.out.printf("%30s%n", "HOTEL STAY EASE INVOICE");
+        System.out.println("==================================================");
+
+        System.out.printf("Invoice No   : %s%n", "INV-" + booking.getBookingId());
+        System.out.printf("Date         : %s%n", LocalDateTime.now().format(dtf));
+        System.out.println("--------------------------------------------------");
+
+        User guest = booking.getUser();
+        System.out.printf("Guest Name   : %s%n", guest.getName());
+        System.out.printf("Email        : %s%n", guest.getEmail());
+//        System.out.printf("Contact No   : %s%n", guest.getPhone());
+        System.out.println("--------------------------------------------------");
+
+        System.out.println("Room Details");
+        System.out.println("--------------------------------------------------");
+
+        Room room = booking.getRoom();
+        System.out.printf("Room No      : %s%n", room.getRoomNumber());
+        System.out.printf("Room Type    : %s%n", room.getRoomType());
+        System.out.printf("Price/Night  : ₹ %.2f%n", room.getPrice());
+        System.out.printf("Check-in     : %s%n", booking.getCheckIn().format(dtf));
+        System.out.printf("Check-out    : %s%n", booking.getCheckOut().format(dtf));
+
+        long nights = ChronoUnit.DAYS.between(booking.getCheckIn(), booking.getCheckOut());
+        System.out.printf("Nights       : %d%n", nights);
+        System.out.println("--------------------------------------------------");
+
+        double subtotal = room.getPrice() * nights;
+        double tax = subtotal * 0.12;
+        double total = subtotal + tax;
+
+        System.out.println("Amount Summary");
+        System.out.println("--------------------------------------------------");
+        System.out.printf("Subtotal     : ₹ %.2f%n", subtotal);
+        System.out.printf("Tax (12%%)    : ₹ %.2f%n", tax);
+        System.out.printf("Total Amount : ₹ %.2f%n", total);
+        System.out.printf("Payment status: %s%n", invoice.getPaymentStatus());
+
+        System.out.println("==================================================");
+        System.out.printf("%30s%n", "Thank you for choosing Our Hotel!");
+        System.out.println("==================================================");
+    }
 }

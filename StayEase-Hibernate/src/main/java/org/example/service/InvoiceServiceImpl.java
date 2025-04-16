@@ -1,5 +1,6 @@
 package org.example.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.example.constants.PaymentStatus;
 import org.example.dao.InvoiceDao;
 import org.example.entity.Booking;
@@ -10,6 +11,7 @@ import org.example.exception.ServiceException;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 public class InvoiceServiceImpl implements InvoiceService {
     private final UserService userService;
     private final BookingService bookingService;
@@ -39,6 +41,10 @@ public class InvoiceServiceImpl implements InvoiceService {
             return Optional.empty();
         }
         Optional<Booking> booking = bookingService.getBookingById(bookingId);
+        if (!booking.isPresent()){
+            log.info("No booking found for id {}.",bookingId);
+            return Optional.empty();
+        }
         return invoiceDao.getInvoiceByBooking(booking.get());
     }
 

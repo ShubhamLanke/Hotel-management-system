@@ -102,12 +102,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @Transactional
     public int createUser(User user) {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             entityManager.getTransaction().begin();
             entityManager.persist(user);
-            entityManager.flush();
+            entityManager.flush(); // need to access auto generated id here before commit that why used flush.
             entityManager.getTransaction().commit();
             return user.getUserID();
         } catch (Exception e) {

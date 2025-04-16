@@ -52,7 +52,7 @@ public abstract class AbstractUI {
 //                case 4 -> userController.manageStaff();
 //                case 5 -> userController.manageAdmins();
 //                case 6 -> {
-//                    System.out.println("Logging out...");
+//                    System.out.println("You have been logged out successfully.");
 //                    return;
 //                }
 //                default -> System.out.println("Invalid choice! Please enter a valid option.");
@@ -85,7 +85,7 @@ public abstract class AbstractUI {
 //                case 2 -> bookingController.viewAllBookings();
 //                case 3 -> roomController.manageRooms();
 //                case 4 -> {
-//                    System.out.println("Logging out...");
+//                    System.out.println("You have been logged out successfully.");
 //                    return;
 //                }
 //                default -> System.out.println("Invalid choice! Please enter a valid option.");
@@ -118,7 +118,7 @@ public abstract class AbstractUI {
 //                case 1 -> bookingController.viewAssignedBookings();
 //                case 2 -> bookingController.updateBookingStatus();
 //                case 3 -> {
-//                    System.out.println("Logging out...");
+//                    System.out.println("You have been logged out successfully.");
 //                    return;
 //                }
 //                default -> System.out.println("Invalid choice! Please enter a valid option.");

@@ -18,21 +18,19 @@ import static org.example.constants.ResponseStatus.ERROR;
 public class HomeMenuUI {
     private final UserController userController;
 
-    private final AdminDashBoard adminDashBoard;
+    private final AdminMenuUI adminMenuUI;
 
-    private final Menu menu;
     private final UserMenuUI userMenuUI;
     private final StaffMenuUI staffMenuUI;
     private final MenuHandler menuHandler;
     private final Scanner scanner;
 
-    public HomeMenuUI(UserController userController, AdminDashBoard adminDashBoard, UserMenuUI userMenuUI, StaffMenuUI staffMenuUI, MenuHandler menuHandler, Menu menu, Scanner scanner) {
+    public HomeMenuUI(UserController userController, AdminMenuUI adminMenuUI, UserMenuUI userMenuUI, StaffMenuUI staffMenuUI, MenuHandler menuHandler, Scanner scanner) {
         this.userController = userController;
-        this.adminDashBoard = adminDashBoard;
+        this.adminMenuUI = adminMenuUI;
         this.userMenuUI = userMenuUI;
         this.staffMenuUI = staffMenuUI;
         this.menuHandler = menuHandler;
-        this.menu = menu;
         this.scanner = scanner;
     }
 
@@ -46,7 +44,7 @@ public class HomeMenuUI {
                 int choice = menuHandler.getUserChoice();
                 switch (choice) {
                     case 1 -> userMenuUI.viewAvailableRooms();
-                    case 2 -> registerUser();
+                    case 2 -> userMenuUI.registerUser();
                     case 3 -> loginUser();
                     default -> System.out.println("Invalid choice! Please enter a valid option.");
                 }
@@ -54,92 +52,6 @@ public class HomeMenuUI {
                 log.error("Invalid input! Please enter a number from above options.");
                 scanner.nextLine();
             }
-        }
-    }
-
-    private void registerUser() {
-        String name, email, password, roleInput;
-        UserRole role;
-
-        while (true) {
-            System.out.print("\nEnter your name (or type 0 to cancel): ");
-            name = scanner.nextLine().trim();
-            if (name.equals("0")) return;
-
-            if (!Validator.isValidName(name)) {
-                log.warn("Invalid name format entered: {}", name);
-                System.out.println("❌ Invalid name format. Please enter a valid name.");
-            } else {
-                name = name.toUpperCase();
-                break;
-            }
-        }
-        while (true) {
-            System.out.print("Enter your email (or type 0 to cancel): ");
-            email = scanner.nextLine().trim();
-            if (email.equals("0")) return;
-
-            if (!Validator.isValidEmail(email)) {
-                log.warn("Invalid email format entered: {}", email);
-                System.out.println("❌ Invalid email format. Please enter a valid email.");
-            } else {
-                email = email.toLowerCase();
-                break;
-            }
-        }
-        while (true) {
-            System.out.print("Enter your password (or type 0 to cancel): ");
-            password = scanner.nextLine().trim();
-            if (password.equals("0")) return;
-
-            if (!Validator.isValidPassword(password)) {
-                log.warn("Invalid password format entered for email: {}", email);
-                System.out.println("❌ Invalid password. Use at least 1 lowercase, 1 uppercase, 1 digit, 1 special char, and min 4 chars.");
-            } else {
-                break;
-            }
-        }
-        while (true) {
-            System.out.print("Enter Role (STAFF/GUEST) (or type 0 to cancel): ");
-            roleInput = scanner.nextLine().trim().toUpperCase();
-            if (roleInput.equals("0")) return;
-
-            try {
-                role = UserRole.valueOf(roleInput);
-                break;
-            } catch (IllegalArgumentException e) {
-                System.out.println("❌ Invalid role! Please enter either STAFF or GUEST.");
-                log.warn("Invalid role entered: {}", roleInput);
-            }
-        }
-        try {
-            Response userResponse = userController.isEmailExists(email);
-            if (userResponse.getData().equals(true)) {
-                System.out.println("❗ This email is already registered. Please use a different email.");
-                return;
-            }
-
-            User user = new User();
-            user.setName(name);
-            user.setEmail(email);
-            user.setPassword(password);
-            user.setUserRole(role);
-
-            if (role == UserRole.GUEST) {
-                user.setActive(true);
-            } else {
-                user.setActive(false);
-                System.out.println("✅ Staff registration request submitted! Awaiting admin approval.");
-            }
-            Response registerUserResponse = userController.registerUser(user);
-            if (registerUserResponse.getStatus().equals(ERROR)) {
-                log.error("Unable to register user.");
-                return;
-            }
-            System.out.println("\n🎉 Congratulations " + user.getName() + " (" + user.getUserRole() + ")" + "! You can now log in.");
-
-        } catch (Exception e) {
-            log.error("Unexpected error occurred during registration.", e);
         }
     }
 
@@ -189,8 +101,8 @@ public class HomeMenuUI {
             switch (user.getUserRole()) {
                 case STAFF -> staffMenuUI.displayStaffMenu(user);
                 case GUEST -> userMenuUI.displayUserMenu(user);
-                case ADMIN -> adminDashBoard.displayAdminMenu(user);
-                case SUPER_ADMIN -> adminDashBoard.displaySuperAdminMenu(user);
+                case ADMIN -> adminMenuUI.displayAdminMenu(user);
+                case SUPER_ADMIN -> adminMenuUI.displaySuperAdminMenu(user);
                 default -> {
                     log.error("Unknown user role for user: {}", email);
                     System.out.println("❗ Unknown user role. Contact support.");

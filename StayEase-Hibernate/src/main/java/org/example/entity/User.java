@@ -1,13 +1,15 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import org.example.constants.UserRole;
 
 @Data
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Builder
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User {
 
     @Id

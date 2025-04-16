@@ -3,6 +3,7 @@ package org.example.consoleinterface;
 import lombok.extern.log4j.Log4j2;
 import org.example.constants.BookingStatus;
 import org.example.constants.PaymentStatus;
+import org.example.constants.UserRole;
 import org.example.controller.BookingController;
 import org.example.controller.InvoiceController;
 import org.example.controller.RoomController;
@@ -10,7 +11,7 @@ import org.example.controller.UserController;
 import org.example.entity.*;
 import org.example.utility.PrintGenericResponse;
 import org.example.utility.Response;
-import org.example.view.Menu;
+import org.example.utility.Validator;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -31,21 +32,19 @@ public class UserMenuUI {
 
     private final PrintGenericResponse printGenericResponse;
     private final MenuHandler menuHandler;
-    private final Menu menu;
     private final Scanner scanner;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private Future<?> scheduledTask;
 
-    public UserMenuUI(UserController userController, RoomController roomController, BookingController bookingController, InvoiceController invoiceController, PrintGenericResponse printGenericResponse, MenuHandler menuHandler, Menu menu, Scanner scanner) {
+    public UserMenuUI(UserController userController, RoomController roomController, BookingController bookingController, InvoiceController invoiceController, PrintGenericResponse printGenericResponse, MenuHandler menuHandler, Scanner scanner) {
         this.userController = userController;
         this.roomController = roomController;
         this.bookingController = bookingController;
         this.invoiceController = invoiceController;
         this.printGenericResponse = printGenericResponse;
         this.menuHandler = menuHandler;
-        this.menu = menu;
         this.scanner = scanner;
     }
 
@@ -79,7 +78,7 @@ public class UserMenuUI {
                     }
                     case 5 -> {
                         log.info("User {} is logging out", loggedInGuest.getUserID());
-                        System.out.println("User is logging out...");
+                        System.out.println("User is logged out successfully.");
                     }
                     default -> {
                         System.out.println("Invalid menu choice.");
@@ -95,6 +94,93 @@ public class UserMenuUI {
         } while (choice != 5);
     }
 
+    public void registerUser() {
+        String name, email, password, roleInput;
+        UserRole role;
+
+        while (true) {
+            System.out.print("\nEnter your name (or type 0 to cancel): ");
+            name = scanner.nextLine().trim();
+            if (name.equals("0")) return;
+
+            if (!Validator.isValidName(name)) {
+                log.warn("Invalid name format entered: {}", name);
+                System.out.println("❌ Invalid name format. Please enter a valid name.");
+            } else {
+                name = name.toUpperCase();
+                break;
+            }
+        }
+        while (true) {
+            System.out.print("Enter your email (or type 0 to cancel): ");
+            email = scanner.nextLine().trim();
+            if (email.equals("0")) return;
+
+            if (!Validator.isValidEmail(email)) {
+                log.warn("Invalid email format entered: {}", email);
+                System.out.println("❌ Invalid email format. Please enter a valid email.");
+            } else {
+                email = email.toLowerCase();
+                break;
+            }
+        }
+        while (true) {
+            System.out.print("Enter your password (or type 0 to cancel): ");
+            password = scanner.nextLine().trim();
+            if (password.equals("0")) return;
+
+            if (!Validator.isValidPassword(password)) {
+                log.warn("Invalid password format entered for email: {}", email);
+                System.out.println("❌ Invalid password. Use at least 1 lowercase, 1 uppercase, 1 digit, 1 special char, and min 4 chars.");
+            } else {
+                break;
+            }
+        }
+        while (true) {
+            System.out.print("Enter Role (STAFF/GUEST) (or type 0 to cancel): ");
+            roleInput = scanner.nextLine().trim().toUpperCase();
+            if (roleInput.equals("0")) return;
+
+            try {
+                role = UserRole.valueOf(roleInput);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("❌ Invalid role! Please enter either STAFF or GUEST.");
+                log.warn("Invalid role entered: {}", roleInput);
+            }
+        }
+        try {
+            Response userResponse = userController.isEmailExists(email);
+            if (userResponse.getData().equals(true)) {
+                System.out.println("❗ This email is already registered. Please use a different email.");
+                return;
+            }
+
+            User user = new User();
+            user.setName(name);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setUserRole(role);
+
+            if (role == UserRole.GUEST) {
+                user.setActive(true);
+            } else {
+                user.setActive(false);
+                System.out.println("✅ Staff registration request submitted! Awaiting admin approval.");
+            }
+            Response registerUserResponse = userController.registerUser(user);
+            if (registerUserResponse.getStatus().equals(ERROR)) {
+                log.error("Unable to register user.");
+                System.out.println("Unable to register user");
+                return;
+            }
+            System.out.println("\n🎉 Congratulations " + user.getName() + " (" + user.getUserRole() + ")" + "! You can now log in.");
+
+        } catch (Exception e) {
+            log.error("Unexpected error occurred during registration.", e);
+        }
+    }
+
     public void viewAvailableRooms() {
         Response roomResponse = roomController.getAvailableRooms();
         Object data = roomResponse.getData();
@@ -107,8 +193,8 @@ public class UserMenuUI {
                 }
             }
         }
-        if (roomResponse.getStatus().equals(ERROR)) {
-            System.out.println("\nNo available rooms found.");
+        if (availableRooms.isEmpty()) {
+            System.out.println("\nAll rooms are currently booked. Please check back later.");
         } else {
             List<String> ignore = Arrays.asList("isAvailable");
             printGenericResponse.printTable(availableRooms, ignore);
@@ -351,12 +437,8 @@ public class UserMenuUI {
             System.out.println("No available rooms at the moment.");
             return;
         }
-
-        System.out.println("\nAvailable Rooms:");
-        for (Room room : availableRooms) {
-            System.out.println("Room ID: " + room.getRoomID() + " | Room Number: " + room.getRoomNumber() + " | Type: " +
-                    room.getRoomType() + " | Price: " + room.getPrice());
-        }
+        List<String> ignore = Arrays.asList("isAvailable");
+        printGenericResponse.printTable(availableRooms, ignore);
 
         System.out.print("\nEnter Room ID to book: ");
         int roomId = scanner.nextInt();

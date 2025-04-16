@@ -81,7 +81,7 @@ public class SuperAdminDashboard {
 //                        viewSystemLogs();
 //                        break;
 //                    case 7:
-//                        System.out.println("Logging out...");
+//                        System.out.println("You have been logged out successfully.");
 //                        return;
 //                    default:
 //                        System.out.println("Invalid choice! Please enter a valid option.");
