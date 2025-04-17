@@ -56,6 +56,7 @@ public class PrintGenericResponse {
 
     public void printInvoice(Booking booking, Invoice invoice) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+        long totalNights = (ChronoUnit.DAYS.between(booking.getCheckIn().toLocalDate(), booking.getCheckOut().toLocalDate()));
 
         System.out.println("==================================================");
         System.out.printf("%30s%n", "HOTEL STAY EASE INVOICE");
@@ -81,11 +82,10 @@ public class PrintGenericResponse {
         System.out.printf("Check-in     : %s%n", booking.getCheckIn().format(dtf));
         System.out.printf("Check-out    : %s%n", booking.getCheckOut().format(dtf));
 
-        long nights = ChronoUnit.DAYS.between(booking.getCheckIn(), booking.getCheckOut());
-        System.out.printf("Nights       : %d%n", nights);
+        System.out.printf("Total Nights : %d%n", totalNights);
         System.out.println("--------------------------------------------------");
 
-        double subtotal = room.getPrice() * nights;
+        double subtotal = room.getPrice() * totalNights;
         double tax = subtotal * 0.12;
         double total = subtotal + tax;
 

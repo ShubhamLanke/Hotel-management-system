@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import org.example.constants.PaymentStatus;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Builder
 @Table(name = "invoices")
 public class Invoice {
 

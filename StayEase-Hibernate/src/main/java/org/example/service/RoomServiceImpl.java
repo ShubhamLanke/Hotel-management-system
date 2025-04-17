@@ -5,6 +5,7 @@ import org.example.dao.RoomDao;
 import org.example.entity.Room;
 import org.example.exception.RoomNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,14 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<Room> getAvailableRooms() {
         return roomDao.getAvailableRooms();
+    }
+
+    @Override
+    public List<Room> getAvailableRoomsForDate(LocalDateTime checkIn, LocalDateTime checkOut) {
+        if (checkIn == null || checkOut == null || !checkOut.isAfter(checkIn)) {
+            throw new IllegalArgumentException("Invalid date range. Check-out must be after check-in.");
+        }
+        return roomDao.getAvailableRoomsForDate(checkIn, checkOut);
     }
 
     @Override

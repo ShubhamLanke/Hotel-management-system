@@ -35,7 +35,7 @@
     </Appenders>
 
     <Loggers>
-        <Root level="info">
+        <Root level="debug">
             <AppenderRef ref="AppFileLogger"/>
             <AppenderRef ref="ErrorFileLogger"/>
             <!-- <AppenderRef ref="Console"/> --> <!-- Enable later if needed -->

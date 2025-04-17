@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.example.entity.Room;
 import org.example.persistence.PersistenceManager;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,6 +106,24 @@ public class RoomDaoImpl implements RoomDao {
         } catch (Exception e) {
             log.error("Error fetching room with ID {}", roomId, e);
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Room> getAvailableRoomsForDate(LocalDateTime checkIn, LocalDateTime checkOut) {
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            String jpql = """
+            SELECT r FROM Room r
+            WHERE r.isAvailable = true AND r.roomID NOT IN (
+                SELECT b.room.roomID FROM Booking b
+                WHERE (:checkIn < b.checkOut AND :checkOut > b.checkIn)
+            )
+            """;
+
+            return entityManager.createQuery(jpql, Room.class)
+                    .setParameter("checkIn", checkIn)
+                    .setParameter("checkOut", checkOut)
+                    .getResultList();
         }
     }
 }

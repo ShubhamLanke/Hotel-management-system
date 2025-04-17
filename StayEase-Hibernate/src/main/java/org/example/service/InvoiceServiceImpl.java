@@ -38,14 +38,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public Optional<Invoice> getInvoiceByBookingId(int bookingId) {
         if (bookingId <= 0) {
+            log.warn("Invalid booking ID: {}", bookingId);
             return Optional.empty();
         }
-        Optional<Booking> booking = bookingService.getBookingById(bookingId);
-        if (!booking.isPresent()){
-            log.info("No booking found for id {}.",bookingId);
+
+        Optional<Booking> bookingOpt = bookingService.getBookingById(bookingId);
+        if (bookingOpt.isEmpty()) {
+            log.info("No booking found for ID: {}", bookingId);
+            System.out.println("Andar jaa raha hai!");
             return Optional.empty();
         }
-        return invoiceDao.getInvoiceByBooking(booking.get());
+
+        Optional<Invoice> invoiceOpt = invoiceDao.getInvoiceByBooking(bookingOpt.get());
+        if (invoiceOpt.isEmpty()) {
+            log.info("No invoice found for booking ID: {}", bookingId);
+        }
+        return invoiceOpt;
     }
 
     @Override

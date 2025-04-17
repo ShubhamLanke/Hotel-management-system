@@ -13,11 +13,13 @@ import org.example.entity.*;
 import org.example.utility.PrintGenericResponse;
 import org.example.utility.Response;
 import org.example.utility.Validator;
-import org.example.view.Menu;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Log4j2
@@ -33,7 +35,9 @@ public class StaffMenuUI {
     private final MenuHandler menuHandler;
     private final Scanner scanner;
 
-    public StaffMenuUI(UserMenuUI userMenuUI, UserController userController, RoomController roomController, BookingController bookingController, InvoiceController invoiceController, PrintGenericResponse printGenericResponse, MenuHandler menuHandler,Scanner scanner) {
+    DateTimeFormatter showDateInFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    public StaffMenuUI(UserMenuUI userMenuUI, UserController userController, RoomController roomController, BookingController bookingController, InvoiceController invoiceController, PrintGenericResponse printGenericResponse, MenuHandler menuHandler, Scanner scanner) {
         this.userMenuUI = userMenuUI;
         this.userController = userController;
         this.roomController = roomController;
@@ -57,7 +61,7 @@ public class StaffMenuUI {
         System.out.println("Role: " + loggedInStaff.getUserRole());
         while (1 > 0) {
             menuHandler.displayMenu("Staff Menu", new String[]{"Check Guest Details", "View Available Rooms", "Book a Room",
-                    "Checkout", "Cancel Booking", "Generate Invoices", "Logout", "Exit" });
+                    "Checkout", "Cancel Booking", "Generate Invoices", "Logout", "Exit"});
             try {
                 int choice = scanner.nextInt();
                 if (scanner.hasNextLine()) {
@@ -119,7 +123,7 @@ public class StaffMenuUI {
 
         Response invoiceResponse = invoiceController.getInvoiceByBookingId(bookingId);
         Invoice invoice = (Invoice) invoiceResponse.getData();
-        if (Objects.isNull(invoice)){
+        if (Objects.isNull(invoice)) {
             System.out.println("No invoice found for this user.");
         }
         if (!validateInvoice(invoice)) return;
@@ -145,7 +149,7 @@ public class StaffMenuUI {
         System.out.println("\n------ INVOICE ------");
         System.out.printf("Booking ID: %d%nUser Email: %s%nRoom Number: %d%nTotal Amount: %.2f%nBooking Status: %s%nPayment Status: %s%nCheck-in Date: %s%nCheck-out Date: %s%n",
                 booking.getBookingId(), booking.getUser().getUserID(), booking.getRoom().getRoomID(), invoice.getAmount(),
-                booking.getStatus(), invoice.getPaymentStatus(), booking.getCheckIn(), booking.getCheckOut());
+                booking.getStatus(), invoice.getPaymentStatus(), booking.getCheckIn().format(showDateInFormat), booking.getCheckOut().format(showDateInFormat));
         System.out.println("----------------------\n");
     }
 
@@ -165,7 +169,7 @@ public class StaffMenuUI {
 
         Response invoiceResponse = invoiceController.getInvoiceByBookingId(bookingId);
         Invoice invoice = (Invoice) invoiceResponse.getData();
-        if (Objects.isNull(invoice)){
+        if (Objects.isNull(invoice)) {
             System.out.println("No invoice found for this booking.");
             return;
         }
@@ -197,7 +201,7 @@ public class StaffMenuUI {
         }
     }
 
-    private  boolean updateRoomAvailability(int roomId, boolean isAvailable) {
+    private boolean updateRoomAvailability(int roomId, boolean isAvailable) {
         log.info("Attempting to update room availability. Room ID: {}, Availability: {}", roomId, isAvailable);
         Response roomResponse = roomController.getRoomById(roomId);
         Room room = (Room) roomResponse.getData();
@@ -245,7 +249,7 @@ public class StaffMenuUI {
         }
         Response invoiceResponse = invoiceController.getInvoiceByBookingId(activeBooking.getBookingId());
         Invoice invoice = (Invoice) invoiceResponse.getData();
-        if (Objects.isNull(invoice)){
+        if (Objects.isNull(invoice)) {
             System.out.println("\nInvoice is not available for this booking.");
             return;
         }
@@ -308,11 +312,11 @@ public class StaffMenuUI {
             log.info("User not found, creating a new user.");
             user = createNewUser(email);
         }
-        if(Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             System.out.println("Unable to create user! Please try after sometime.");
             return;
         }
-        System.out.println("User found: " + user.getName() + " (" + user.getEmail() + ")");
+        System.out.println("\nUser found: " + user.getName() + " (" + user.getEmail() + ")\n");
 
         Response roomResponse = roomController.getAvailableRooms();
         List<Room> availableRooms = (List<Room>) roomResponse.getData();
@@ -330,33 +334,141 @@ public class StaffMenuUI {
         }
 
         Booking newBooking = createBooking(user, selectedRoom);
-        finalizeBooking(newBooking, selectedRoom);
+        if (Objects.isNull(newBooking)) {
+            log.error("Failed to create booking: createBooking returned null.");
+            System.out.println("Booking creation failed. Please try again.");
+            return;
+        }
+        finalizeBooking(user, newBooking, selectedRoom);
         log.info("Room booked successfully for user: {}", user.getEmail());
     }
 
-    private void finalizeBooking(Booking booking, Room room) {
+    private void finalizeBooking(User user, Booking booking, Room room) {
+        String paymentStatus;
+
+        while (true) {
+            System.out.println("""
+                    \nHow would you like to proceed with payment?
+                    ______________________________________________
+                    1. Pay now
+                    2. Pay at checkout
+                    3. Cancel payment and booking
+                    ______________________________________________
+                    Enter your choice: """);
+
+            String input = scanner.nextLine().trim();
+            if (input.equals("1")) {
+                paymentStatus = String.valueOf(PaymentStatus.PAID);
+                break;
+            } else if (input.equals("2")) {
+                paymentStatus = String.valueOf(PaymentStatus.PENDING);
+                break;
+            } else if (input.equals("3")) {
+                System.out.println("\n❌ Booking has been cancelled.");
+                paymentStatus = String.valueOf(PaymentStatus.CANCELED);
+                return;
+            } else {
+                System.out.println("\n❌ Invalid input. Please try again.");
+            }
+        }
+
+        long totalNights = (ChronoUnit.DAYS.between(booking.getCheckIn().toLocalDate(), booking.getCheckOut().toLocalDate()));
+        double amount = room.getPrice() * totalNights;
+
         bookingController.createBooking(booking);
         room.setAvailable(false);
         roomController.updateRoom(room);
-        System.out.printf("Booking confirmed! Room: %d, Check-in: %s, Check-out: %s, Amount: Rs.%.2f%n",
-                room.getRoomID(), booking.getCheckIn(), booking.getCheckOut(), room.getPrice() * Duration.between(booking.getCheckIn(), booking.getCheckOut()).toDays());
+
+        System.out.printf("✅ Booking confirmed for %s!%nRoom: %d, Check-in: %s, Check-out: %s, Amount: Rs.%.2f%n",
+                user.getName(),
+                room.getRoomID(),
+                booking.getCheckIn().format(showDateInFormat),
+                booking.getCheckOut().format(showDateInFormat),
+                amount);
+
+        Invoice invoice = Invoice.builder()
+                .booking(booking)
+                .user(user)
+                .amount(amount)
+                .issueDate(LocalDateTime.now())
+                .paymentStatus(PaymentStatus.valueOf(paymentStatus))
+                .build();
+
+        invoiceController.generateInvoice(invoice);
+        printGenericResponse.printInvoice(booking, invoice);
     }
 
     private Booking createBooking(User user, Room room) {
-        System.out.print("Enter check-in date (YYYY-MM-DD HH:MM) or press Enter for today's date: ");
-        String checkInInput = scanner.nextLine().trim();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime checkIn = checkInInput.isEmpty() ? LocalDateTime.now().withHour(12).withMinute(0) : LocalDateTime.parse(checkInInput, formatter);
+        DateTimeFormatter inputDateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate checkInDate = null;
+        LocalDate today = LocalDate.now();
 
-        System.out.print("Enter duration (in days): ");
-        int duration = scanner.nextInt();
-        scanner.nextLine();
-        LocalDateTime checkOut = checkIn.plusDays(duration);
+        while (checkInDate == null) {
+            System.out.print("\nEnter check-in date (dd-MM-yyyy) or press Enter for today's date (0 to cancel): ");
+            String checkInInput = scanner.nextLine().trim();
 
-        log.info("Creating booking for user {} in room {} from {} to {}", user.getEmail(), room.getRoomNumber(), checkIn, checkOut);
+            if ("0".equals(checkInInput)) {
+                System.out.println("❌ Booking cancelled by user.");
+                return null;
+            }
+
+            if (checkInInput.isEmpty()) {
+                checkInDate = today;
+            } else {
+                try {
+                    checkInDate = LocalDate.parse(checkInInput, inputDateFormatter);
+                    if (checkInDate.isBefore(today)) {
+                        System.out.println("\n❗ Cannot select a past date. Please enter today or a future date.");
+                        checkInDate = null;
+                    }
+                } catch (DateTimeParseException e) {
+                    System.out.println("❗ Invalid date format. Please try again.");
+                }
+            }
+        }
+
+        LocalDateTime currentHour = LocalDateTime.now();
+        LocalDateTime checkIn;
+        if (checkInDate.isEqual(today)) {
+            if (currentHour.getHour() >= 11) {
+                checkIn = currentHour.withSecond(0).withNano(0);
+                System.out.println("\nSince it's after 11 AM, booking will be from current time: " + checkIn.toLocalTime());
+            } else {
+                checkIn = checkInDate.atTime(11, 0);
+                System.out.println("\nBooking will be from default time: 11:00 AM");
+            }
+        } else {
+            checkIn = checkInDate.atTime(11, 0);
+        }
+
+        int duration = -1;
+        while (duration <= 0) {
+            System.out.print("\nEnter number of nights to stay (Enter 0 to cancel): ");
+
+            if (scanner.hasNextInt()) {
+                duration = scanner.nextInt();
+                scanner.nextLine();
+                if (duration == 0) {
+                    System.out.println("\n❌ Booking cancelled by user.");
+                    return null;
+                }
+                if (duration < 0) {
+                    System.out.println("\nDuration must be positive. Please try again.");
+                }
+            } else {
+                System.out.println("❗ Invalid input. Please enter a number.");
+                scanner.nextLine();
+            }
+        }
+
+        LocalDateTime checkOut = checkIn.plusDays(duration).withHour(10).withMinute(0);
+
+        log.info("Creating booking for user {} in room {} from {} to {}",
+                user.getEmail(), room.getRoomNumber(), checkIn, checkOut);
+
         return new Booking(user, room, checkIn, checkOut, BookingStatus.CONFIRMED);
-
     }
+
 
     private Room getRoomSelection(List<Room> availableRooms) {
         System.out.print("\nEnter Room ID to book: ");
@@ -369,10 +481,9 @@ public class StaffMenuUI {
                 .orElse(null);
     }
 
-    private void displayAvailableRooms(List<Room> rooms) {
-        System.out.println("\nAvailable Rooms:");
-        rooms.forEach(room -> System.out.printf("Room ID: %d | Room Number: %d | Type: %s | Price: %.2f | Available: %s%n",
-                room.getRoomID(), room.getRoomNumber(), room.getRoomType(), room.getPrice(), (room.isAvailable() ? "Yes" : "No")));
+    private void displayAvailableRooms(List<Room> availableRooms) {
+        List<String> ignore = Arrays.asList("isAvailable");
+        printGenericResponse.printTable(availableRooms, ignore);
     }
 
     private User createNewUser(String email) {
@@ -481,8 +592,8 @@ public class StaffMenuUI {
             System.out.println("----------------------------------");
             bookings.forEach(booking -> {
                 System.out.println("Booking ID: " + booking.getBookingId());
-                System.out.println("Check-in Date: " + booking.getCheckIn());
-                System.out.println("Check-out Date: " + booking.getCheckOut());
+                System.out.println("Check-in Date: " + booking.getCheckIn().format(showDateInFormat));
+                System.out.println("Check-out Date: " + booking.getCheckOut().format(showDateInFormat));
                 System.out.println("Status: " + booking.getStatus());
                 System.out.println("----------------------------------");
             });

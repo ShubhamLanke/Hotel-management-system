@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.print.Book;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Log4j2
@@ -24,8 +25,17 @@ public class BookingController {
     }
 
     public Response createBooking(Booking booking) {
-        bookingService.createBooking(booking);
-        return response =  new Response(booking, ResponseStatus.SUCCESS, "Booking created successfully!");
+        if (Objects.isNull(booking)) {
+            return response = new Response(null, ResponseStatus.ERROR, "Booking details are missing or invalid.");
+        }
+
+        try {
+            bookingService.createBooking(booking);
+            return response = new Response(booking, ResponseStatus.SUCCESS, "Booking created successfully!");
+        } catch (Exception e) {
+            log.error("Failed to create booking.",e);
+            return response = new Response(null, ResponseStatus.ERROR, "Failed to create booking. Please try again or contact support.");
+        }
     }
 
     public Response updateBooking(Booking booking) {
@@ -36,7 +46,7 @@ public class BookingController {
         Optional<Booking> optionalBooking = bookingService.getBookingById(bookingId);
         if (optionalBooking.isPresent()) {
             Booking booking = optionalBooking.get();
-            boolean isCancelled = bookingService.cancelBooking(bookingId);
+            boolean isCancelled = bookingService.cancelBooking(booking.getBookingId());
             if (isCancelled) {
                 return response = new Response(booking, ResponseStatus.SUCCESS, "Booking cancelled successfully!");
             }

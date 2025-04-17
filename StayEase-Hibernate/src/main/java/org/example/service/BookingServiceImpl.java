@@ -25,6 +25,7 @@ public class BookingServiceImpl implements BookingService {
     public void createBooking(Booking booking) {
         if (Objects.isNull(booking)) {
             throw new ServiceException("INVALID_BOOKING_DETAILS_PROVIDED");
+
         }
         bookingDao.createBooking(booking);
         log.info("Booking created successfully with ID: {}", booking.getBookingId());
@@ -41,8 +42,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean cancelBooking(int bookingId) {
+        Booking booking = bookingDao.getBookingById(bookingId);
         try {
-            if (bookingDao.getBookingById(bookingId).isEmpty()) {
+            if(Objects.isNull(booking)) {
                 throw new BookingNotFoundException("Booking not found with ID: " + bookingId);
             }
             bookingDao.cancelBooking(bookingId);
@@ -55,9 +57,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Optional<Booking> getBookingById(int bookingId) {
-        return Optional.ofNullable(bookingDao.getBookingById(bookingId))
-                .orElseThrow(() -> new ServiceException("BOOKING_NOT_FOUND"));
+        return Optional.ofNullable(bookingDao.getBookingById(bookingId));
     }
+
 
     @Override
     public List<Booking> getBookingsByUser(int userId) {

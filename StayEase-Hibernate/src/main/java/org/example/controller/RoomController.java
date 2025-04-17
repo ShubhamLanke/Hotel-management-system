@@ -5,6 +5,7 @@ import org.example.entity.Room;
 import org.example.service.RoomService;
 import org.example.utility.Response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,5 +53,19 @@ public class RoomController {
         return response = roomService.getRoomById(roomId)
                 .map(room -> new Response(room, ResponseStatus.SUCCESS, "Room found."))
                 .orElse(new Response(null, ResponseStatus.ERROR, "Room not found."));
+    }
+
+    public Response getAvailableRoomsForDate(LocalDateTime checkIn, LocalDateTime checkOut) {
+        try {
+            List<Room> availableRooms = roomService.getAvailableRoomsForDate(checkIn, checkOut);
+            if (availableRooms.isEmpty()) {
+                return response = new Response(null, ResponseStatus.ERROR, "No rooms available for the given dates.");
+            }
+            return response = new Response(availableRooms, ResponseStatus.SUCCESS, "Available rooms fetched successfully.");
+        } catch (IllegalArgumentException e) {
+            return response = new Response(null, ResponseStatus.ERROR, e.getMessage());
+        } catch (Exception e) {
+            return response = new Response(null, ResponseStatus.ERROR, "Something went wrong while fetching available rooms.");
+        }
     }
 }

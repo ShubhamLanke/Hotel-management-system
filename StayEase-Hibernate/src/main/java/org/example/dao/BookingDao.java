@@ -13,7 +13,7 @@ public interface BookingDao {
 
     void cancelBooking(int bookingId);
 
-    Optional<Booking> getBookingById(int bookingId);
+    Booking getBookingById(int bookingId);
 
     List<Booking> getBookingsByUser(User user);
 
