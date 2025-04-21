@@ -45,7 +45,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         Optional<Booking> bookingOpt = bookingService.getBookingById(bookingId);
         if (bookingOpt.isEmpty()) {
             log.info("No booking found for ID: {}", bookingId);
-            System.out.println("Andar jaa raha hai!");
             return Optional.empty();
         }
 

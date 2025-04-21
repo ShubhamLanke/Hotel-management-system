@@ -19,4 +19,6 @@ public interface BookingService {
     Optional<Booking> getConfirmedBookingByUserId(int userId);
 
     List<Booking> getAllBookings();
+
+    List<Booking> getAllConfirmedBookingsByUserId(int userId);
 }

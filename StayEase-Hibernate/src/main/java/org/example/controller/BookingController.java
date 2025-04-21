@@ -83,4 +83,15 @@ public class BookingController {
             return response = new Response(null, ResponseStatus.ERROR, "No bookings available.");
         }
     }
+
+    public Response getAllConfirmedBookingsByUserId(int userId) {
+        List<Booking> confirmedBookings = bookingService.getAllConfirmedBookingsByUserId(userId);
+
+        if (confirmedBookings.isEmpty()) {
+            return new Response(null, ResponseStatus.ERROR, "No confirmed bookings found!");
+        } else {
+            return new Response(confirmedBookings, ResponseStatus.SUCCESS, "Confirmed bookings retrieved successfully.");
+        }
+    }
+
 }

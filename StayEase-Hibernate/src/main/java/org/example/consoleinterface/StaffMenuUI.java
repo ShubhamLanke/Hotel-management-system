@@ -133,7 +133,6 @@ public class StaffMenuUI {
         if (!bookingResponse.isSuccess()) return;
 
         printGenericResponse.printInvoice(booking, invoice);
-        displayInvoice(booking, invoice);
     }
 
     private boolean validateInvoice(Invoice invoice) {
@@ -143,14 +142,6 @@ public class StaffMenuUI {
             return false;
         }
         return true;
-    }
-
-    private void displayInvoice(Booking booking, Invoice invoice) {
-        System.out.println("\n------ INVOICE ------");
-        System.out.printf("Booking ID: %d%nUser Email: %s%nRoom Number: %d%nTotal Amount: %.2f%nBooking Status: %s%nPayment Status: %s%nCheck-in Date: %s%nCheck-out Date: %s%n",
-                booking.getBookingId(), booking.getUser().getUserID(), booking.getRoom().getRoomID(), invoice.getAmount(),
-                booking.getStatus(), invoice.getPaymentStatus(), booking.getCheckIn().format(showDateInFormat), booking.getCheckOut().format(showDateInFormat));
-        System.out.println("----------------------\n");
     }
 
     private void cancelBooking() {
@@ -573,13 +564,15 @@ public class StaffMenuUI {
     }
 
     private void displayUserDetails(User user) {
-        System.out.println("==================================");
-        System.out.println("             User Found           ");
-        System.out.println("==================================");
-        System.out.println("Name: " + user.getName());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("Role: " + user.getUserRole());
-        System.out.println("==================================");
+        System.out.println("""
+        ==================================
+                 User Found           
+        ==================================
+        Name: %s
+        Email: %s
+        Role: %s
+        ==================================
+        """.formatted(user.getName(), user.getEmail(), user.getUserRole()));
     }
 
     private void displayBookingHistory(User user) {

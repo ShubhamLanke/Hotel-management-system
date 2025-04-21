@@ -1,15 +1,17 @@
-2025-04-17 15:52:55 ERROR StaffMenuUI - Failed to create booking: createBooking returned null.
-2025-04-17 16:00:56 ERROR StaffMenuUI - Failed to create booking: createBooking returned null.
-2025-04-17 16:02:11 ERROR StaffMenuUI - Failed to create booking: createBooking returned null.
-2025-04-17 16:06:15 ERROR StaffMenuUI - Failed to create booking: createBooking returned null.
-2025-04-17 17:15:01 ERROR UserDaoImpl - Error fetching user by email abrar@gmail.com: No result found for query [SELECT u FROM User u WHERE u.email = :email]
-jakarta.persistence.NoResultException: No result found for query [SELECT u FROM User u WHERE u.email = :email]
-	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:558) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
-	at org.example.dao.UserDaoImpl.getUserByEmailId(UserDaoImpl.java:87) [classes/:?]
-	at org.example.service.UserServiceImpl.getUserByEmail(UserServiceImpl.java:69) [classes/:?]
-	at org.example.controller.UserController.getUserByEmail(UserController.java:32) [classes/:?]
-	at org.example.consoleinterface.StaffMenuUI.bookRoomByStaff(StaffMenuUI.java:309) [classes/:?]
-	at org.example.consoleinterface.StaffMenuUI.displayStaffMenu(StaffMenuUI.java:82) [classes/:?]
+2025-04-21 12:07:43 ERROR BookingDaoImpl - Error occurred while fetching confirmed booking for user ID: 13
+jakarta.persistence.NonUniqueResultException: Query did not return a unique result: 2 results were returned
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:131) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:564) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.example.dao.BookingDaoImpl.getConfirmedBookingByUserId(BookingDaoImpl.java:99) ~[classes/:?]
+	at java.util.Optional.flatMap(Optional.java:289) [?:?]
+	at org.example.service.BookingServiceImpl.getConfirmedBookingByUserId(BookingServiceImpl.java:77) [classes/:?]
+	at org.example.controller.BookingController.getConfirmedBookingByUserId(BookingController.java:73) [classes/:?]
+	at org.example.consoleinterface.StaffMenuUI.checkoutByStaff(StaffMenuUI.java:234) [classes/:?]
+	at org.example.consoleinterface.StaffMenuUI.displayStaffMenu(StaffMenuUI.java:86) [classes/:?]
 	at org.example.consoleinterface.HomeMenuUI.loginUser(HomeMenuUI.java:102) [classes/:?]
 	at org.example.consoleinterface.HomeMenuUI.displayMainMenu(HomeMenuUI.java:48) [classes/:?]
 	at org.example.Main.main(Main.java:24) [classes/:?]
+Caused by: org.hibernate.NonUniqueResultException: Query did not return a unique result: 2 results were returned
+	at org.hibernate.query.spi.AbstractSelectionQuery.uniqueElement(AbstractSelectionQuery.java:578) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:561) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 9 more

@@ -6,6 +6,8 @@ import org.example.entity.Booking;
 import org.example.entity.User;
 import org.example.exception.BookingNotFoundException;
 import org.example.exception.ServiceException;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -80,5 +82,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getAllBookings() {
         return bookingDao.getAllBookings();
+    }
+
+    @Override
+    public List<Booking> getAllConfirmedBookingsByUserId(int userId) {
+        return userService.getUserById(userId)
+                .map(bookingDao::getAllConfirmedBookingByUser)
+                .orElse(Collections.emptyList());
     }
 }

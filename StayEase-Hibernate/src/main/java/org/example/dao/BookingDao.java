@@ -17,7 +17,9 @@ public interface BookingDao {
 
     List<Booking> getBookingsByUser(User user);
 
-    Optional<Booking> getConfirmedBookingByUserId(User user);  // Use Optional to handle absence of confirmed bookings
+    Optional<Booking> getConfirmedBookingByUserId(User user);
 
     List<Booking> getAllBookings();
+
+    List<Booking> getAllConfirmedBookingByUser(User user);
 }

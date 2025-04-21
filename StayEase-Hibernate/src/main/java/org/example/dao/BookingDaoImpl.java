@@ -7,6 +7,8 @@ import org.example.entity.User;
 import org.example.persistence.PersistenceManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +74,6 @@ public class BookingDaoImpl implements BookingDao {
         }
     }
 
-
     @Override
     public List<Booking> getBookingsByUser(User user) {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
@@ -116,4 +117,20 @@ public class BookingDaoImpl implements BookingDao {
         }
         return List.of();
     }
+
+    @Override
+    public List<Booking> getAllConfirmedBookingByUser(User user) {
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            return entityManager.createQuery(
+                            "SELECT b FROM Booking b WHERE b.user = :user AND b.status = :status",
+                            Booking.class)
+                    .setParameter("user", user)
+                    .setParameter("status", BookingStatus.CONFIRMED)
+                    .getResultList(); // returns an empty list if none found
+        } catch (Exception e) {
+            log.error("Error occurred while fetching confirmed bookings for user ID: " + user.getUserID(), e);
+            return Collections.emptyList();
+        }
+    }
+
 }
