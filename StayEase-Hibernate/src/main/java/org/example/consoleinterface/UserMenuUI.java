@@ -138,18 +138,19 @@ public class UserMenuUI {
             }
         }
         while (true) {
-            System.out.print("Enter Role (STAFF/GUEST) (or type 0 to cancel): ");
-            roleInput = scanner.nextLine().trim().toUpperCase();
-            if (roleInput.equals("0")) return;
+            System.out.print("Enter User Role: \n1.STAFF \n2.GUEST \n(or type 0 to cancel):");
+            String input = scanner.nextLine().trim();
 
-            try {
-                role = UserRole.valueOf(roleInput);
+            if (input.matches("[12]")) {
+                role = input.equals("1") ? UserRole.STAFF : UserRole.GUEST;
                 break;
-            } catch (IllegalArgumentException e) {
-                System.out.println("❌ Invalid role! Please enter either STAFF or GUEST.");
-                log.warn("Invalid role entered: {}", roleInput);
+            } else if (input.equals("0")) {
+                return;
+            } else {
+                System.out.println("❌ Invalid input! Please enter 1 for STAFF or 2 for GUEST.");
             }
         }
+
         try {
             Response userResponse = userController.isEmailExists(email);
             if (userResponse.getData().equals(true)) {
