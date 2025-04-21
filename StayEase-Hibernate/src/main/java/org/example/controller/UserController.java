@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.constants.ResponseStatus;
 import org.example.entity.Guest;
 import org.example.entity.User;
@@ -9,6 +10,7 @@ import org.example.utility.Response;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class UserController {
     private final UserService userService;
     Response response;
@@ -35,11 +37,15 @@ public class UserController {
     }
 
     public Response authenticateUser(String email, String password) {
-        boolean result = userService.authenticateUser(email, password);
-        if(result) {
-            return response = new Response(true, ResponseStatus.SUCCESS, "User authentication successful.");
-        }else{
-            return response = new Response(false, ResponseStatus.ERROR,"User authentication failed.");
+        try {
+            boolean result = userService.authenticateUser(email, password);
+            if (result) {
+                return response = new Response(true, ResponseStatus.SUCCESS, "User authentication successful.");
+            } else {
+                return response = new Response(false, ResponseStatus.ERROR, "User authentication failed.");
+            }
+        } catch (IllegalArgumentException e){
+            return response = new Response(false, ResponseStatus.ERROR, "User authentication failed.");
         }
     }
 

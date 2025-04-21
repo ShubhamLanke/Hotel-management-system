@@ -15,7 +15,7 @@ public interface UserService {
 
     List<User> getAllAdmins();
 
-    boolean authenticateUser(String email, String password);
+    boolean authenticateUser(String email, String password) throws IllegalArgumentException;
 
     Optional<User> getUserByEmail(String email);
 

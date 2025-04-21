@@ -30,8 +30,8 @@ public class Validator {
         return password != null && PASSWORD_PATTERN.matcher(password).matches();
     }
 
-    public static boolean isNotEmpty(String str) {
-        return str != null && !str.trim().isEmpty();
+    public static boolean isNotNullAnd(String str) {
+        return str != null && !str.isBlank();
     }
 
     public static boolean isValidPinCode(String pinCode) {

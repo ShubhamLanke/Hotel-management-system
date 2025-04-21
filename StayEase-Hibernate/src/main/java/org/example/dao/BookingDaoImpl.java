@@ -66,8 +66,8 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public Booking getBookingById(int bookingId) {
-        try (EntityManager em = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
-            return em.find(Booking.class, bookingId);
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            return entityManager.find(Booking.class, bookingId);
         } catch (Exception e) {
             log.error("Error fetching booking by ID: {}", bookingId, e);
             return null;
@@ -126,7 +126,7 @@ public class BookingDaoImpl implements BookingDao {
                             Booking.class)
                     .setParameter("user", user)
                     .setParameter("status", BookingStatus.CONFIRMED)
-                    .getResultList(); // returns an empty list if none found
+                    .getResultList();
         } catch (Exception e) {
             log.error("Error occurred while fetching confirmed bookings for user ID: " + user.getUserID(), e);
             return Collections.emptyList();

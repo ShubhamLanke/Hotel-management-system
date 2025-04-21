@@ -406,8 +406,8 @@ public class UserMenuUI {
             System.out.println("\nNo bookings found for " + loggedInGuest.getName());
         } else {
             System.out.println("\n=========== Booking History ===========");
-
             for (Booking booking : bookings) {
+                printGenericResponse.printTable(bookings,null);
                 System.out.printf("Booking ID: %s%nDate: %s%nDate: %s%nStatus: %s%n-----------------------------------------%n",
                         booking.getBookingId(), booking.getCheckIn().format(showDateInFormat), booking.getCheckOut().format(showDateInFormat), booking.getStatus());
 

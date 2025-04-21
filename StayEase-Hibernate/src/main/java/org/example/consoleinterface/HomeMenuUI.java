@@ -58,6 +58,7 @@ public class HomeMenuUI {
     private void loginUser() {
         while (true) {
             System.out.print("\nEnter email (or 0 to cancel): ");
+
             String email = scanner.nextLine().toLowerCase();
 
             if (email.equals("0")) return;

@@ -36,7 +36,7 @@ public class RoomServiceImpl implements RoomService {
         }
         Optional<Room> existingRoom = roomDao.getRoomById(room.getRoomID());
         if (existingRoom.isEmpty()) {
-            return Optional.empty(); // Room doesn't exist
+            return Optional.empty();
         }
         if (room.getRoomNumber() <= 0) {
             throw new IllegalArgumentException("Room number must be a positive integer.");

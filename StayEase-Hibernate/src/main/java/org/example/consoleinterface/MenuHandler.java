@@ -47,11 +47,21 @@ public class MenuHandler {
     }
 
     public int getUserChoice() {
-        while (!scanner.hasNextInt()) {
-            System.out.println("Invalid input! Please enter a number from range.");
-            scanner.next();
+//        while (!scanner.hasNextInt()) {
+//            System.out.println("Invalid input! Please enter a number from range.");
+//            scanner.next();
+//        }
+//        return scanner.nextInt();
+        while(true){
+            try{
+                int x = scanner.nextInt();
+                scanner.nextLine();
+                return x;
+            } catch (Exception e) {
+                System.out.println("Enter a valid number.");
+                scanner.nextLine();
+            }
         }
-        return scanner.nextInt();
     }
 
     public <T> void printTable(List<T> list, List<String> ignoreFields) {

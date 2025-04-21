@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean authenticateUser(String email, String password) {
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+    public boolean authenticateUser(String email, String password) throws IllegalArgumentException{
+        if (email == null || email.isEmpty() && password == null || password.isEmpty()) {
             throw new IllegalArgumentException("Email and password cannot be empty.");
         }
         return userDao.getUserByEmailId(email)
