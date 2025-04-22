@@ -91,4 +91,19 @@ public class InvoiceDaoImpl implements InvoiceDao {
             throw new RuntimeException("Error fetching invoices for user ID: " + user.getUserID(), e);
         }
     }
+
+    @Override
+    public boolean updateInvoice(Invoice invoice) {
+        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+            Invoice existingInvoice = entityManager.find(Invoice.class, invoice.getInvoiceId());
+            if (existingInvoice == null) {
+                return false;
+            }
+            entityManager.merge(invoice);
+            return true;
+        } catch (Exception e) {
+            log.error("Error while updating invoice");
+            return false;
+        }
+    }
 }

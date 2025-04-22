@@ -51,4 +51,13 @@ public class InvoiceController {
             return response = new Response(null, ResponseStatus.ERROR, "No invoices found for user ID: " + userID);
         }
     }
+
+    public Response updateInvoice(Invoice invoice){
+        boolean isUpdated = invoiceService.updateInvoice(invoice);
+        if (isUpdated) {
+            return response = new Response(null, ResponseStatus.SUCCESS, "Invoice updated successfully for Invoice ID: " + invoice.getInvoiceId());
+        } else {
+            return response = new Response(null, ResponseStatus.ERROR, "Failed to update invoice. Invoice ID may not exist.");
+        }
+    }
 }

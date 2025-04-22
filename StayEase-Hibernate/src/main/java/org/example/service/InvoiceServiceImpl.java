@@ -88,4 +88,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         Optional<User> user = userService.getUserById(userID);
         return invoiceDao.getInvoiceByUserId(user.get());
     }
+
+    @Override
+    public boolean updateInvoice(Invoice invoice) {
+        return invoiceDao.updateInvoice(invoice);
+    }
 }

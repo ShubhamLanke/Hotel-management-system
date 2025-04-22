@@ -197,7 +197,7 @@ public class StaffMenuUI {
         Response roomResponse = roomController.getRoomById(roomId);
         Room room = (Room) roomResponse.getData();
         if (room != null) {
-            room.setAvailable(isAvailable);
+//            room.setAvailable(isAvailable);
             Response updateRoomResponse = roomController.updateRoom(room);
 
             if (updateRoomResponse.isSuccess()) {
@@ -266,8 +266,7 @@ public class StaffMenuUI {
                 }
             }
         }
-
-        activeBooking.setStatus(BookingStatus.COMPLETED);
+        invoiceController.updatePaymentStatus(invoice.getInvoiceId(), PaymentStatus.CANCELED);
         bookingController.updateBooking(activeBooking);
         log.info("Booking ID: {} status updated to COMPLETED", activeBooking.getBookingId());
 

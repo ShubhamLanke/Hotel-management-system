@@ -42,6 +42,7 @@ public class BookingController {
         bookingService.updateBooking(booking);
         return response = new Response(booking, ResponseStatus.SUCCESS, "Booking updated successfully!");
     }
+
     public Response cancelBooking(int bookingId) {
         Optional<Booking> optionalBooking = bookingService.getBookingById(bookingId);
         if (optionalBooking.isPresent()) {

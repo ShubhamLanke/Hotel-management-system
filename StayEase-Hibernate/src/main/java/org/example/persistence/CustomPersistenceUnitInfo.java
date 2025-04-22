@@ -33,10 +33,10 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
         String username = properties.getProperty("user");
         String password = properties.getProperty("password");
 
-        HikariConfig hikariConfig = new HikariConfig(properties);
-//        hikariConfig.setJdbcUrl(jdbcUrl);
-//        hikariConfig.setUsername(username);
-//        hikariConfig.setPassword(password);
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(jdbcUrl);
+        hikariConfig.setUsername(username);
+        hikariConfig.setPassword(password);
         hikariConfig.setDriverClassName("org.postgresql.Driver");
 
         dataSource = new HikariDataSource(hikariConfig);

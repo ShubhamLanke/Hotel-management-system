@@ -18,4 +18,6 @@ public interface InvoiceService {
     Optional<Invoice> getInvoiceById(int invoiceId);
 
     List<Invoice> getInvoiceByUserId(int userID);
+
+    boolean updateInvoice(Invoice invoice);
 }

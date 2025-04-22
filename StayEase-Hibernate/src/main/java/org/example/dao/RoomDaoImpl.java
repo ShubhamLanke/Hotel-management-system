@@ -113,12 +113,11 @@ public class RoomDaoImpl implements RoomDao {
     public List<Room> getAvailableRoomsForDate(LocalDateTime checkIn, LocalDateTime checkOut) {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             String jpql = """
-            SELECT r FROM Room r
-            WHERE r.isAvailable = true AND r.roomID NOT IN (
-                SELECT b.room.roomID FROM Booking b
-                WHERE (:checkIn < b.checkOut AND :checkOut > b.checkIn)
-            )
-            """;
+                    SELECT r FROM Room r WHERE r.isAvailable = true AND r.roomID NOT IN (
+                        SELECT b.room.roomID FROM Booking b WHERE b.status = 'CONFIRMED' AND (:checkIn < b.checkOut AND :checkOut > b.checkIn)
+                      ) ORDER BY r.roomID ASC
+                    """;
+
 
             return entityManager.createQuery(jpql, Room.class)
                     .setParameter("checkIn", checkIn)

@@ -22,4 +22,6 @@ public interface InvoiceDao {
     Optional<Invoice> getInvoiceById(int invoiceId);
 
     List<Invoice> getInvoiceByUserId(User user);
+
+    boolean updateInvoice(Invoice invoice);
 }
