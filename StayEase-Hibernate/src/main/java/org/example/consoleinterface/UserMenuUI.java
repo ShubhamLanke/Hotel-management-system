@@ -9,6 +9,7 @@ import org.example.controller.InvoiceController;
 import org.example.controller.RoomController;
 import org.example.controller.UserController;
 import org.example.entity.*;
+import org.example.utility.MenuHandler;
 import org.example.utility.PrintGenericResponse;
 import org.example.utility.Response;
 import org.example.utility.Validator;
@@ -138,7 +139,7 @@ public class UserMenuUI {
             }
         }
         while (true) {
-            System.out.print("Enter User Role: \n1.STAFF \n2.GUEST \n(or type 0 to cancel):");
+            System.out.print("Enter User Role: \n1.STAFF \n2.GUEST \n(or type 0 to cancel): ");
             String input = scanner.nextLine().trim();
 
             if (input.matches("[12]")) {
@@ -164,19 +165,21 @@ public class UserMenuUI {
             user.setPassword(password);
             user.setUserRole(role);
 
-            if (role == UserRole.GUEST) {
-                user.setActive(true);
-            } else {
-                user.setActive(false);
-                System.out.println("✅ Staff registration request submitted! Awaiting admin approval.");
-            }
             Response registerUserResponse = userController.registerUser(user);
             if (registerUserResponse.getStatus().equals(ERROR)) {
                 log.error("Unable to register user.");
                 System.out.println("Unable to register user");
                 return;
             }
-            System.out.println("\n🎉 Congratulations " + user.getName() + " (" + user.getUserRole() + ")" + "! You can now log in.");
+            if (role == UserRole.GUEST) {
+                user.setActive(true);
+            } else {
+                user.setActive(false);
+                System.out.println("✅ Staff registration request submitted! Awaiting admin approval.\n");
+                System.out.println("\n🎉 Congratulations " + user.getName() + " (" + user.getUserRole() + ")" + "! You can login after your account gets active by admin.");
+                return;
+            }
+            System.out.println("\n🎉 Congratulations " + user.getName() + " (" + user.getUserRole() + ")" + "! You can now log in.\n");
 
         } catch (Exception e) {
             log.error("Unexpected error occurred during registration.", e);
@@ -511,19 +514,29 @@ public class UserMenuUI {
 
     private List<Guest> collectGuestDetails() {
         List<Guest> guests = new ArrayList<>();
-        System.out.print("Will the user have accompanied guests? (yes/no): ");
-        if (!scanner.nextLine().trim().equalsIgnoreCase("yes")) return guests;
 
-        System.out.print("Enter the number of guests: ");
-        int guestCount = scanner.nextInt();
-        scanner.nextLine();
+        System.out.print("Will the user have accompanied guests?\n1. Yes\n2. No\n(0 to cancel)\nEnter option: ");
+        int option = scanner.nextInt(); scanner.nextLine();
+        if (option != 1) return guests;
 
-        for (int i = 0; i < guestCount; i++) {
-            System.out.print("Enter guest name for guest " + (i + 1) + ": ");
-            String name = scanner.nextLine();
-            System.out.print("Enter guest age for guest " + (i + 1) + ": ");
-            int age = scanner.nextInt();
-            scanner.nextLine();
+        System.out.print("Enter number of guests (Max 16) OR (Enter 0 to cancel): ");
+        int guestCount = scanner.nextInt(); scanner.nextLine();
+        if (guestCount == 0 || guestCount > 16) return guests;
+
+        for (int i = 1; i <= guestCount; i++) {
+            System.out.print("Enter guest name for guest " + i + " (or 0 to cancel): ");
+            String name = scanner.nextLine().toUpperCase();
+            if (name.equals("0")) return guests;
+            if (!Validator.isValidName(name)) {
+                log.warn("Invalid name format: {}", name);
+                System.out.println("Invalid name format. Try again.");
+                return null;
+            }
+
+            System.out.print("Enter guest age for guest " + i + " (1–100, 0 to cancel): ");
+            int age = scanner.nextInt(); scanner.nextLine();
+            if (age == 0 || age > 100) return guests;
+
             guests.add(new Guest(null, name, age, null));
         }
 

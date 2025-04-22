@@ -10,11 +10,11 @@ import org.example.controller.InvoiceController;
 import org.example.controller.RoomController;
 import org.example.controller.UserController;
 import org.example.entity.*;
+import org.example.utility.MenuHandler;
 import org.example.utility.PrintGenericResponse;
 import org.example.utility.Response;
 import org.example.utility.Validator;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -95,7 +95,7 @@ public class StaffMenuUI {
                     }
                     case 7 -> {
                         log.info("User {} is logging out", loggedInStaff.getName());
-                        System.out.println("You have been logged out successfully.");
+                        System.out.println("You have been logged out successfully.\n");
                         return;
                     }
                     case 8 -> {
@@ -284,7 +284,7 @@ public class StaffMenuUI {
         }
 
         log.info("Checkout completed successfully for user: {}", user.getName());
-        System.out.println("Checkout completed successfully for " + user.getName() + ".");
+        System.out.println("Checkout completed successfully for " + user.getName() + ".\n");
     }
 
     private void bookRoomByStaff() {
@@ -307,7 +307,17 @@ public class StaffMenuUI {
             System.out.println("Unable to create user! Please try after sometime.");
             return;
         }
-        System.out.println("\nUser found: " + user.getName() + " (" + user.getEmail() + ")\n");
+        System.out.println("\nBooking a room for " + user.getName() + " (" + user.getEmail() + ")\n");
+
+        List<Guest> guests = collectGuestDetails();
+        if (Objects.isNull(guests)) {
+            System.out.println("No accompanied guests for " + user.getName());
+            return;
+        }
+        for (Guest guest : guests) {
+            guest.setUser(user);
+            userController.addAccompaniedGuest(guest);
+        }
 
         Response roomResponse = roomController.getAvailableRooms();
         List<Room> availableRooms = (List<Room>) roomResponse.getData();
@@ -318,7 +328,7 @@ public class StaffMenuUI {
         displayAvailableRooms(availableRooms);
 
         Room selectedRoom = getRoomSelection(availableRooms);
-        if (selectedRoom == null) {
+        if (Objects.isNull(selectedRoom)) {
             System.out.println("Operation canceled, the room you've selected might have booked by other already.");
             log.warn("Operation canceled, the room you've selected might have booked by other already.");
             return;
@@ -370,12 +380,7 @@ public class StaffMenuUI {
         room.setAvailable(false);
         roomController.updateRoom(room);
 
-        System.out.printf("✅ Booking confirmed for %s!%nRoom: %d, Check-in: %s, Check-out: %s, Amount: Rs.%.2f%n",
-                user.getName(),
-                room.getRoomID(),
-                booking.getCheckIn().format(showDateInFormat),
-                booking.getCheckOut().format(showDateInFormat),
-                amount);
+        System.out.printf("✅ Booking confirmed for %s!%n", user.getName());
 
         Invoice invoice = Invoice.builder()
                 .booking(booking)
@@ -399,7 +404,7 @@ public class StaffMenuUI {
             String checkInInput = scanner.nextLine().trim();
 
             if ("0".equals(checkInInput)) {
-                System.out.println("❌ Booking cancelled by user.");
+                System.out.println("❌ Booking cancelled for " + user.getName());
                 return null;
             }
 
@@ -440,11 +445,11 @@ public class StaffMenuUI {
                 duration = scanner.nextInt();
                 scanner.nextLine();
                 if (duration == 0) {
-                    System.out.println("\n❌ Booking cancelled by user.");
+                    System.out.println("\n❌ Booking cancelled for " + user.getName());
                     return null;
                 }
-                if (duration < 0) {
-                    System.out.println("\nDuration must be positive. Please try again.");
+                if (duration < 0 || duration > 60) {
+                    System.out.println("\n Duration should not be more than 60 Days. \nAnd duration must be positive. Please try again.");
                 }
             } else {
                 System.out.println("❗ Invalid input. Please enter a number.");
@@ -462,10 +467,11 @@ public class StaffMenuUI {
 
 
     private Room getRoomSelection(List<Room> availableRooms) {
-        System.out.print("\nEnter Room ID to book: ");
+        System.out.print("\nEnter Room ID to book (0 to go back): ");
         int roomId = scanner.nextInt();
         scanner.nextLine();
 
+        if (roomId == 0) return null;
         return availableRooms.stream()
                 .filter(room -> room.getRoomID() == roomId)
                 .findFirst()
@@ -525,19 +531,32 @@ public class StaffMenuUI {
 
     private List<Guest> collectGuestDetails() {
         List<Guest> guests = new ArrayList<>();
-        System.out.print("Will the user have accompanied guests? (yes/no): ");
-        if (!scanner.nextLine().trim().equalsIgnoreCase("yes")) return guests;
 
-        System.out.print("Enter the number of guests: ");
+        System.out.print("Will the user have accompanied guests?\n1. Yes\n2. No\n(0 to cancel)\nEnter option: ");
+        int option = scanner.nextInt();
+        scanner.nextLine();
+        if (option != 1) return guests;
+
+        System.out.print("Enter number of guests (Max 16) OR (Enter 0 to cancel): ");
         int guestCount = scanner.nextInt();
         scanner.nextLine();
+        if (guestCount == 0 || guestCount > 16) return guests;
 
-        for (int i = 0; i < guestCount; i++) {
-            System.out.print("Enter guest name for guest " + (i + 1) + ": ");
-            String name = scanner.nextLine();
-            System.out.print("Enter guest age for guest " + (i + 1) + ": ");
+        for (int i = 1; i <= guestCount; i++) {
+            System.out.print("Enter guest name for guest " + i + " (or 0 to cancel): ");
+            String name = scanner.nextLine().toUpperCase();
+            if (name.equals("0")) return guests;
+            if (!Validator.isValidName(name)) {
+                log.warn("Invalid name format: {}", name);
+                System.out.println("Invalid name format. Try again.");
+                return null;
+            }
+
+            System.out.print("Enter guest age for guest " + i + " (1–100, 0 to cancel): ");
             int age = scanner.nextInt();
             scanner.nextLine();
+            if (age == 0 || age > 100) return guests;
+
             guests.add(new Guest(null, name, age, null));
         }
 
@@ -547,7 +566,7 @@ public class StaffMenuUI {
 
     private void searchUserDetails() {
         System.out.print("\nEnter user email: ");
-        String email = scanner.nextLine().trim();
+        String email = scanner.nextLine().trim().toLowerCase();
 
         if (email.isEmpty()) {
             System.out.println("Email cannot be empty. Please enter a valid email.");
@@ -565,23 +584,23 @@ public class StaffMenuUI {
 
     private void displayUserDetails(User user) {
         System.out.println("""
-        ==================================
-                 User Found           
-        ==================================
-        Name: %s
-        Email: %s
-        Role: %s
-        ==================================
-        """.formatted(user.getName(), user.getEmail(), user.getUserRole()));
+                ==================================
+                            User Details           
+                ==================================
+                Name: %s
+                Email: %s
+                Role: %s
+                ----------------------------------
+                """.formatted(user.getName(), user.getEmail(), user.getUserRole()));
     }
 
     private void displayBookingHistory(User user) {
         Response bookingResponse = bookingController.getBookingsByUser(user.getUserID());
         List<Booking> bookings = (List<Booking>) bookingResponse.getData();
         if (Objects.isNull(bookings) || bookings.isEmpty()) {
-            System.out.println("No bookings found for this user.");
+            System.out.println("No bookings found for this user.\n");
         } else {
-            System.out.println("           Booking History        ");
+            System.out.println("         Booking History        ");
             System.out.println("----------------------------------");
             bookings.forEach(booking -> {
                 System.out.println("Booking ID: " + booking.getBookingId());

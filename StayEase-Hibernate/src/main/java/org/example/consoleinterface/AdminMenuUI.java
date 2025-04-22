@@ -1,8 +1,6 @@
 package org.example.consoleinterface;
 
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.constants.UserRole;
 import org.example.controller.BookingController;
 import org.example.controller.InvoiceController;
@@ -11,10 +9,12 @@ import org.example.controller.UserController;
 import org.example.entity.Booking;
 import org.example.entity.Room;
 import org.example.entity.User;
+import org.example.utility.MenuHandler;
+import org.example.utility.PrintGenericResponse;
 import org.example.utility.Response;
 import org.example.utility.Validator;
-import org.example.view.AdminDashBoard;
 
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Objects;
@@ -32,14 +32,17 @@ public class AdminMenuUI {
     private final BookingController bookingController;
     private final InvoiceController invoiceController;
 
+    private final PrintGenericResponse printGenericResponse;
+    DateTimeFormatter showDateInFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private final Scanner scanner;
 
-    public AdminMenuUI(MenuHandler menuHandler, RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, Scanner scanner) {
+    public AdminMenuUI(MenuHandler menuHandler, RoomController roomController, UserController userController, BookingController bookingController, InvoiceController invoiceController, PrintGenericResponse printGenericResponse, Scanner scanner) {
         this.menuHandler = menuHandler;
         this.roomController = roomController;
         this.userController = userController;
         this.bookingController = bookingController;
         this.invoiceController = invoiceController;
+        this.printGenericResponse = printGenericResponse;
         this.scanner = scanner;
     }
 
@@ -53,7 +56,6 @@ public class AdminMenuUI {
         System.out.println("Welcome, " + loggedInSuperAdmin.getName() + "!");
         System.out.println("Role: " + loggedInSuperAdmin.getUserRole());
         while (true) {
-
             menuHandler.displayMenu("Super Admin Dashboard", new String[]{
                     "View Available Rooms", "View All Bookings", "Manage Rooms", "Manage Staff", "Manage Admin", "Logout"});
             try {
@@ -89,26 +91,28 @@ public class AdminMenuUI {
     }
 
     private void manageAdmins() {
-        menuHandler.displayMenu("Manage Admins", new String[]{"View All Admins", "Grant or Revoke Admin Access", "Return Back to Menu"});
-        try {
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+        while (true) {
+            menuHandler.displayMenu("Manage Admins", new String[]{"View All Admins", "Grant or Revoke Admin Access", "Return Back to Menu"});
+            try {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    getAllAdmins();
-                    break;
-                case 2:
-                    grantOrRevokeAdminAccess();
-                    break;
-                case 3:
-                    return;
-                default:
-                    System.out.println("Invalid option.");
+                switch (choice) {
+                    case 1:
+                        getAllAdmins();
+                        break;
+                    case 2:
+                        grantOrRevokeAdminAccess();
+                        break;
+                    case 3:
+                        return;
+                    default:
+                        System.out.println("❗ Invalid option. Please choose 1, 2, or 3.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("❗ Invalid input! Please enter a number.");
+                scanner.nextLine();
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input!");
-            scanner.nextLine();
         }
     }
 
@@ -125,10 +129,11 @@ public class AdminMenuUI {
             log.warn("No admin users found!");
             System.out.println("No admin users found!");
         }
-
-        System.out.println("====================================================================================");
+        List<String> ignore = List.of("password");
+        printGenericResponse.printTable(users, ignore);
+        System.out.println("=======================================================================================");
         System.out.printf("%-10s %-20s %-30s %-15s %-10s%n", "User ID", "Name", "Email", "Role", "Active");
-        System.out.println("====================================================================================");
+        System.out.println("=======================================================================================");
 
         users.forEach(user -> {
             System.out.printf("%-10d %-20s %-30s %-15s %-10s%n",
@@ -142,56 +147,63 @@ public class AdminMenuUI {
                     user.getUserID(), user.getName(), user.getEmail(), user.getUserRole(), user.isActive());
         });
 
-        System.out.println("------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------");
         log.info("Total admins found: {}", users.size());
     }
 
     private void grantOrRevokeAdminAccess() {
         log.info("Starting admin access grant/revoke process.");
 
-        System.out.print("Enter admin email ID to approve or deny: ");
+        System.out.print("Enter admin email ID to approve or deny (or 0 to cancel): ");
         String email = scanner.nextLine().trim().toLowerCase();
+        if (email.equals("0")) return;
 
         if (!Validator.isValidEmail(email)) {
-            log.warn("Invalid email format entered: {}", email);
             System.out.println("Invalid email format. Please enter a valid email.");
+            log.warn("Invalid email format entered: {}", email);
             return;
         }
+
         Response userResponse = userController.getUserByEmail(email);
-        if (userResponse.getStatus().equals(SUCCESS)) {
-            User user = (User) userResponse.getData();
-            System.out.print("Grant or Revoke Admin access? (g/r): ");
-            String input = scanner.next().trim().toLowerCase();
+        if (!SUCCESS.equals(userResponse.getStatus())) {
+            System.out.println("User not found.");
+            log.warn("User not found with email: {}", email);
+            return;
+        }
 
-            if (input.length() != 1) {
-                log.warn("Invalid input length: '{}'. Expected 'g' or 'r'.", input);
-                System.out.println("Invalid input. Please enter 'g' for grant or 'r' for revoke.");
-                return;
-            }
+        User user = (User) userResponse.getData();
 
-            char choice = input.charAt(0);
-            scanner.nextLine();
+        System.out.print("1. Grant Admin Access\n2. Revoke Admin Access\n0. Cancel\nEnter choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
 
-            if (choice == 'g') {
+        switch (choice) {
+            case 1:
                 user.setActive(true);
                 user.setUserRole(UserRole.ADMIN);
                 userController.updateUserToActive(user);
+                System.out.println("✅ Admin access granted to " + user.getName());
                 log.info("Admin access granted to user: {}", user.getEmail());
-                System.out.println("Admin access granted to " + user.getName());
-            } else if (choice == 'r') {
+                break;
+
+            case 2:
                 user.setActive(false);
                 userController.updateUserToInactive(user);
+                System.out.println("❌ Admin access revoked for " + user.getName());
                 log.info("Admin access revoked for user: {}", user.getEmail());
-                System.out.println("Admin access revoked for " + user.getName());
-            } else {
-                log.error("Invalid choice '{}' entered by user.", choice);
-                System.out.println("Invalid option. Please enter 'g' or 'r'.");
-            }
-        } else {
-            log.warn("User not found with email: {}", email);
-            System.out.println("User not found.");
+                break;
+
+            case 0:
+                System.out.println("Action cancelled.");
+                log.info("❗ Admin access grant/revoke cancelled by user.");
+                break;
+
+            default:
+                System.out.println("Invalid option. Please enter 1, 2, or 0.");
+                log.warn("Invalid admin action choice: {}", choice);
         }
     }
+
 
     public void displayAdminMenu(User loggedInAdmin) {
         if (loggedInAdmin == null || loggedInAdmin.getUserRole() != UserRole.ADMIN) {
@@ -242,21 +254,22 @@ public class AdminMenuUI {
             System.out.println("\nNo available rooms found.");
             return;
         }
-
-        System.out.println("\n================================================================");
-        System.out.printf("%-10s %-15s %-15s %-10s %-15s%n",
-                "Room ID", "Room Number", "Room Type", "Price", "Available");
-        System.out.println("================================================================");
-
         List<Room> availableRooms = (List<Room>) roomResponse.getData();
-        availableRooms.forEach(room -> System.out.printf("%-10d %-15d %-15s Rs.%-9.2f %-15s%n",
-                room.getRoomID(),
-                room.getRoomNumber(),
-                room.getRoomType().toString(),
-                room.getPrice(),
-                room.isAvailable() ? "Yes" : "No"));
+        printGenericResponse.printTable(availableRooms, null);
 
-        System.out.println("----------------------------------------------------------------");
+//        System.out.println("\n================================================================");
+//        System.out.printf("%-10s %-15s %-15s %-10s %-15s%n",
+//                "Room ID", "Room Number", "Room Type", "Price", "Available");
+//        System.out.println("================================================================");
+//
+//        availableRooms.forEach(room -> System.out.printf("%-10d %-15d %-15s Rs.%-9.2f %-15s%n",
+//                room.getRoomID(),
+//                room.getRoomNumber(),
+//                room.getRoomType().toString(),
+//                room.getPrice(),
+//                room.isAvailable() ? "Yes" : "No"));
+//
+//        System.out.println("----------------------------------------------------------------");
         log.info("Displayed {} available rooms.", availableRooms.size());
     }
 
@@ -266,60 +279,55 @@ public class AdminMenuUI {
             System.out.println("\nNo bookings found.");
             return;
         }
+        List<Booking> bookings = (List<Booking>) bookingResponse.getData();
+        printAllBookings(bookings);
+    }
+
+    private void printAllBookings(List<Booking> bookings) {
         System.out.println("\n=================================================================================================");
         System.out.printf("%-10s %-10s %-10s %-25s %-25s %-15s%n",
                 "BookingID", "UserID", "RoomID", "Check-In", "Check-Out", "Status");
         System.out.println("=================================================================================================");
-
-        List<Booking> bookings = (List<Booking>) bookingResponse.getData();
-
         for (Booking booking : bookings) {
             System.out.printf("%-10d %-10d %-10d %-25s %-25s %-15s%n",
                     booking.getBookingId(),
                     booking.getUser().getUserID(),
                     booking.getRoom().getRoomID(),
-                    booking.getCheckIn().toString(),
-                    booking.getCheckOut().toString(),
+                    booking.getCheckIn().format(showDateInFormat),
+                    booking.getCheckOut().format(showDateInFormat),
                     booking.getStatus().toString());
         }
         System.out.println("-------------------------------------------------------------------------------------------------");
     }
 
     private void manageStaffs() {
-        System.out.println("\n=======================================");
-        System.out.println("              Manage Staff             ");
-        System.out.println("=======================================");
-        System.out.println("1. View All Staff");
-        System.out.println("2. Approve or Deny Staff Registration");
-        System.out.println("3. Grant or Revoke Staff Access");
-        System.out.println("4. Return back to menu");
-        System.out.println("---------------------------------------");
-        System.out.print("Enter your choice: ");
-        try {
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+        while (true) {
+            menuHandler.displayMenu("Manage Staff", new String[]{"View All Staff", "Approve or Deny Staff Registration", "Grant or Revoke Staff Access", "Return back to menu"});
+            try {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    getAllStaff();
-                    return;
-                case 2:
-                    approveOrDenyStaffRegistration();
-                    return;
-                case 3:
-                    grantOrRevokeStaffAccess();
-                    return;
-                case 4:
-                    return;
-                default:
-                    System.out.println("Invalid option.");
+                switch (choice) {
+                    case 1:
+                        getAllStaff();
+                        break;
+                    case 2:
+                        approveOrDenyStaffRegistration();
+                        break;
+                    case 3:
+                        grantOrRevokeStaffAccess();
+                        break;
+                    case 4:
+                        return;
+                    default:
+                        System.out.println("Invalid option.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input!");
+                scanner.nextLine();
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input!");
-            scanner.nextLine();
         }
     }
-
 
     private void getAllStaff() {
         Response userResponse = userController.getAllStaff();
@@ -328,6 +336,10 @@ public class AdminMenuUI {
             System.out.println("\nNo users found.");
             return;
         }
+        printGenericUsers(users);
+    }
+
+    private void printGenericUsers(List<User> users) {
         System.out.println("\n======================================================================================");
         System.out.printf("%-10s %-20s %-30s %-15s %-10s%n", "User ID", "Name", "Email", "Role", "Active");
         System.out.println("======================================================================================");
@@ -350,80 +362,95 @@ public class AdminMenuUI {
 
         if (!Validator.isValidEmail(email)) {
             log.warn("Invalid email format entered: {}", email);
-            System.out.println("Invalid email format. Please enter a valid email.");
+            System.out.println("❗ Invalid email format. Please enter a valid email.");
             return;
         }
+
         Response userResponse = userController.getUserByEmail(email);
         if (userResponse.getStatus().equals(ERROR)) {
             log.error("User not found for email: {}", email);
-            System.out.println("User not found.");
+            System.out.println("❌ User not found.");
             return;
         }
-        User user = (User) userResponse.getData();
-        System.out.print("Approve staff registration? (y/n): ");
-        String input = scanner.nextLine().trim();
 
-        if (input.equalsIgnoreCase("y")) {
-            user.setActive(true);
-            userController.updateUserToActive(user);
-            log.info("Staff registration approved: {}", user.getEmail());
-            System.out.println("Staff " + user.getName() + " registration approved.");
-        } else if (input.equalsIgnoreCase("n")) {
-            log.info("Staff registration denied: {}", user.getEmail());
-            System.out.println("Staff " + user.getName() + " registration denied.");
-        } else {
-            log.warn("Invalid choice entered: {}", input);
-            System.out.println("Invalid option. Please enter 'y' for yes or 'n' for no.");
+        User user = (User) userResponse.getData();
+        System.out.print("Approve staff registration?\n1. Approve\n2. Deny\n0. Cancel \nEnter option: ");
+        int option = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (option) {
+            case 1:
+                user.setActive(true);
+                userController.updateUserToActive(user);
+                log.info("Staff registration approved: {}", user.getEmail());
+                System.out.println("✅ Staff " + user.getName() + " registration approved.");
+                break;
+            case 2:
+                log.info("Staff registration denied: {}", user.getEmail());
+                System.out.println("❌ Staff " + user.getName() + " registration denied.");
+                break;
+
+            case 0:
+                System.out.println("Action cancelled.");
+                log.info("❗ Admin access grant/revoke cancelled by user.");
+                break;
+
+            default:
+                log.warn("Invalid option entered: {}", option);
+                System.out.println("❗ Invalid option. Please enter 1 (Approve) or 2 (Deny).");
         }
     }
 
     private void grantOrRevokeStaffAccess() {
-        System.out.print("Enter staff email ID to approve or deny: ");
+        System.out.print("Enter staff email ID to grant or revoke access: ");
         String email = scanner.nextLine().trim().toLowerCase();
 
         if (!Validator.isValidEmail(email)) {
             log.warn("Invalid email format entered: {}", email);
-            System.out.println("Invalid email format. Please enter a valid email.");
+            System.out.println("❗ Invalid email format. Please enter a valid email.");
             return;
         }
+
         Response userResponse = userController.getUserByEmail(email);
         if (userResponse.getStatus().equals(ERROR)) {
-            System.out.println("User not found.");
             log.warn("User with email '{}' not found.", email);
+            System.out.println("❌ User not found.");
             return;
         }
-        User user = (User) userResponse.getData();
-        System.out.println("Grant or Revoke access? (g/r): ");
-        char choice = scanner.next().charAt(0);
-        scanner.nextLine();
 
-        if (choice == 'g' || choice == 'G') {
-            user.setActive(true);
-            userController.updateUserToActive(user);
-            System.out.println(user.getName() + " granted access.");
-            log.info("Access granted to staff: {}", user.getEmail());
-        } else if (choice == 'r' || choice == 'R') {
-            user.setActive(false);
-            userController.updateUserToInactive(user);
-            System.out.println(user.getName() + " access revoked.");
-            log.info("Access revoked for staff: {}", user.getEmail());
-        } else {
-            System.out.println("Invalid option.");
-            log.warn("Invalid input '{}' for granting/revoking access.", choice);
+        User user = (User) userResponse.getData();
+        System.out.print("Staff Access Permission?\n1. Grant Access\n2. Revoke Access\n0. Cancel \nEnter option: ");
+        int option = scanner.nextInt();
+        scanner.nextLine(); // consume leftover newline
+
+        switch (option) {
+            case 1:
+                user.setActive(true);
+                userController.updateUserToActive(user);
+                log.info("Access granted to staff: {}", user.getEmail());
+                System.out.println("✅ " + user.getName() + " granted staff access.\n");
+                break;
+            case 2:
+                user.setActive(false);
+                userController.updateUserToInactive(user);
+                log.info("Access revoked for staff: {}", user.getEmail());
+                System.out.println("❌ " + user.getName() + " access revoked.");
+                break;
+
+            case 0:
+                System.out.println("Action cancelled.");
+                log.info("❗ Admin access grant/revoke cancelled by user.");
+                break;
+
+            default:
+                log.warn("Invalid input '{}' for granting/revoking access.", option);
+                System.out.println("❗ Invalid option. Please enter 1 (Grant) or 2 (Revoke).");
         }
     }
 
     private void manageRooms() {
         while (true) {
-            System.out.println("\n=======================================");
-            System.out.println("              Manage Rooms             ");
-            System.out.println("=======================================");
-            System.out.println("1. Mark Room Under Maintenance");
-            System.out.println("2. Mark Room as Active");
-            System.out.println("3. Return back to menu");
-            System.out.println("---------------------------------------");
-            System.out.print("Your choice: ");
-
+            menuHandler.displayMenu("Manage Rooms", new String[]{"Mark Room Under Maintenance", "Mark Room as Active", "Return Back To Menu"});
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
 
@@ -435,13 +462,13 @@ public class AdminMenuUI {
                         markRoomAsActive();
                         break;
                     case 3:
-                        System.out.println("Returning to main menu...");
+                        System.out.println("❗ Returning to main menu!\n");
                         return;
                     default:
-                        System.out.println("Invalid choice. Please enter a number between 1 and 3.");
+                        System.out.println("❗ Invalid choice. Please enter a number between 1 and 3.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.println("❗ Invalid input. Please enter a valid number.");
                 log.warn("Invalid menu input: {}", e.getMessage());
             }
         }
@@ -454,22 +481,24 @@ public class AdminMenuUI {
             return;
         }
         List<Room> availableRooms = (List<Room>) roomResponse.getData();
-        System.out.println("\n=================================");
-        System.out.println("         Available Rooms         ");
-        System.out.println("=================================");
-        availableRooms.forEach(room ->
-                System.out.printf("Room ID: %d, Room Number: %d%n", room.getRoomID(), room.getRoomNumber())
-        );
-        System.out.println("-------------------------------");
 
-        System.out.print("Enter Room ID to mark under maintenance (or press Enter to cancel): ");
+        System.out.println("\n==================================");
+        System.out.println("         Available Rooms         ");
+        System.out.println("==================================");
+        List<String> ignore = List.of("roomType", "price", "isAvailable");
+        printGenericResponse.printTable(availableRooms, ignore);
+
+        System.out.print("Enter Room ID to mark under maintenance (or press 0 to cancel): ");
         String input = scanner.nextLine().trim();
-        if (input.isEmpty()) return;
+        if ("0".equals(input)) {
+            System.out.println("❌ Operation Cancelled\n");
+            return;
+        }
 
         try {
             int roomId = Integer.parseInt(input);
             roomController.markRoomUnderMaintenance(roomId);
-            System.out.println("Room " + roomId + " marked as under maintenance.");
+            System.out.println("✅ Room " + roomId + " marked as under maintenance.");
             log.info("Room {} marked under maintenance.", roomId);
         } catch (NumberFormatException e) {
             System.out.println("Invalid Room ID. Please enter a valid number.");
@@ -493,14 +522,16 @@ public class AdminMenuUI {
         );
         System.out.println("-------------------------------");
 
-        System.out.print("Enter Room ID to mark as available (or press Enter to cancel): ");
+        System.out.print("Enter Room ID to mark as available (or press 0 to cancel): ");
         String input = scanner.nextLine().trim();
-        if (input.isEmpty()) return;
-
+        if ("0".equals(input)) {
+            System.out.println("❌ Operation Cancelled\n");
+            return;
+        }
         try {
             int roomId = Integer.parseInt(input);
             roomController.markRoomAvailable(roomId);
-            System.out.println("Room " + roomId + " is now available.");
+            System.out.println("✅ Room " + roomId + " is now available.");
             log.info("Room {} marked as available.", roomId);
         } catch (NumberFormatException e) {
             System.out.println("Invalid Room ID. Please enter a valid number.");

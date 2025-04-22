@@ -109,7 +109,7 @@ public class BookingDaoImpl implements BookingDao {
     public List<Booking> getAllBookings() {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             return entityManager.createQuery(
-                            "SELECT b FROM Booking b JOIN FETCH b.user JOIN FETCH b.room JOIN FETCH b.invoice ORDER BY b.checkIn DESC",
+                            " SELECT b FROM Booking b JOIN FETCH b.user JOIN FETCH b.room ORDER BY b.checkIn DESC ",
                             Booking.class)
                     .getResultList();
         } catch (Exception e) {

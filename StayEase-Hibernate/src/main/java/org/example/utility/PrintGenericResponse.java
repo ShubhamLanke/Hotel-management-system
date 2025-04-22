@@ -58,7 +58,7 @@ public class PrintGenericResponse {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
         long totalNights = (ChronoUnit.DAYS.between(booking.getCheckIn().toLocalDate(), booking.getCheckOut().toLocalDate()));
 
-        System.out.println("%n==================================================");
+        System.out.println("\n==================================================");
         System.out.printf("%30s%n", "HOTEL STAY EASE INVOICE");
         System.out.println("==================================================");
 

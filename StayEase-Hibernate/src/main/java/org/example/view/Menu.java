@@ -1,27 +1,5 @@
 package org.example.view;
 
-import org.example.consoleinterface.MenuHandler;
-import org.example.constants.BookingStatus;
-import org.example.constants.PaymentStatus;
-import org.example.constants.UserRole;
-import org.example.controller.BookingController;
-import org.example.controller.InvoiceController;
-import org.example.controller.RoomController;
-import org.example.controller.UserController;
-import org.example.entity.*;
-import org.example.utility.Response;
-import org.example.utility.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.*;
-
-import static org.example.constants.ResponseStatus.ERROR;
-
 public class Menu {
 
 //    private static final Scanner scanner = new Scanner(System.in);

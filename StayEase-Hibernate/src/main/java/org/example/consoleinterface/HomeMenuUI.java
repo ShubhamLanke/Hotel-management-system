@@ -4,15 +4,12 @@ import lombok.extern.log4j.Log4j2;
 import org.example.constants.UserRole;
 import org.example.controller.UserController;
 import org.example.entity.User;
+import org.example.utility.MenuHandler;
 import org.example.utility.Response;
 import org.example.utility.Validator;
-import org.example.view.AdminDashBoard;
-import org.example.view.Menu;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
-import static org.example.constants.ResponseStatus.ERROR;
 
 @Log4j2
 public class HomeMenuUI {

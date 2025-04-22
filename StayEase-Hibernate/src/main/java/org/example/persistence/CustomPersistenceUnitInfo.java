@@ -33,10 +33,10 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
         String username = properties.getProperty("user");
         String password = properties.getProperty("password");
 
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(jdbcUrl);
-        hikariConfig.setUsername(username);
-        hikariConfig.setPassword(password);
+        HikariConfig hikariConfig = new HikariConfig(properties);
+//        hikariConfig.setJdbcUrl(jdbcUrl);
+//        hikariConfig.setUsername(username);
+//        hikariConfig.setPassword(password);
         hikariConfig.setDriverClassName("org.postgresql.Driver");
 
         dataSource = new HikariDataSource(hikariConfig);
@@ -95,8 +95,6 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
     @Override
     public List<String> getManagedClassNames() {
         return List.of(
-                "org.example.Passport",
-                "org.example.Persons",
                 "org.example.entity.User",
                 "org.example.entity.Guest",
                 "org.example.entity.Booking",

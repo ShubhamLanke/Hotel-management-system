@@ -1,4 +1,4 @@
-package org.example.consoleinterface;
+package org.example.utility;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

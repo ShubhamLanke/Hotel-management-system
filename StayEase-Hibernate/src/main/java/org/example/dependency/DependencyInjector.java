@@ -10,6 +10,7 @@ import org.example.dao.InvoiceDaoImpl;
 import org.example.dao.RoomDaoImpl;
 import org.example.dao.UserDaoImpl;
 import org.example.service.*;
+import org.example.utility.MenuHandler;
 import org.example.utility.PrintGenericResponse;
 
 import java.util.Scanner;
@@ -35,10 +36,9 @@ public class DependencyInjector {
         BookingController bookingController = new BookingController(bookingService);
         InvoiceController invoiceController = new InvoiceController(invoiceService);
 
-//        Menu menu = new Menu(roomController, userController, bookingController, invoiceController, adminDashBoard, menuHandler);
         UserMenuUI userMenuUI = new UserMenuUI(userController, roomController, bookingController, invoiceController, printGenericResponse, menuHandler, scanner);
         StaffMenuUI staffMenuUI = new StaffMenuUI(userMenuUI, userController, roomController, bookingController, invoiceController, printGenericResponse, menuHandler, scanner);
-        AdminMenuUI adminMenuUI = new AdminMenuUI(menuHandler, roomController, userController, bookingController, invoiceController, scanner);
+        AdminMenuUI adminMenuUI = new AdminMenuUI(menuHandler, roomController, userController, bookingController, invoiceController, printGenericResponse, scanner);
         return new HomeMenuUI(userController, adminMenuUI, userMenuUI, staffMenuUI, menuHandler,scanner);
     }
 }
