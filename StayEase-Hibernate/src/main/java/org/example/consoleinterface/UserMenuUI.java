@@ -40,7 +40,8 @@ public class UserMenuUI {
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private Future<?> scheduledTask;
-    DateTimeFormatter showDateInFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    DateTimeFormatter showDateInFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public UserMenuUI(UserController userController, RoomController roomController, BookingController bookingController, InvoiceController invoiceController, PrintGenericResponse printGenericResponse, MenuHandler menuHandler, Scanner scanner) {
         this.userController = userController;
@@ -189,7 +190,6 @@ public class UserMenuUI {
     }
 
     public void viewAvailableRooms() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         LocalDateTime checkInDate;
         LocalDateTime checkOutDate;
@@ -433,7 +433,6 @@ public class UserMenuUI {
 
     private void viewBooking(User loggedInGuest) {
         log.info("User {} requested to view their bookings.", loggedInGuest.getUserID());
-        DateTimeFormatter showDateInFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         Response bookingResponse = bookingController.getBookingsByUser(loggedInGuest.getUserID());
         Object data = bookingResponse.getData();
@@ -451,9 +450,12 @@ public class UserMenuUI {
             log.warn("No bookings found for {}.", loggedInGuest.getName());
             System.out.println("\nNo bookings found for " + loggedInGuest.getName());
         } else {
-            System.out.println("\n=========== Booking History ===========");
+            System.out.println("\n=========================================");
+            System.out.println("             Booking History             ");
+            System.out.println("=========================================");
+
             for (Booking booking : bookings) {
-                printGenericResponse.printTable(bookings, null);
+//                printGenericResponse.printTable(bookings, null);
                 System.out.printf("Booking ID: %s%nDate: %s%nDate: %s%nStatus: %s%n-----------------------------------------%n",
                         booking.getBookingId(), booking.getCheckIn().format(showDateInFormat), booking.getCheckOut().format(showDateInFormat), booking.getStatus());
 
@@ -557,37 +559,57 @@ public class UserMenuUI {
     private List<Guest> collectGuestDetails() {
         List<Guest> guests = new ArrayList<>();
 
-        System.out.print("Will the user have accompanied guests?\n1. Yes\n2. No\n(0 to cancel)\nEnter option: ");
-        int option = scanner.nextInt();
-        scanner.nextLine();
-        if (option != 1) return guests;
+        while (true) {
+            System.out.print("Will the user have accompanied guests?\n1. Yes\n2. No\n(0 to cancel)\nEnter option: ");
+            int option = scanner.nextInt();
+            scanner.nextLine();
 
-        System.out.print("Enter number of guests (Max 16) OR (Enter 0 to cancel): ");
-        int guestCount = scanner.nextInt();
-        scanner.nextLine();
-        if (guestCount == 0 || guestCount > 16) return guests;
-
-        for (int i = 1; i <= guestCount; i++) {
-            System.out.print("Enter guest name for guest " + i + " (or 0 to cancel): ");
-            String name = scanner.nextLine().toUpperCase();
-            if (name.equals("0")) return guests;
-            if (!Validator.isValidName(name)) {
-                log.warn("Invalid name format: {}", name);
-                System.out.println("Invalid name format. Try again.");
-                return null;
+            if (option == 0 || option == 2) return guests;
+            if (option != 1) {
+                System.out.println("Invalid option. Try again.");
+                continue;
             }
 
-            System.out.print("Enter guest age for guest " + i + " (1–100, 0 to cancel): ");
-            int age = scanner.nextInt();
-            scanner.nextLine();
-            if (age == 0 || age > 100) return guests;
+            int guestCount = -1;
+            while (true) {
+                System.out.print("Enter number of guests (1–16) OR (0 to cancel): ");
+                guestCount = scanner.nextInt();
+                scanner.nextLine();
+                if (guestCount == 0) return guests;
+                if (guestCount > 0 && guestCount <= 16) break;
 
-            guests.add(new Guest(null, name, age, null));
+                System.out.println("Guest count must be between 1 and 16.");
+            }
+
+            for (int i = 1; i <= guestCount; i++) {
+                String name;
+                while (true) {
+                    System.out.print("Enter guest name for guest " + i + " (or 0 to cancel): ");
+                    name = scanner.nextLine().toUpperCase();
+                    if (name.equals("0")) return guests;
+                    if (Validator.isValidName(name)) break;
+
+                    log.warn("Invalid name format: {}", name);
+                    System.out.println("Invalid name format. Try again.");
+                }
+
+                int age;
+                while (true) {
+                    System.out.print("Enter guest age for guest " + i + " (1–100, 0 to cancel): ");
+                    age = scanner.nextInt();
+                    scanner.nextLine();
+                    if (age == 0) return guests;
+                    if (age > 0 && age <= 100) break;
+
+                    System.out.println("Invalid age. Try again.");
+                }
+                guests.add(new Guest(null, name, age, null));
+            }
+            log.info("Collected details for {} guest(s)", guests.size());
+            return guests;
         }
-
-        log.info("Collected details for {} guest(s)", guests.size());
-        return guests;
     }
+
 
     private int generateInvoiceAtBooking(int bookingId, int userId, double totalAmount, boolean isPaid) {
         log.info("Generating invoice for user {} | Booking ID: {} | Amount: {} | Paid: {}",

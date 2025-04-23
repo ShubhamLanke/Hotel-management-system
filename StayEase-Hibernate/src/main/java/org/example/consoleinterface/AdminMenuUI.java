@@ -187,6 +187,12 @@ public class AdminMenuUI {
                 break;
 
             case 2:
+                if (user.getUserRole() == UserRole.SUPER_ADMIN) {
+                    System.out.println("⚠️ You cannot revoke access for SUPER_ADMIN.\ngit s");
+                    log.warn("Attempt to revoke SUPER_ADMIN access for email: {}", email);
+                    return;
+                }
+
                 user.setActive(false);
                 userController.updateUserToInactive(user);
                 System.out.println("❌ Admin access revoked for " + user.getName());
@@ -203,7 +209,6 @@ public class AdminMenuUI {
                 log.warn("Invalid admin action choice: {}", choice);
         }
     }
-
 
     public void displayAdminMenu(User loggedInAdmin) {
         if (loggedInAdmin == null || loggedInAdmin.getUserRole() != UserRole.ADMIN) {
