@@ -7,6 +7,7 @@ import jakarta.persistence.ValidationMode;
 import jakarta.persistence.spi.ClassTransformer;
 import jakarta.persistence.spi.PersistenceUnitInfo;
 import jakarta.persistence.spi.PersistenceUnitTransactionType;
+import org.example.entity.*;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -95,12 +96,12 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
     @Override
     public List<String> getManagedClassNames() {
         return List.of(
-                "org.example.entity.User",
-                "org.example.entity.Guest",
-                "org.example.entity.Booking",
-                "org.example.entity.Room",
-                "org.example.entity.Invoice"
-        );
+                User.class.getName(),
+                Booking.class.getName(),
+                Guest.class.getName(),
+                Room.class.getName(),
+                Invoice.class.getName()
+                );
     }
 
     @Override

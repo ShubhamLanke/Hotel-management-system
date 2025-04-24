@@ -1,1 +1,2 @@
 2025-04-24 15:10:15 ERROR StaffMenuUI - InputMismatchException: Invalid input by user SHUBHAM LANKE in staff menu
+2025-04-24 15:20:15 ERROR StaffMenuUI - Failed to create booking: createBooking returned null.
