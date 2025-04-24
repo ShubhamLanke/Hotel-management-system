@@ -152,9 +152,9 @@ public class StaffMenuUI {
         log.info("Cancellation process started for Booking ID: {}", bookingId);
 
         Response bookingResponse = bookingController.getBookingById(bookingId);
-        if (bookingResponse == null) {
+        if (bookingResponse.getStatus().equals(ResponseStatus.ERROR)) {
             log.warn("Booking not found for ID: {}", bookingId);
-            System.out.println("\nBooking not found for: " + bookingId);
+            System.out.println("Booking not found for ID: " + bookingId);
             return;
         }
 
@@ -268,14 +268,12 @@ public class StaffMenuUI {
         }
         activeBooking.setStatus(BookingStatus.COMPLETED);
         activeBooking.setCheckOut(LocalDateTime.now());
-//        invoiceController.updatePaymentStatus(invoice.getInvoiceId(), PaymentStatus.CANCELED);
         bookingController.updateBooking(activeBooking);
         log.info("Booking ID: {} status updated to COMPLETED", activeBooking.getBookingId());
 
         Response roomResponse = roomController.getRoomById(activeBooking.getRoom().getRoomID());
         Room bookedRoom = (Room) roomResponse.getData();
         if (bookedRoom != null) {
-//            bookedRoom.setAvailable(true);
             roomController.updateRoom(bookedRoom);
             log.info("Room {} is now available after checkout", bookedRoom.getRoomNumber());
             System.out.println("Room " + bookedRoom.getRoomNumber() + " is now available.");
@@ -320,13 +318,7 @@ public class StaffMenuUI {
             userController.addAccompaniedGuest(guest);
         }
 
-        Response roomResponse = roomController.getAvailableRooms();
-        List<Room> availableRooms = (List<Room>) roomResponse.getData();
-        if (availableRooms.isEmpty()) {
-            System.out.println("No available rooms at the moment.");
-            return;
-        }
-        displayAvailableRooms(availableRooms);
+        List<Room> availableRooms = userMenuUI.viewAvailableRooms();
 
         Room selectedRoom = getRoomSelection(availableRooms);
         if (Objects.isNull(selectedRoom)) {
@@ -378,7 +370,6 @@ public class StaffMenuUI {
         double amount = room.getPrice() * totalNights;
 
         bookingController.createBooking(booking);
-        room.setAvailable(false);
         roomController.updateRoom(room);
 
         System.out.printf("✅ Booking confirmed for %s!%n", user.getName());
@@ -534,7 +525,7 @@ public class StaffMenuUI {
         List<Guest> guests = new ArrayList<>();
 
         while (true) {
-            System.out.print("Will the user have accompanied guests?\n1. Yes\n2. No\n(0 to cancel)\nEnter option: ");
+            System.out.print("Will the user have accompanied guests?\n1. Yes\n2. No\n0. Cancel\nEnter option: ");
             int option = scanner.nextInt();
             scanner.nextLine();
 

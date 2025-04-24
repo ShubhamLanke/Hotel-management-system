@@ -168,18 +168,19 @@ public class UserMenuUI {
             user.setPassword(password);
             user.setUserRole(role);
 
-            Response registerUserResponse = userController.registerUser(user);
-            if (registerUserResponse.getStatus().equals(ERROR)) {
-                log.error("Unable to register user.");
-                System.out.println("Unable to register user");
-                return;
-            }
             if (role == UserRole.GUEST) {
                 user.setActive(true);
             } else {
                 user.setActive(false);
                 System.out.println("✅ Staff registration request submitted! Awaiting admin approval.\n");
                 System.out.println("\n🎉 Congratulations " + user.getName() + " (" + user.getUserRole() + ")" + "! You can login after your account gets active by admin.");
+                return;
+            }
+            Response registerUserResponse = userController.registerUser(user);
+
+            if (registerUserResponse.getStatus().equals(ERROR)) {
+                log.error("Unable to register user.");
+                System.out.println("Unable to register user");
                 return;
             }
             System.out.println("\n🎉 Congratulations " + user.getName() + " (" + user.getUserRole() + ")" + "! You can now log in.\n");
@@ -189,8 +190,8 @@ public class UserMenuUI {
         }
     }
 
-    public void viewAvailableRooms() {
-
+    public List<Room> viewAvailableRooms() {
+        List<Room> availableRooms = new ArrayList<>();
         LocalDateTime checkInDate;
         LocalDateTime checkOutDate;
 
@@ -201,11 +202,10 @@ public class UserMenuUI {
             checkInDate = parsedCheckIn.atStartOfDay();
 
             LocalDate today = LocalDate.now();
-
             if (parsedCheckIn.isBefore(today) || parsedCheckIn.isAfter(today.plusDays(60))) {
                 System.out.println("Check-in date must be from today to the next 60 days (max): " +
                         formatter.format(today) + " to " + formatter.format(today.plusDays(60)));
-                return;
+                return availableRooms;
             }
 
             System.out.print("Enter Check-out Date (dd-MM-yyyy): ");
@@ -215,18 +215,17 @@ public class UserMenuUI {
 
             if (!checkOutDate.isAfter(checkInDate)) {
                 System.out.println("Check-out date must be after check-in date.");
-                return;
+                return availableRooms;
             }
 
             long stayDuration = java.time.Duration.between(checkInDate, checkOutDate).toDays();
             if (stayDuration > 180) {
                 System.out.println("Stay duration cannot exceed 180 days. You selected: " + stayDuration + " days.");
-                return;
+                return availableRooms;
             }
 
             Response roomResponse = roomController.getAvailableRoomsForDate(checkInDate, checkOutDate);
             Object data = roomResponse.getData();
-            List<Room> availableRooms = new ArrayList<>();
 
             if (data instanceof List<?>) {
                 for (Object obj : (List<?>) data) {
@@ -243,8 +242,11 @@ public class UserMenuUI {
                 printGenericResponse.printTable(availableRooms, ignore);
             }
 
+            return availableRooms;
+
         } catch (DateTimeParseException e) {
             System.out.println("Invalid date format. Please use dd-MM-yyyy.");
+            return availableRooms;
         }
     }
 
@@ -466,24 +468,8 @@ public class UserMenuUI {
     }
 
     private void bookRoomByUser(User loggedInUser) {
-        Response roomResponse = roomController.getAvailableRooms();
-        Object data = roomResponse.getData();
-        List<Room> availableRooms = new ArrayList<>();
 
-        if (data instanceof List<?>) {
-            for (Object obj : (List<?>) data) {
-                if (obj instanceof Room room) {
-                    availableRooms.add(room);
-                }
-            }
-        }
-
-        if (availableRooms.isEmpty()) {
-            System.out.println("No available rooms at the moment.");
-            return;
-        }
-        List<String> ignore = Arrays.asList("isAvailable");
-        printGenericResponse.printTable(availableRooms, ignore);
+        List<Room> availableRooms = viewAvailableRooms();
 
         System.out.print("\nEnter Room ID to book: ");
         int roomId = scanner.nextInt();
@@ -501,8 +487,6 @@ public class UserMenuUI {
             guest.setUser(loggedInUser);
             userController.addAccompaniedGuest(guest);
         }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         System.out.print("Enter check-in date (YYYY-MM-DD HH:MM) or press Enter for today's date: ");
         String checkInDateString = scanner.nextLine().trim();
@@ -560,7 +544,7 @@ public class UserMenuUI {
         List<Guest> guests = new ArrayList<>();
 
         while (true) {
-            System.out.print("Will the user have accompanied guests?\n1. Yes\n2. No\n(0 to cancel)\nEnter option: ");
+            System.out.print("Will the user have accompanied guests?\n1. Yes\n2. No\n0. Cancel\nEnter option: ");
             int option = scanner.nextInt();
             scanner.nextLine();
 

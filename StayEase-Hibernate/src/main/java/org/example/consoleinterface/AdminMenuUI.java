@@ -129,9 +129,8 @@ public class AdminMenuUI {
             log.warn("No admin users found!");
             System.out.println("No admin users found!");
         }
-        List<String> ignore = List.of("password");
-        printGenericResponse.printTable(users, ignore);
-        System.out.println("=======================================================================================");
+
+        System.out.println("\n=======================================================================================");
         System.out.printf("%-10s %-20s %-30s %-15s %-10s%n", "User ID", "Name", "Email", "Role", "Active");
         System.out.println("=======================================================================================");
 
@@ -188,7 +187,7 @@ public class AdminMenuUI {
 
             case 2:
                 if (user.getUserRole() == UserRole.SUPER_ADMIN) {
-                    System.out.println("⚠️ You cannot revoke access for SUPER_ADMIN.\ngit s");
+                    System.out.println("⚠️ You cannot revoke access for SUPER_ADMIN.\n");
                     log.warn("Attempt to revoke SUPER_ADMIN access for email: {}", email);
                     return;
                 }
