@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PrintGenericResponse {
@@ -19,6 +20,7 @@ public class PrintGenericResponse {
 
         Class<?> clazz = list.get(0).getClass();
         Field[] allFields = clazz.getDeclaredFields();
+
         List<Field> fields = Arrays.stream(allFields)
                 .filter(f -> ignoreFields == null || !ignoreFields.contains(f.getName()))
                 .peek(f -> f.setAccessible(true))

@@ -22,9 +22,9 @@ public class PersistenceManager {
                 .createContainerEntityManagerFactory(persistenceUnitInfo, properties);
     }
 
-    public static void close() {
-        if (entityManagerFactory != null) {
-            entityManagerFactory.close();
-        }
-    }
+//    public static void close() {
+//        if (entityManagerFactory != null) {
+//            entityManagerFactory.close();
+//        }
+//    }
 }

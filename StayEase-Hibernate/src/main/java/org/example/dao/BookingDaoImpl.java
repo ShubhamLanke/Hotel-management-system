@@ -1,5 +1,7 @@
 package org.example.dao;
 
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.RollbackException;
 import lombok.extern.log4j.Log4j2;
 import org.example.constants.BookingStatus;
 import org.example.entity.Booking;
@@ -15,18 +17,30 @@ import java.util.Optional;
 @Log4j2
 public class BookingDaoImpl implements BookingDao {
 
+    private  final EntityManager entityManager;
+
+    public BookingDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
     @Override
     public void createBooking(Booking booking) {
-        try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
+        try {
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             try {
                 entityManager.persist(booking);
                 transaction.commit();
-            } catch (Exception e) {
-                transaction.rollback();
-                log.error("Error while creating booking for user ID: {}", booking.getUser().getUserID(), e);
+            } catch (IllegalStateException | RollbackException ex) {
+                try {
+                    transaction.rollback();
+                } catch (IllegalStateException | PersistenceException pe) {
+                    log.error("Error occured while rolling back: ", pe);
+                }
+//                log.error("Error while creating booking for user ID: {}", booking.getUser().getUserID(), ex);
             }
+        } finally {
+            entityManager.close();
         }
     }
 

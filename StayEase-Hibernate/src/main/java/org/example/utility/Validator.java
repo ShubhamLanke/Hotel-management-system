@@ -1,5 +1,8 @@
 package org.example.utility;
 
+import org.apache.logging.log4j.util.Strings;
+
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Validator {
@@ -11,7 +14,7 @@ public class Validator {
             "^[a-zA-Z0-9._%+-]+@(?:gmail\\.com|yahoo\\.com|hotmail\\.com|outlook\\.com|protonmail\\.com|icloud\\.com|direction\\.biz|dss\\.com|dss\\.biz)$");
 
     public static boolean isValidMobile(String mobile) {
-        return mobile != null && MOBILE_PATTERN.matcher(mobile).matches();
+        return Strings.isNotBlank(mobile) && MOBILE_PATTERN.matcher(mobile).matches();
     }
 
     public static boolean isValidAge(int age) {
@@ -27,7 +30,7 @@ public class Validator {
     }
 
     public static boolean isValidPassword(String password) {
-        return password != null && PASSWORD_PATTERN.matcher(password).matches();
+        return Objects.nonNull(password) && PASSWORD_PATTERN.matcher(password).matches();
     }
 
     public static boolean isNotNullAnd(String str) {

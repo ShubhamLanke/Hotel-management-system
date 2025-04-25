@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class InvoiceController {
     private final InvoiceService invoiceService;
-    Response response;
+//    Response response;
 
     public InvoiceController(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;

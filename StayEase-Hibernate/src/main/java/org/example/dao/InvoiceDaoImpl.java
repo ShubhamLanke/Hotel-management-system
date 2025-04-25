@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.example.constants.PaymentStatus;
 import org.example.entity.Booking;
 import org.example.entity.Invoice;
@@ -13,12 +14,12 @@ import org.example.persistence.PersistenceManager;
 import java.util.List;
 import java.util.Optional;
 
-@Log4j2
+@Slf4j
 public class InvoiceDaoImpl implements InvoiceDao {
 
     @Override
-    @Transactional
-    public int generateInvoice(Invoice invoice) {
+//    @Transactional
+    public int generateInvoice(Invoice invoice) throws RuntimeException {
         try (EntityManager entityManager = PersistenceManager.getEntityManagerFactory().createEntityManager()) {
             entityManager.getTransaction().begin();
             entityManager.persist(invoice);

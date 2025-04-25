@@ -13,7 +13,7 @@ import java.util.Optional;
 @Slf4j
 public class UserController {
     private final UserService userService;
-    Response response;
+//    Response response;
 
     public UserController(UserService userService) {
         this.userService = userService;

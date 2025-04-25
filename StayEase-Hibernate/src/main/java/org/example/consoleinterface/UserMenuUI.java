@@ -13,12 +13,14 @@ import org.example.utility.MenuHandler;
 import org.example.utility.PrintGenericResponse;
 import org.example.utility.Response;
 import org.example.utility.Validator;
+import org.example.wrapperclass.RoomAvailabilityResult;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -190,65 +192,86 @@ public class UserMenuUI {
         }
     }
 
-    public List<Room> viewAvailableRooms() {
+    public RoomAvailabilityResult viewAvailableRooms() {
         List<Room> availableRooms = new ArrayList<>();
-        LocalDateTime checkInDate;
-        LocalDateTime checkOutDate;
+        LocalDateTime checkInDate = null;
+        LocalDateTime checkOutDate = null;
 
-        try {
-            System.out.print("Enter Check-in Date (dd-MM-yyyy): ");
-            String checkInInput = scanner.nextLine();
-            LocalDate parsedCheckIn = LocalDate.parse(checkInInput, formatter);
-            checkInDate = parsedCheckIn.atStartOfDay();
+        while (true) {
+            try {
+                System.out.print("Enter Check-in Date (dd-MM-yyyy) or 0 to cancel: ");
+                String checkInInput = scanner.nextLine();
+                if (checkInInput.equals("0")) {
+                    System.out.println("Operation cancelled.");
+                    return null;
+                }
 
-            LocalDate today = LocalDate.now();
-            if (parsedCheckIn.isBefore(today) || parsedCheckIn.isAfter(today.plusDays(60))) {
-                System.out.println("Check-in date must be from today to the next 60 days (max): " +
-                        formatter.format(today) + " to " + formatter.format(today.plusDays(60)));
-                return availableRooms;
+                LocalDate parsedCheckIn = LocalDate.parse(checkInInput, formatter);
+                checkInDate = parsedCheckIn.atStartOfDay();
+
+                LocalDate today = LocalDate.now();
+                if (parsedCheckIn.isBefore(today) || parsedCheckIn.isAfter(today.plusDays(60))) {
+                    System.out.println("Check-in date must be from today to the next 60 days: " +
+                            formatter.format(today) + " to " + formatter.format(today.plusDays(60)));
+                    continue;
+                }
+
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please use dd-MM-yyyy.");
             }
+        }
 
-            System.out.print("Enter Check-out Date (dd-MM-yyyy): ");
-            String checkOutInput = scanner.nextLine();
-            LocalDate parsedCheckOut = LocalDate.parse(checkOutInput, formatter);
-            checkOutDate = parsedCheckOut.atStartOfDay();
+        while (true) {
+            try {
+                System.out.print("Enter Check-out Date (dd-MM-yyyy) or 0 to cancel: ");
+                String checkOutInput = scanner.nextLine();
+                if (checkOutInput.equals("0")) {
+                    System.out.println("Operation cancelled.");
+                    return null;
+                }
 
-            if (!checkOutDate.isAfter(checkInDate)) {
-                System.out.println("Check-out date must be after check-in date.");
-                return availableRooms;
+                LocalDate parsedCheckOut = LocalDate.parse(checkOutInput, formatter);
+                checkOutDate = parsedCheckOut.atStartOfDay();
+
+                if (!checkOutDate.isAfter(checkInDate)) {
+                    System.out.println("Check-out date must be after check-in date.");
+                    continue;
+                }
+
+                long stayDuration = java.time.Duration.between(checkInDate, checkOutDate).toDays();
+                if (stayDuration > 180) {
+                    System.out.println("Stay duration cannot exceed 180 days. You selected: " + stayDuration + " days.");
+                    continue;
+                }
+
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please use dd-MM-yyyy.");
             }
+        }
 
-            long stayDuration = java.time.Duration.between(checkInDate, checkOutDate).toDays();
-            if (stayDuration > 180) {
-                System.out.println("Stay duration cannot exceed 180 days. You selected: " + stayDuration + " days.");
-                return availableRooms;
-            }
+        Response roomResponse = roomController.getAvailableRoomsForDate(checkInDate, checkOutDate);
+        Object data = roomResponse.getData();
 
-            Response roomResponse = roomController.getAvailableRoomsForDate(checkInDate, checkOutDate);
-            Object data = roomResponse.getData();
-
-            if (data instanceof List<?>) {
-                for (Object obj : (List<?>) data) {
-                    if (obj instanceof Room room) {
-                        availableRooms.add(room);
-                    }
+        if (data instanceof List<?>) {
+            for (Object obj : (List<?>) data) {
+                if (obj instanceof Room room) {
+                    availableRooms.add(room);
                 }
             }
-
-            if (availableRooms.isEmpty()) {
-                System.out.println("\nAll rooms are currently booked. Please check back later.");
-            } else {
-                List<String> ignore = List.of("isAvailable");
-                printGenericResponse.printTable(availableRooms, ignore);
-            }
-
-            return availableRooms;
-
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format. Please use dd-MM-yyyy.");
-            return availableRooms;
         }
+
+        if (availableRooms.isEmpty()) {
+            System.out.println("\nAll rooms are currently booked. Please check back later.");
+        } else {
+            List<String> ignore = List.of("isAvailable");
+            printGenericResponse.printTable(availableRooms, ignore);
+        }
+
+        return new RoomAvailabilityResult(availableRooms, checkInDate, checkOutDate);
     }
+
 
     private void viewInvoice(User loggedInGuest) {
         log.info("User {} requested to view their invoices.", loggedInGuest.getUserID());
@@ -259,17 +282,14 @@ public class UserMenuUI {
             System.out.println("\nNo invoices found for user " + loggedInGuest.getName());
             log.warn("No invoices found for user {}.", loggedInGuest.getUserID());
         } else {
-            System.out.println("\n");
-            printGenericResponse.printTable(invoices, null);
-
             System.out.println("\n==========================");
             System.out.println("      Invoice History     ");
             System.out.println("==========================");
 
             for (Invoice invoice : invoices) {
-                System.out.println("Invoice ID: " + invoice.getInvoiceId());
-                System.out.println("Booking ID: " + invoice.getBooking().getBookingId());
-                System.out.println("Date: " + invoice.getIssueDate());
+                System.out.println("Invoice NO: " + "INV-" + invoice.getInvoiceId());
+                System.out.println("Booking NO: " + "BOK-" + invoice.getBooking().getBookingId());
+                System.out.println("Date: " + invoice.getIssueDate().format(showDateInFormat));
                 System.out.println("Amount: " + invoice.getAmount());
                 System.out.println("Payment Status: " + invoice.getPaymentStatus());
                 System.out.println("--------------------------");
@@ -468,68 +488,66 @@ public class UserMenuUI {
     }
 
     private void bookRoomByUser(User loggedInUser) {
-
-        List<Room> availableRooms = viewAvailableRooms();
-
-        System.out.print("\nEnter Room ID to book: ");
-        int roomId = scanner.nextInt();
-        scanner.nextLine();
-
-        boolean isRoomValid = availableRooms.stream().anyMatch(room -> room.getRoomID() == roomId);
-        if (!isRoomValid) {
-            System.out.println("Invalid Room Number. Please select a valid room.");
+        RoomAvailabilityResult result = viewAvailableRooms();
+        if (result == null || result.getAvailableRooms().isEmpty()) {
             return;
         }
 
-        List<Guest> guests = collectGuestDetails();
+        List<Room> availableRooms = result.getAvailableRooms();
+        LocalDateTime checkInDate = result.getCheckInDate().withHour(10).withMinute(0);
+        LocalDateTime checkOutDate = result.getCheckOutDate().withHour(11).withMinute(0);
 
+        int roomId;
+        Room selectedRoom = null;
+
+        while (true) {
+            System.out.print("\nEnter Room ID to book (or 0 to cancel): ");
+            while (!scanner.hasNextInt()) {
+                System.out.print("Please enter a valid number: ");
+                scanner.next(); // consume invalid input
+            }
+            roomId = scanner.nextInt();
+            scanner.nextLine();
+
+            if (roomId == 0) {
+                System.out.println("Booking cancelled.");
+                return;
+            }
+
+            int finalRoomId = roomId;
+            selectedRoom = availableRooms.stream()
+                    .filter(room -> room.getRoomID() == finalRoomId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (selectedRoom != null) {
+                break;
+            } else {
+                System.out.println("Invalid Room Number. Please select a valid room.");
+            }
+        }
+
+        List<Guest> guests = collectGuestDetails();
         for (Guest guest : guests) {
             guest.setUser(loggedInUser);
             userController.addAccompaniedGuest(guest);
         }
 
-        System.out.print("Enter check-in date (YYYY-MM-DD HH:MM) or press Enter for today's date: ");
-        String checkInDateString = scanner.nextLine().trim();
-
-        LocalDateTime checkInDate;
-        if (checkInDateString.isEmpty()) {
-            checkInDate = LocalDateTime.now().withHour(12).withMinute(0);
-        } else {
-            checkInDate = LocalDateTime.parse(checkInDateString, formatter);
-        }
-
-        int duration;
-        while (true) {
-            System.out.print("Enter duration (in days): ");
-            duration = scanner.nextInt();
-            scanner.nextLine();
-            if (duration > 0) {
-                break;
-            } else {
-                System.out.println("The duration must be greater than 0.");
-            }
-        }
-
-        LocalDateTime checkOutDate = checkInDate.plusDays(duration);
-
-        Room selectedRoom = availableRooms.stream().filter(room -> room.getRoomID() == roomId).findFirst().orElse(null);
-        if (selectedRoom == null) {
-            System.out.println("Room you're trying to book might have booked by someone else!");
-            return;
-        }
+        int duration = (int) ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        checkOutDate = checkInDate.plusDays(duration);
 
         double totalAmount = selectedRoom.getPrice() * duration;
         Booking newBooking = new Booking(loggedInUser, selectedRoom, checkInDate, checkOutDate, BookingStatus.CONFIRMED);
         bookingController.createBooking(newBooking);
-//        selectedRoom.setAvailable(false);
+
         roomController.updateRoom(selectedRoom);
         scheduleRoomAvailabilityReset(roomId, checkOutDate);
-
 
         boolean isPaid = bookingPaymentChoice();
         int generatedInvoiceId = generateInvoiceAtBooking(newBooking.getBookingId(), loggedInUser.getUserID(), totalAmount, isPaid);
         Response invoiceResponse = invoiceController.getInvoiceById(generatedInvoiceId);
         Invoice invoice = (Invoice) invoiceResponse.getData();
+
         if (invoice != null) {
             System.out.println("\nInvoice generated successfully for " + loggedInUser.getName());
             System.out.println("\nBooking confirmed for " + loggedInUser.getName() + "!");

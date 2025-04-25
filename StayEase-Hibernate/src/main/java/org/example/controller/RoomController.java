@@ -11,14 +11,14 @@ import java.util.Optional;
 
 public class RoomController {
     private final RoomService roomService;
-    Response response;
+//    Response response;
 
     public RoomController(RoomService roomService) {
         this.roomService = roomService;
     }
 
     public Response addRoom(Room room) {
-        roomService.addRoom(room);
+        roomService.addRoom(room); // update return logic
         return response = new Response(null, ResponseStatus.SUCCESS, "Room added successfully.");
     }
 

@@ -21,8 +21,9 @@ public class DatabaseConnection {
             while (attempts < MAX_RETRIES) {
                 try {
                     Properties properties = new Properties();
-                    FileInputStream fileInputStream = new FileInputStream("src/main/resources/application.properties");
-                    properties.load(fileInputStream);
+                    try(FileInputStream fileInputStream = new FileInputStream("src/main/resources/application.properties")){
+                        properties.load(fileInputStream);
+                    }
                     String url = properties.getProperty("url");
 
                     connection = DriverManager.getConnection(url, properties);

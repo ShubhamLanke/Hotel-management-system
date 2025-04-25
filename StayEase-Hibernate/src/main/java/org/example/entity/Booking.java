@@ -10,7 +10,7 @@ import java.util.Objects;
 @Data
 @Entity
 @Table(name = "bookings")
-public class Booking {
+public class Booking  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,19 +53,30 @@ public class Booking {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(bookingId);
-    }
-
-    @Override
     public String toString() {
         return "Booking{" +
-                "bookingId=" + bookingId +
-                ", user=" + (user != null ? user.getUserID() : null) +
-                ", room=" + (room != null ? room.getRoomID() : null) +
+                "user=" + user +
+                ", room=" + room +
                 ", checkIn=" + checkIn +
                 ", checkOut=" + checkOut +
                 ", status=" + status +
                 '}';
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(bookingId);
+    }
+
+//    @Override
+//    public String toString() {
+//        return "Booking{" +
+//                "bookingId=" + bookingId +
+//                ", user=" + (user != null ? user.getUserID() : null) +
+//                ", room=" + (room != null ? room.getRoomID() : null) +
+//                ", checkIn=" + checkIn +
+//                ", checkOut=" + checkOut +
+//                ", status=" + status +
+//                '}';
+//    }
 }

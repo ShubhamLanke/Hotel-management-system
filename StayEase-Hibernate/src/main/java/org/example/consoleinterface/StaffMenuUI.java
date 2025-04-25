@@ -14,6 +14,7 @@ import org.example.utility.MenuHandler;
 import org.example.utility.PrintGenericResponse;
 import org.example.utility.Response;
 import org.example.utility.Validator;
+import org.example.wrapperclass.RoomAvailabilityResult;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -197,7 +198,6 @@ public class StaffMenuUI {
         Response roomResponse = roomController.getRoomById(roomId);
         Room room = (Room) roomResponse.getData();
         if (room != null) {
-//            room.setAvailable(isAvailable);
             Response updateRoomResponse = roomController.updateRoom(room);
 
             if (updateRoomResponse.isSuccess()) {
@@ -318,7 +318,8 @@ public class StaffMenuUI {
             userController.addAccompaniedGuest(guest);
         }
 
-        List<Room> availableRooms = userMenuUI.viewAvailableRooms();
+        RoomAvailabilityResult result = userMenuUI.viewAvailableRooms();
+        List<Room> availableRooms = result.getAvailableRooms();
 
         Room selectedRoom = getRoomSelection(availableRooms);
         if (Objects.isNull(selectedRoom)) {

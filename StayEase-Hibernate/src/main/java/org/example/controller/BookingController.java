@@ -18,24 +18,31 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    Response response;
-
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
     public Response createBooking(Booking booking) {
+        Response response = Response.builder().message("No result found")
+                .status(ResponseStatus.ERROR)
+                .build();
+
         if (Objects.isNull(booking)) {
-            return response = new Response(null, ResponseStatus.ERROR, "Booking details are missing or invalid.");
+            response = Response.builder().data(null)
+                    .status(ResponseStatus.ERROR)
+                    .message("Boo..")
+                    .build();
+            return response;
         }
 
         try {
             bookingService.createBooking(booking);
             return response = new Response(booking, ResponseStatus.SUCCESS, "Booking created successfully!");
         } catch (Exception e) {
-            log.error("Failed to create booking.",e);
+            log.error("Failed to create booking.", e);
             return response = new Response(null, ResponseStatus.ERROR, "Failed to create booking. Please try again or contact support.");
         }
+        return response;
     }
 
     public Response updateBooking(Booking booking) {
@@ -87,7 +94,6 @@ public class BookingController {
 
     public Response getAllConfirmedBookingsByUserId(int userId) {
         List<Booking> confirmedBookings = bookingService.getAllConfirmedBookingsByUserId(userId);
-
         if (confirmedBookings.isEmpty()) {
             return new Response(null, ResponseStatus.ERROR, "No confirmed bookings found!");
         } else {
